@@ -1,0 +1,398 @@
+<?php
+
+class Kegiatan extends Admin_Controller
+{
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->not_logged_in();
+
+        $this->data['page_title'] = 'Kegiatan';
+
+        $this->load->model('model_groups');
+        $this->load->model('Jenis_terminal_model');
+        $this->load->model('Agen_kapal_model');
+        $this->load->model('Operasional_model');
+        $this->load->model('Asal_pemilik_model');
+        $this->load->model('Perusahaan_model');
+        $this->load->model('Barang_model');
+        $this->load->model('Permohonan_model');
+        $this->load->model('Semua_model');
+    }
+
+    public function index()
+    {
+        $q      = urldecode($this->input->get('q', true));
+        $start  = intval($this->input->get('start'));
+        $status = intval($this->input->get('status'));
+
+        if ($q != '' && $status != '') {
+            $config['base_url']  = base_url() . 'operasional/index?q=' . urlencode($q) . '&status=' . urlencode($status);
+            $config['first_url'] = base_url() . 'operasional/index?q=' . urlencode($q) . '&status=' . urlencode($status);
+        } elseif ($q != '') {
+            $config['base_url']  = base_url() . 'operasional/index?q=' . urlencode($q);
+            $config['first_url'] = base_url() . 'operasional/index?q=' . urlencode($q);
+        } elseif ($status != '') {
+            $config['base_url']  = base_url() . 'operasional/index?status=' . urlencode($status);
+            $config['first_url'] = base_url() . 'operasional/index?status=' . urlencode($status);
+        } else {
+            $config['base_url']  = base_url() . 'operasional/index';
+            $config['first_url'] = base_url() . 'operasional/index';
+        }
+
+        $config['per_page']          = 10;
+        $config['page_query_string'] = true;
+        $config['total_rows']        = $this->Operasional_model->total_rows($q);
+        $config['attributes']        = array('class' => 'page-link');
+        $operasional                 = $this->Operasional_model->get_limit_data($config['per_page'], $start, $q);
+
+        $this->load->library('pagination');
+        $this->pagination->initialize($config);
+
+        $data = array(
+            'operasional_data' => $operasional,
+            'q'                => $q,
+            'status'           => $status,
+            'pagination'       => $this->pagination->create_links(),
+            'total_rows'       => $config['total_rows'],
+            'start'            => $start,
+        );
+        $this->render_view('kegiatan/kegiatan_index', $data);
+    }
+    public function permohonan($id)
+    {
+        $row = $this->Operasional_model->get_by_id($id);
+        if ($row) {
+            $data = array(
+                'id'                 => $row->id,
+                'nama'               => $row->nama,
+                'keterangan'         => $row->keterangan,
+                'operasional_status' => $row->operasional_status,
+                'created_at'         => $row->created_at,
+            );
+            $this->render_view('kegiatan/permohonan_lihat', $data);
+        } else {
+            $this->session->set_flashdata('message', 'Record Not Found');
+            redirect(site_url('kegiatan'));
+        }
+    }
+    public function invoice($id)
+    {
+        $row = $this->Operasional_model->get_by_id($id);
+        if ($row) {
+            $data = array(
+                'id'                 => $row->id,
+                'nama'               => $row->nama,
+                'keterangan'         => $row->keterangan,
+                'barang_asal'        => $row->barang_asal,
+                'barang_pemilik'     => $row->barang_pemilik,
+                'perusahaan'         => $row->perusahaan,
+                'keterangan'         => $row->keterangan,
+                'operasional_status' => $row->operasional_status,
+                'created_at'         => $row->created_at,
+            );
+            $this->render_view('kegiatan/invoice_lihat', $data);
+        } else {
+            $this->session->set_flashdata('message', 'Record Not Found');
+            redirect(site_url('kegiatan'));
+        }
+    }
+
+    public function read_norkbm($id)
+    {
+        echo trim($this->Semua_model->get_by_id('permohonan', $id)->no_rkbm);
+        // echo '<input type="number" class="form-control" value="'.$this->Semua_model->get_by_id('permohonan', $id)->no_rkbm.'">';
+    }
+    public function update_norkbm()
+    {
+        $data = array(
+            'no_rkbm' => $this->input->post('no_rkbm', true),
+        );
+        $this->db->where('id', $this->input->post('id_rkbm', true));
+        $this->db->update('permohonan', $data);
+        echo json_encode(array('status' => 'success', 'data' => 'No RKBM Berhasil diperbarui menjadi ' . $this->input->post('no_rkbm', true) . ''));
+    }
+    public function update_cetak()
+    {
+        $data = array(
+            'cetak' => $this->input->get('invoice', true),
+        );
+        $this->db->where('id', $this->input->get('invoice_id', true));
+        $this->db->update('permohonan', $data);
+        echo json_encode(array('status' => 'success', 'data' => $this->input->get('invoice', true)));
+    }
+    public function permohonan_buat()
+    {
+        $this->permohonan_rules();
+
+        if ($this->form_validation->run() == false) {
+            echo json_encode(array('status' => 'error', 'data' => validation_errors()));
+            // exit;
+        } else {
+            //     $data = array(
+            // 'nama' => $this->input->post('nama', true),
+            // 'keterangan' => $this->input->post('keterangan', true),
+            // );
+            // $this->Operasional_model->insert($data);
+            $permohonan_jenis = $this->input->post('permohonan_jenis', true);
+            if ($permohonan_jenis == 'muat') {
+                $permohonan_jenis = 1;
+            } elseif ($permohonan_jenis == 'bongkar') {
+                $permohonan_jenis = 2;
+            } else {
+                $permohonan_jenis = 3;
+            }
+            $data = array(
+                'operasional'      => $this->input->post('operasional', true),
+                'mulai'            => $this->input->post('mulai', true),
+                'selesai'          => $this->input->post('selesai', true),
+                'kapal'            => $this->input->post('nama_kapal', true),
+                'tempat_muat'      => $this->input->post('tempat_muat', true),
+                'barang'           => $this->input->post('barang', true),
+                'tempat_bongkar'   => $this->input->post('tempat_bongkar', true),
+                'jumlah_muatan'    => str_replace('.', '', $this->input->post('jumlah_muatan', true)),
+                'jumlah_asli'      => str_replace('.', '', $this->input->post('jumlah_asli', true)),
+                'jumlah_bongkar'   => str_replace('.', '', $this->input->post('jumlah_bongkar', true)),
+                // 'asal_barang'          => $this->input->post('asal_barang', true),
+                 // 'perusahaan'          => $this->input->post('perusahaan', true),
+                 'permohonan_jenis' => $permohonan_jenis,
+            );
+            // $this->db->trans_start(true); // Query will be rolled back
+            $this->db->insert('permohonan', $data);
+            // $this->db->trans_complete();
+            echo json_encode(array('status' => 'success', 'data' => 'Permohonan ' . $this->input->post('permohonan_jenis', true) . ' berhasil dibuat'));
+            // $this->Rkbm_model->insert($data);
+            // $this->session->set_flashdata('message', 'Create Record Success');
+            // redirect(site_url('rkbm'));
+        }
+    }
+
+    public function permohonan_update($id)
+    {
+        $this->permohonan_rules();
+
+        if ($this->form_validation->run() == false) {
+            echo json_encode(array('status' => 'error', 'data' => validation_errors()));
+            // exit;
+        } else {
+            $permohonan_jenis = $this->input->post('permohonan_jenis', true);
+            $permohonan_jenis = str_replace('ubah', '', $permohonan_jenis);
+            $permohonan_jenis = str_replace('_', '', $permohonan_jenis);
+            $pj_txt           = $permohonan_jenis;
+            if ($permohonan_jenis == 'muat') {
+                $permohonan_jenis = 1;
+            } elseif ($permohonan_jenis == 'bongkar') {
+                $permohonan_jenis = 2;
+            } else {
+                $permohonan_jenis = 3;
+            }
+            $data = array(
+                // 'operasional'          => $this->input->post('operasional', true),
+                 'mulai'          => $this->input->post('mulai', true),
+                'selesai'        => $this->input->post('selesai', true),
+                'kapal'          => $this->input->post('nama_kapal', true),
+                'tempat_muat'    => $this->input->post('tempat_muat', true),
+                'barang'         => $this->input->post('barang', true),
+                'tempat_bongkar' => $this->input->post('tempat_bongkar', true),
+                'jumlah_muatan'  => str_replace('.', '', $this->input->post('jumlah_muatan', true)),
+                'jumlah_asli'    => str_replace('.', '', $this->input->post('jumlah_asli', true)),
+                'jumlah_bongkar' => str_replace('.', '', $this->input->post('jumlah_bongkar', true)),
+                // 'asal_barang'          => $this->input->post('asal_barang', true),
+                // 'perusahaan'          => $this->input->post('perusahaan', true),
+                // 'permohonan_jenis'          => $permohonan_jenis,
+            );
+            $this->db->where('id', $id);
+            $this->db->where('operasional', $this->input->post('operasional', true));
+            $this->db->update('permohonan', $data);
+            echo json_encode(array('status' => 'success', 'data' => 'Permohonan ' . $pj_txt . ' berhasil diupdate'));
+        }
+    }
+    public function permohonan_revisi($id)
+    {
+        $this->permohonan_rules();
+
+        if ($this->form_validation->run() == false) {
+            echo json_encode(array('status' => 'error', 'data' => validation_errors()));
+            // exit;
+        } else {
+            $permohonan_jenis = $this->input->post('permohonan_jenis', true);
+            $permohonan_jenis = str_replace('revisi', '', $permohonan_jenis);
+            $permohonan_jenis = str_replace('_', '', $permohonan_jenis);
+            $pj_txt           = $permohonan_jenis;
+            if ($permohonan_jenis == 'muat') {
+                $permohonan_jenis = 1;
+            } elseif ($permohonan_jenis == 'bongkar') {
+                $permohonan_jenis = 2;
+            } else {
+                $permohonan_jenis = 3;
+            }
+            $data = array(
+                'parent'           => $id,
+                'operasional'      => $this->input->post('operasional', true),
+                'mulai'            => $this->input->post('mulai', true),
+                'selesai'          => $this->input->post('selesai', true),
+                'kapal'            => $this->input->post('nama_kapal', true),
+                'tempat_muat'      => $this->input->post('tempat_muat', true),
+                'barang'           => $this->input->post('barang', true),
+                'tempat_bongkar'   => $this->input->post('tempat_bongkar', true),
+                'jumlah_muatan'    => str_replace('.', '', $this->input->post('jumlah_muatan', true)),
+                'jumlah_asli'      => str_replace('.', '', $this->input->post('jumlah_asli', true)),
+                'jumlah_bongkar'   => str_replace('.', '', $this->input->post('jumlah_bongkar', true)),
+                // 'asal_barang'          => $this->input->post('asal_barang', true),
+                 // 'perusahaan'          => $this->input->post('perusahaan', true),
+                 'permohonan_jenis' => $permohonan_jenis,
+                'status'           => 3,
+            );
+            $this->db->insert('permohonan', $data);
+            echo json_encode(array('status' => 'success', 'data' => 'Permohonan ' . $pj_txt . ' berhasil diupdate'));
+        }
+    }
+    public function permohonan_perpanjang($id)
+    {
+        $this->permohonan_rules();
+
+        if ($this->form_validation->run() == false) {
+            echo json_encode(array('status' => 'error', 'data' => validation_errors()));
+            // exit;
+        } else {
+            $permohonan_jenis = $this->input->post('permohonan_jenis', true);
+            $permohonan_jenis = str_replace('perpanjang', '', $permohonan_jenis);
+            $permohonan_jenis = str_replace('_', '', $permohonan_jenis);
+            $pj_txt           = $permohonan_jenis;
+            if ($permohonan_jenis == 'muat') {
+                $permohonan_jenis = 1;
+            } elseif ($permohonan_jenis == 'bongkar') {
+                $permohonan_jenis = 2;
+            } else {
+                $permohonan_jenis = 3;
+            }
+            $data = array(
+                'parent'           => $id,
+                'operasional'      => $this->input->post('operasional', true),
+                'mulai'            => $this->input->post('mulai', true),
+                'selesai'          => $this->input->post('selesai', true),
+                'kapal'            => $this->input->post('nama_kapal', true),
+                'tempat_muat'      => $this->input->post('tempat_muat', true),
+                'barang'           => $this->input->post('barang', true),
+                'tempat_bongkar'   => $this->input->post('tempat_bongkar', true),
+                'jumlah_muatan'    => str_replace('.', '', $this->input->post('jumlah_muatan', true)),
+                'jumlah_asli'      => str_replace('.', '', $this->input->post('jumlah_asli', true)),
+                'jumlah_bongkar'   => str_replace('.', '', $this->input->post('jumlah_bongkar', true)),
+                // 'asal_barang'          => $this->input->post('asal_barang', true),
+                 // 'perusahaan'          => $this->input->post('perusahaan', true),
+                 'permohonan_jenis' => $permohonan_jenis,
+                'status'           => 2,
+            );
+            $this->db->insert('permohonan', $data);
+            echo json_encode(array('status' => 'success', 'data' => 'Permohonan ' . $pj_txt . ' berhasil diupdate'));
+        }
+    }
+
+    public function permohonan_rules()
+    {
+        $this->form_validation->set_rules('mulai', 'Tanggal Mulai', 'trim|required', array('required' => '%s tidak boleh kosong.'));
+        $this->form_validation->set_rules('operasional', 'Judul Operasional', 'trim|required', array('required' => '%s tidak boleh kosong.'));
+        $this->form_validation->set_rules('nama_kapal', 'Nama Kapal', 'trim|required', array('required' => '%s tidak boleh kosong.'));
+        $this->form_validation->set_rules('tempat_muat', 'Tempat Muat', 'trim|required', array('required' => '%s tidak boleh kosong.'));
+        $this->form_validation->set_rules('barang', 'Jenis Barang', 'trim|required', array('required' => '%s tidak boleh kosong.'));
+        $this->form_validation->set_rules('tempat_bongkar', 'Tempat Bongkar', 'trim|required', array('required' => '%s tidak boleh kosong.'));
+        $this->form_validation->set_rules('jumlah_muatan', 'jumlah_muatan', 'trim');
+        $this->form_validation->set_rules('jumlah_asli', 'jumlah_asli', 'trim');
+        $this->form_validation->set_rules('jumlah_bongkar', 'jumlah_bongkar', 'trim');
+        // $this->form_validation->set_rules('asal_barang', 'Asal Barang', 'trim|required', array('required' => '%s tidak boleh kosong.'));
+        // $this->form_validation->set_rules('perusahaan', 'Perusahaan Bongkar Muat', 'trim|required', array('required' => '%s tidak boleh kosong.'));
+        $this->form_validation->set_rules('permohonan_jenis', 'Jenis Permohonan', 'trim|required', array('required' => '%s harus jelas.'));
+
+        // $this->form_validation->set_rules('id', 'id', 'trim');
+        // $this->form_validation->set_error_delimiters('<br><span class="text-danger">', '</span>');
+    }
+
+    public function cetak_permohonan($id)
+    {
+        $row = $this->Permohonan_model->get_by_id($id);
+        if ($row) {
+            // echo json_encode($data);
+            // return $row;
+            //     $data = array(
+            // 'id' => $row->id,
+            // 'parent' => $row->parent,
+            // 'operasional' => $row->operasional,
+            // 'no_rkbm' => $row->no_rkbm,
+            // 'mulai' => $row->mulai,
+            // 'selesai' => $row->selesai,
+            // 'kapal' => $row->kapal,
+            // 'tempat_muat' => $row->tempat_muat,
+            // 'barang' => $row->barang,
+            // 'tempat_bongkar' => $row->tempat_bongkar,
+            // 'jumlah_muatan' => $row->jumlah_muatan,
+            // 'jumlah_asli' => $row->jumlah_asli,
+            // 'jumlah_bongkar' => $row->jumlah_bongkar,
+            // 'asal_barang' => $row->asal_barang,
+            // 'perusahaan' => $row->perusahaan,
+            // 'status' => $row->status,
+            // 'permohonan_jenis' => $row->permohonan_jenis,
+            // );
+            // $this->render_view('permohonan/permohonan_read', $data);
+            // echo json_encode($data);
+        } else {
+            echo 'Permohonan tidak ada..';
+        }
+
+    }
+    public function permohonan_cetak($id)
+    {
+        $row = $this->Permohonan_model->get_by_id($id);
+        if ($row) {
+            // echo json_encode($data);
+            // return $row;
+            $data = array(
+                'id'               => $row->id,
+                'parent'           => $row->parent,
+                'operasional'      => $row->operasional,
+                'no_rkbm'          => $row->no_rkbm,
+                'mulai'            => $row->mulai,
+                'selesai'          => $row->selesai,
+                'kapal'            => $row->kapal,
+                'tempat_muat'      => $row->tempat_muat,
+                'barang'           => $row->barang,
+                'tempat_bongkar'   => $row->tempat_bongkar,
+                'jumlah_muatan'    => $row->jumlah_muatan,
+                'jumlah_asli'      => $row->jumlah_asli,
+                'jumlah_bongkar'   => $row->jumlah_bongkar,
+                // 'asal_barang' => $row->asal_barang,
+                 // 'perusahaan' => $row->perusahaan,
+                 'status'           => $row->status,
+                'permohonan_jenis' => $row->permohonan_jenis,
+            );
+            $this->load->view('cetak/permohonan', $data);
+            // echo json_encode($data);
+        } else {
+            echo 'Permohonan tidak ada..';
+        }
+
+    }
+
+    public function invoice_cetak($id)
+    {
+        $row = $this->Operasional_model->get_by_id($id);
+        if ($row) {
+            $data = array(
+                'id'                 => $row->id,
+                'nama'               => $row->nama,
+                'keterangan'         => $row->keterangan,
+                'barang_asal'        => $row->barang_asal,
+                'barang_pemilik'     => $row->barang_pemilik,
+                'perusahaan'         => $row->perusahaan,
+                'keterangan'         => $row->keterangan,
+                'operasional_status' => $row->operasional_status,
+                'created_at'         => $row->created_at,
+            );
+            $this->load->view('cetak/invoice', $data);
+            // echo json_encode($data);
+        } else {
+            echo 'Invoice tidak ada..';
+        }
+
+    }
+}
