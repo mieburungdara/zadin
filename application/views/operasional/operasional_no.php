@@ -68,6 +68,9 @@ function integerToRoman($integer)
 <link rel="stylesheet" type="text/css" href="<?=base_url(); ?>assets/libs/leader-line/leader-line.css">
 <script src="https://anseki.github.io/leader-line/js/libs-d4667dd-211118164156.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/anim-event@1.0.16/anim-event.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
 
 
 <div class="container-fluid bg-white overflow-auto mt-3">
@@ -91,7 +94,155 @@ function integerToRoman($integer)
             <a class="btn waves-effect waves-light btn-sm btn-info collapsed ml-3" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                 Cetak Invoice
             </a>
+            <a class="btn waves-effect waves-light btn-sm btn-info collapsed ml-3" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                Filter Permohonan
+            </a>
         </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <div class="col-12 mt-3">
+            <div class="collapse" id="collapseExample" style="">
+                <div class="d-flex flex-wrap">
+                    <div class="row">
+                        <div class="col-auto form-group mb-4">
+                            <label class="mr-sm-2" for="perusahaan">Perusahaan</label>
+                            <select class="custom-select mr-sm-2" id="perusahaan" name="perusahaan">
+                                <option selected value="">Semua</option>
+                                <?php
+$perusahaan = $this->db->get('perusahaan')->result();
+foreach ($perusahaan as $palu) {
+    echo "<option value='" . $palu->id . "'>" . $palu->nama . "</option>";
+}
+?>
+                            </select>
+                        </div>
+                        <div class="col-auto form-group mb-4">
+                            <label class="mr-sm-2" for="bulan">Bulan</label>
+                            <input type="text" class="form-control ngambilbulan" placeholder="Semua" id="bulan" name="bulan">
+                        </div>
+                        <div class="col-auto form-group mb-4">
+                            <label class="mr-sm-2" for="tahun">Tahun</label>
+                            <input type="text" class="form-control ngambitahun" placeholder="Semua" id="tahun" name="tahun">
+                        </div>
+                        <div class="col-auto form-group mb-4">
+                            <label class="mr-sm-2" for="status">Status</label>
+                            <select class="custom-select mr-sm-2" id="status" name="status">
+                                <option selected value="">Semua</option>
+                                <option value="1">Active</option>
+                                <option value="2">Selesai</option>
+                                <option value="3">Arsip</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <table id="example" class="table table-hover" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Detail</th>
+                        <th>Deskripsi</th>
+                        <th>Keterangan</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+
+
+        <script>
+        $(function() {
+            var t = $('#example').DataTable({
+                "drawCallback": function(settings) {
+                    $('[data-toggle="tooltip"]').tooltip({
+                        container: 'body'
+                    });
+                },
+                processing: true,
+                "language": {
+                    "lengthMenu": "Menampilkan _MENU_ hasil per halaman",
+                    "search": "Pencarian:",
+                    "zeroRecords": "Tidak ditemukan",
+                    "info": "Menampilkan halaman _PAGE_ dari _PAGES_",
+                    "infoEmpty": "Tidak ada data ditemukan",
+                    "infoFiltered": "(Disaring dari _MAX_ data)"
+                },
+                serverSide: true,
+                ajax: {
+                    'url': "<?=base_url(); ?>operasional/load_no/<?=$id; ?>",
+                    'type': 'post',
+                    'data': function(d) {
+                        // d.bulan = $('input[name=bulan]').val();
+                        // d.tahun = $('input[name=tahun]').val();
+                        // d.perusahaan = $('select[name=perusahaan]').val();
+                        // d.status = $('select[name=status]').val();
+                    },
+                },
+                "columns": [{
+                        data: "detail",
+                    },
+                    {
+                        data: "deskripsi",
+                    },
+                    {
+                        data: "keterangan",
+                    },
+                    {
+                        data: "aksi",
+                    },
+                ]
+            });
+
+            // $('#bulan').on('change', function(e) {
+            //     t.draw();
+            //     e.preventDefault();
+            // });
+
+            // $('#tahun').on('change', function(e) {
+            //     t.draw();
+            //     e.preventDefault();
+            // });
+
+            // $('#perusahaan').on('change', function(e) {
+            //     t.draw();
+            //     e.preventDefault();
+            // });
+            // $('#status').on('change', function(e) {
+            //     t.draw();
+            //     e.preventDefault();
+            // });
+
+            // t.on('xhr', function(e, settings, json) {
+            //     var month = json.month;
+            //     var year = json.year;
+            //     var perusahaan = json.perusahaan;
+            //     if (perusahaan == 0) {
+            //         // $("#cetaks2").attr("href", '#')
+            //         // $("#cetaks").attr("href", '#')
+
+            //         alert('kosong');
+
+            //     } else {
+            //         // alert('ok');
+            //         // $("#cetaks2").attr("href", 'https://zadin.co.id/admin/laporan/cetak/'+month+'/'+year+'/'+perusahaan)
+            //         // $("#cetaks").attr("href", 'https://zadin.co.id/admin/laporan/cetak/data/'+month+'/'+year+'/'+perusahaan)
+            //     }
+            // });
+
+        });
+        </script>
+
+
         <div class="col-12 mt-3">
             <?php
 $this->db->select('id');
