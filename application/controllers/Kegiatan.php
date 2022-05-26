@@ -130,20 +130,17 @@ class Kegiatan extends Admin_Controller
             echo json_encode(array('status' => 'error', 'data' => validation_errors()));
             // exit;
         } else {
-            //     $data = array(
-            // 'nama' => $this->input->post('nama', true),
-            // 'keterangan' => $this->input->post('keterangan', true),
-            // );
-            // $this->Operasional_model->insert($data);
             $permohonan_jenis = $this->input->post('permohonan_jenis', true);
-            if ($permohonan_jenis == 'muat') {
-                $permohonan_jenis = 1;
-            } elseif ($permohonan_jenis == 'bongkar') {
-                $permohonan_jenis = 2;
-            } else {
-                $permohonan_jenis = 3;
+            $pj_txt           = '';
+            if ($permohonan_jenis == 1) {
+                $pj_txt = 'muat';
             }
-            $data = array(
+            if ($permohonan_jenis == 2) {
+                $pj_txt = 'bongkar';
+            }
+
+            $payment = str_replace('.', '', $this->input->post('jumlah_bongkar', true)) ?? null;
+            $data    = array(
                 'operasional'      => $this->input->post('operasional', true),
                 'mulai'            => $this->input->post('mulai', true),
                 'selesai'          => $this->input->post('selesai', true),
@@ -154,17 +151,16 @@ class Kegiatan extends Admin_Controller
                 'jumlah_muatan'    => str_replace('.', '', $this->input->post('jumlah_muatan', true)),
                 'jumlah_asli'      => str_replace('.', '', $this->input->post('jumlah_asli', true)),
                 'jumlah_bongkar'   => str_replace('.', '', $this->input->post('jumlah_bongkar', true)),
-                // 'asal_barang'          => $this->input->post('asal_barang', true),
-                 // 'perusahaan'          => $this->input->post('perusahaan', true),
-                 'permohonan_jenis' => $permohonan_jenis,
+                'payment'          => $payment,
+                'permohonan_jenis' => $this->input->post('permohonan_jenis', true),
             );
-            // $this->db->trans_start(true); // Query will be rolled back
-            $this->db->insert('permohonan', $data);
-            // $this->db->trans_complete();
-            echo json_encode(array('status' => 'success', 'data' => 'Permohonan ' . $this->input->post('permohonan_jenis', true) . ' berhasil dibuat'));
-            // $this->Rkbm_model->insert($data);
-            // $this->session->set_flashdata('message', 'Create Record Success');
-            // redirect(site_url('rkbm'));
+            $res = $this->db->insert('permohonan', $data);
+            if (!$res) {
+                // $error = $this->db->error();
+                echo json_encode(array('status' => 'error', 'data' => 'error'));
+            } else {
+                echo json_encode(array('status' => 'success', 'data' => 'Permohonan ' . $pj_txt . ' berhasil dibuat'));
+            }
         }
     }
 
@@ -177,30 +173,27 @@ class Kegiatan extends Admin_Controller
             // exit;
         } else {
             $permohonan_jenis = $this->input->post('permohonan_jenis', true);
-            $permohonan_jenis = str_replace('ubah', '', $permohonan_jenis);
-            $permohonan_jenis = str_replace('_', '', $permohonan_jenis);
             $pj_txt           = $permohonan_jenis;
-            if ($permohonan_jenis == 'muat') {
-                $permohonan_jenis = 1;
-            } elseif ($permohonan_jenis == 'bongkar') {
-                $permohonan_jenis = 2;
-            } else {
-                $permohonan_jenis = 3;
+            if ($permohonan_jenis == 0) {
+                $pj_txt = 'muat';
+            }
+            if ($permohonan_jenis == 1) {
+                $pj_txt = 'bongkar';
             }
             $data = array(
                 // 'operasional'          => $this->input->post('operasional', true),
-                 'mulai'          => $this->input->post('mulai', true),
-                'selesai'        => $this->input->post('selesai', true),
-                'kapal'          => $this->input->post('nama_kapal', true),
-                'tempat_muat'    => $this->input->post('tempat_muat', true),
-                'barang'         => $this->input->post('barang', true),
-                'tempat_bongkar' => $this->input->post('tempat_bongkar', true),
-                'jumlah_muatan'  => str_replace('.', '', $this->input->post('jumlah_muatan', true)),
-                'jumlah_asli'    => str_replace('.', '', $this->input->post('jumlah_asli', true)),
-                'jumlah_bongkar' => str_replace('.', '', $this->input->post('jumlah_bongkar', true)),
+                 'mulai'            => $this->input->post('mulai', true),
+                'selesai'          => $this->input->post('selesai', true),
+                'kapal'            => $this->input->post('nama_kapal', true),
+                'tempat_muat'      => $this->input->post('tempat_muat', true),
+                'barang'           => $this->input->post('barang', true),
+                'tempat_bongkar'   => $this->input->post('tempat_bongkar', true),
+                'jumlah_muatan'    => str_replace('.', '', $this->input->post('jumlah_muatan', true)),
+                'jumlah_asli'      => str_replace('.', '', $this->input->post('jumlah_asli', true)),
+                'jumlah_bongkar'   => str_replace('.', '', $this->input->post('jumlah_bongkar', true)),
                 // 'asal_barang'          => $this->input->post('asal_barang', true),
-                // 'perusahaan'          => $this->input->post('perusahaan', true),
-                // 'permohonan_jenis'          => $permohonan_jenis,
+                 // 'perusahaan'          => $this->input->post('perusahaan', true),
+                 'permohonan_jenis' => $permohonan_jenis,
             );
             $this->db->where('id', $id);
             $this->db->where('operasional', $this->input->post('operasional', true));
@@ -300,12 +293,7 @@ class Kegiatan extends Admin_Controller
         $this->form_validation->set_rules('jumlah_muatan', 'jumlah_muatan', 'trim');
         $this->form_validation->set_rules('jumlah_asli', 'jumlah_asli', 'trim');
         $this->form_validation->set_rules('jumlah_bongkar', 'jumlah_bongkar', 'trim');
-        // $this->form_validation->set_rules('asal_barang', 'Asal Barang', 'trim|required', array('required' => '%s tidak boleh kosong.'));
-        // $this->form_validation->set_rules('perusahaan', 'Perusahaan Bongkar Muat', 'trim|required', array('required' => '%s tidak boleh kosong.'));
         $this->form_validation->set_rules('permohonan_jenis', 'Jenis Permohonan', 'trim|required', array('required' => '%s harus jelas.'));
-
-        // $this->form_validation->set_rules('id', 'id', 'trim');
-        // $this->form_validation->set_error_delimiters('<br><span class="text-danger">', '</span>');
     }
 
     public function cetak_permohonan($id)

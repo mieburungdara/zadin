@@ -170,6 +170,9 @@ class Operasional extends Admin_controller
                 'id'                 => set_value('id', $row->id),
                 'nama'               => set_value('nama', $row->nama),
                 'keterangan'         => set_value('keterangan', $row->keterangan),
+                'asal_barang'        => set_value('asal_barang', $row->barang_asal),
+                'pemilik_barang'     => set_value('asal_barang', $row->barang_pemilik),
+                'perusahaan'         => set_value('asal_barang', $row->perusahaan),
                 'operasional_status' => set_value('operasional_status', $row->operasional_status),
             );
             $this->render_view('operasional/operasional_form', $data);
@@ -181,7 +184,7 @@ class Operasional extends Admin_controller
 
     public function update_action()
     {
-        $this->_rules();
+        $this->rules();
 
         if ($this->form_validation->run() == false) {
             $this->update($this->input->post('id', true));
@@ -190,6 +193,9 @@ class Operasional extends Admin_controller
                 'nama'               => $this->input->post('nama', true),
                 'keterangan'         => $this->input->post('keterangan', true),
                 'operasional_status' => $this->input->post('operasional_status', true),
+                'barang_asal'        => $this->input->post('asal_barang', true),
+                'barang_pemilik'     => $this->input->post('pemilik_barang', true),
+                'perusahaan'         => $this->input->post('perusahaan', true),
             );
 
             $this->Operasional_model->update($this->input->post('id', true), $data);
@@ -215,10 +221,10 @@ class Operasional extends Admin_controller
     public function rules()
     {
         $this->form_validation->set_rules('nama', 'Judul Operasional', 'trim|required', array('required' => '%s tidak boleh kosong.'));
+        $this->form_validation->set_rules('keterangan', 'keterangan', 'trim');
         $this->form_validation->set_rules('asal_barang', 'Asal Barang', 'trim|required', array('required' => '%s tidak boleh kosong.'));
         $this->form_validation->set_rules('pemilik_barang', 'Pemilik Barang', 'trim|required', array('required' => '%s tidak boleh kosong.'));
         $this->form_validation->set_rules('perusahaan', 'Perusahaan', 'trim|required', array('required' => '%s tidak boleh kosong.'));
-        $this->form_validation->set_rules('keterangan', 'keterangan', 'trim');
 
         $this->form_validation->set_rules('id', 'id', 'trim');
         $this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
