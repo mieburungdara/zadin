@@ -72,9 +72,10 @@ class Permohonan_model extends CI_Model
     }
 
     // get data with limit and search
-    public function get_limit_data_array($limit, $start = 0, $q = null, $perusahaan = null, $bulan = null, $tahun = null, $status = null, $kapal = null, $barang = null, $no_rkbm = null, $tempat_muat = null, $permohonan_jenis = null)
+    public function get_limit_data_array($id, $start = 0, $limit, $q = null, $perusahaan = null, $bulan = null, $tahun = null, $status = null, $kapal = null, $barang = null, $no_rkbm = null, $tempat_muat = null, $permohonan_jenis = null)
     {
-        $this->db->order_by($this->id, $this->order);
+        $this->db->where('operasional', $id);
+        $this->db->order_by($this->id, "ASC");
         if ($perusahaan != null) {
             $this->db->where('perusahaan', $perusahaan);
         }

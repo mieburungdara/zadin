@@ -11,36 +11,38 @@ class Permohonan extends Admin_controller
         parent::__construct();
         $this->load->model('Permohonan_model');
         $this->load->library('form_validation');
+        $this->load->model('Agen_kapal_model');
+
     }
 
     public function index()
     {
-        $q = urldecode($this->input->get('q', true));
+        $q     = urldecode($this->input->get('q', true));
         $start = intval($this->input->get('start'));
 
-        if ($q <> '') {
-            $config['base_url'] = base_url() . 'permohonan/index?q=' . urlencode($q);
+        if ($q != '') {
+            $config['base_url']  = base_url() . 'permohonan/index?q=' . urlencode($q);
             $config['first_url'] = base_url() . 'permohonan/index?q=' . urlencode($q);
         } else {
-            $config['base_url'] = base_url() . 'permohonan/index';
+            $config['base_url']  = base_url() . 'permohonan/index';
             $config['first_url'] = base_url() . 'permohonan/index';
         }
 
-        $config['per_page'] = 10;
+        $config['per_page']          = 10;
         $config['page_query_string'] = true;
-        $config['total_rows'] = $this->Permohonan_model->total_rows($q);
-        $config['attributes'] = array('class' => 'page-link');
-        $permohonan = $this->Permohonan_model->get_limit_data($config['per_page'], $start, $q);
+        $config['total_rows']        = $this->Permohonan_model->total_rows($q);
+        $config['attributes']        = array('class' => 'page-link');
+        $permohonan                  = $this->Permohonan_model->get_limit_data($config['per_page'], $start, $q);
 
         $this->load->library('pagination');
         $this->pagination->initialize($config);
 
         $data = array(
             'permohonan_data' => $permohonan,
-            'q' => $q,
-            'pagination' => $this->pagination->create_links(),
-            'total_rows' => $config['total_rows'],
-            'start' => $start,
+            'q'               => $q,
+            'pagination'      => $this->pagination->create_links(),
+            'total_rows'      => $config['total_rows'],
+            'start'           => $start,
         );
         $this->render_view('permohonan/permohonan_list', $data);
     }
@@ -50,24 +52,24 @@ class Permohonan extends Admin_controller
         $row = $this->Permohonan_model->get_by_id($id);
         if ($row) {
             $data = array(
-        'id' => $row->id,
-        'parent' => $row->parent,
-        'operasional' => $row->operasional,
-        'no_rkbm' => $row->no_rkbm,
-        'mulai' => $row->mulai,
-        'selesai' => $row->selesai,
-        'kapal' => $row->kapal,
-        'tempat_muat' => $row->tempat_muat,
-        'barang' => $row->barang,
-        'tempat_bongkar' => $row->tempat_bongkar,
-        'jumlah_muatan' => $row->jumlah_muatan,
-        'jumlah_asli' => $row->jumlah_asli,
-        'jumlah_bongkar' => $row->jumlah_bongkar,
-        'asal_barang' => $row->asal_barang,
-        'perusahaan' => $row->perusahaan,
-        'status' => $row->status,
-        'permohonan_jenis' => $row->permohonan_jenis,
-        );
+                'id'               => $row->id,
+                'parent'           => $row->parent,
+                'operasional'      => $row->operasional,
+                'no_rkbm'          => $row->no_rkbm,
+                'mulai'            => $row->mulai,
+                'selesai'          => $row->selesai,
+                'kapal'            => $row->kapal,
+                'tempat_muat'      => $row->tempat_muat,
+                'barang'           => $row->barang,
+                'tempat_bongkar'   => $row->tempat_bongkar,
+                'jumlah_muatan'    => $row->jumlah_muatan,
+                'jumlah_asli'      => $row->jumlah_asli,
+                'jumlah_bongkar'   => $row->jumlah_bongkar,
+                'asal_barang'      => $row->asal_barang,
+                'perusahaan'       => $row->perusahaan,
+                'status'           => $row->status,
+                'permohonan_jenis' => $row->permohonan_jenis,
+            );
             $this->render_view('permohonan/permohonan_read', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
@@ -79,24 +81,24 @@ class Permohonan extends Admin_controller
         $row = $this->Permohonan_model->get_by_id($id);
         if ($row) {
             $data = array(
-        'id' => $row->id,
-        'parent' => $row->parent,
-        'operasional' => $row->operasional,
-        'no_rkbm' => $row->no_rkbm,
-        'mulai' => $row->mulai,
-        'selesai' => $row->selesai,
-        'kapal' => $row->kapal,
-        'tempat_muat' => $row->tempat_muat,
-        'barang' => $row->barang,
-        'tempat_bongkar' => $row->tempat_bongkar,
-        'jumlah_muatan' => $row->jumlah_muatan,
-        'jumlah_asli' => $row->jumlah_asli,
-        'jumlah_bongkar' => $row->jumlah_bongkar,
-        // 'asal_barang' => $row->asal_barang,
-        // 'perusahaan' => $row->perusahaan,
-        'status' => $row->status,
-        'permohonan_jenis' => $row->permohonan_jenis,
-        );
+                'id'               => $row->id,
+                'parent'           => $row->parent,
+                'operasional'      => $row->operasional,
+                'no_rkbm'          => $row->no_rkbm,
+                'mulai'            => $row->mulai,
+                'selesai'          => $row->selesai,
+                'kapal'            => $row->kapal,
+                'tempat_muat'      => $row->tempat_muat,
+                'barang'           => $row->barang,
+                'tempat_bongkar'   => $row->tempat_bongkar,
+                'jumlah_muatan'    => $row->jumlah_muatan,
+                'jumlah_asli'      => $row->jumlah_asli,
+                'jumlah_bongkar'   => $row->jumlah_bongkar,
+                'permohonan_ke'    => $row->permohonan_ke,
+                // 'perusahaan' => $row->perusahaan,
+                 'status'           => $row->status,
+                'permohonan_jenis' => $row->permohonan_jenis,
+            );
             // $this->render_view('permohonan/permohonan_read', $data);
             echo json_encode($data);
         }
@@ -105,26 +107,26 @@ class Permohonan extends Admin_controller
     public function create()
     {
         $data = array(
-            'button' => 'Create',
-            'action' => site_url('permohonan/create_action'),
-        'id' => set_value('id'),
-        'parent' => set_value('parent'),
-        'operasional' => set_value('operasional'),
-        'no_rkbm' => set_value('no_rkbm'),
-        'mulai' => set_value('mulai'),
-        'selesai' => set_value('selesai'),
-        'kapal' => set_value('kapal'),
-        'tempat_muat' => set_value('tempat_muat'),
-        'barang' => set_value('barang'),
-        'tempat_bongkar' => set_value('tempat_bongkar'),
-        'jumlah_muatan' => set_value('jumlah_muatan'),
-        'jumlah_asli' => set_value('jumlah_asli'),
-        'jumlah_bongkar' => set_value('jumlah_bongkar'),
-        'asal_barang' => set_value('asal_barang'),
-        'perusahaan' => set_value('perusahaan'),
-        'status' => set_value('status'),
-        'permohonan_jenis' => set_value('permohonan_jenis'),
-    );
+            'button'           => 'Create',
+            'action'           => site_url('permohonan/create_action'),
+            'id'               => set_value('id'),
+            'parent'           => set_value('parent'),
+            'operasional'      => set_value('operasional'),
+            'no_rkbm'          => set_value('no_rkbm'),
+            'mulai'            => set_value('mulai'),
+            'selesai'          => set_value('selesai'),
+            'kapal'            => set_value('kapal'),
+            'tempat_muat'      => set_value('tempat_muat'),
+            'barang'           => set_value('barang'),
+            'tempat_bongkar'   => set_value('tempat_bongkar'),
+            'jumlah_muatan'    => set_value('jumlah_muatan'),
+            'jumlah_asli'      => set_value('jumlah_asli'),
+            'jumlah_bongkar'   => set_value('jumlah_bongkar'),
+            'asal_barang'      => set_value('asal_barang'),
+            'perusahaan'       => set_value('perusahaan'),
+            'status'           => set_value('status'),
+            'permohonan_jenis' => set_value('permohonan_jenis'),
+        );
         $this->render_view('permohonan/permohonan_form', $data);
     }
 
@@ -136,23 +138,23 @@ class Permohonan extends Admin_controller
             $this->create();
         } else {
             $data = array(
-        'parent' => $this->input->post('parent', true),
-        'operasional' => $this->input->post('operasional', true),
-        'no_rkbm' => $this->input->post('no_rkbm', true),
-        'mulai' => $this->input->post('mulai', true),
-        'selesai' => $this->input->post('selesai', true),
-        'kapal' => $this->input->post('kapal', true),
-        'tempat_muat' => $this->input->post('tempat_muat', true),
-        'barang' => $this->input->post('barang', true),
-        'tempat_bongkar' => $this->input->post('tempat_bongkar', true),
-        'jumlah_muatan' => $this->input->post('jumlah_muatan', true),
-        'jumlah_asli' => $this->input->post('jumlah_asli', true),
-        'jumlah_bongkar' => $this->input->post('jumlah_bongkar', true),
-        // 'asal_barang' => $this->input->post('asal_barang', true),
-        // 'perusahaan' => $this->input->post('perusahaan', true),
-        'status' => $this->input->post('status', true),
-        'permohonan_jenis' => $this->input->post('permohonan_jenis', true),
-        );
+                'parent'           => $this->input->post('parent', true),
+                'operasional'      => $this->input->post('operasional', true),
+                'no_rkbm'          => $this->input->post('no_rkbm', true),
+                'mulai'            => $this->input->post('mulai', true),
+                'selesai'          => $this->input->post('selesai', true),
+                'kapal'            => $this->input->post('kapal', true),
+                'tempat_muat'      => $this->input->post('tempat_muat', true),
+                'barang'           => $this->input->post('barang', true),
+                'tempat_bongkar'   => $this->input->post('tempat_bongkar', true),
+                'jumlah_muatan'    => $this->input->post('jumlah_muatan', true),
+                'jumlah_asli'      => $this->input->post('jumlah_asli', true),
+                'jumlah_bongkar'   => $this->input->post('jumlah_bongkar', true),
+                // 'asal_barang' => $this->input->post('asal_barang', true),
+                 // 'perusahaan' => $this->input->post('perusahaan', true),
+                 'status'           => $this->input->post('status', true),
+                'permohonan_jenis' => $this->input->post('permohonan_jenis', true),
+            );
 
             $this->Permohonan_model->insert($data);
             $this->session->set_flashdata('message', 'Create Record Success');
@@ -163,29 +165,28 @@ class Permohonan extends Admin_controller
     public function update($id)
     {
         $row = $this->Permohonan_model->get_by_id($id);
-
         if ($row) {
             $data = array(
-                'button' => 'Update',
-                'action' => site_url('permohonan/update_action'),
-        'id' => set_value('id', $row->id),
-        'parent' => set_value('parent', $row->parent),
-        'operasional' => set_value('operasional', $row->operasional),
-        'no_rkbm' => set_value('no_rkbm', $row->no_rkbm),
-        'mulai' => set_value('mulai', $row->mulai),
-        'selesai' => set_value('selesai', $row->selesai),
-        'kapal' => set_value('kapal', $row->kapal),
-        'tempat_muat' => set_value('tempat_muat', $row->tempat_muat),
-        'barang' => set_value('barang', $row->barang),
-        'tempat_bongkar' => set_value('tempat_bongkar', $row->tempat_bongkar),
-        'jumlah_muatan' => set_value('jumlah_muatan', $row->jumlah_muatan),
-        'jumlah_asli' => set_value('jumlah_asli', $row->jumlah_asli),
-        'jumlah_bongkar' => set_value('jumlah_bongkar', $row->jumlah_bongkar),
-        'asal_barang' => set_value('asal_barang', $row->asal_barang),
-        'perusahaan' => set_value('perusahaan', $row->perusahaan),
-        'status' => set_value('status', $row->status),
-        'permohonan_jenis' => set_value('permohonan_jenis', $row->permohonan_jenis),
-        );
+                'button'           => 'Update',
+                'action'           => site_url('permohonan/update_action'),
+                'id'               => set_value('id', $row->id),
+                'parent'           => set_value('parent', $row->parent),
+                'operasional'      => set_value('operasional', $row->operasional),
+                // 'no_rkbm'          => set_value('no_rkbm', $row->no_rkbm ? $row->no_rkbm : ''),
+                 'mulai'            => set_value('mulai', $row->mulai),
+                'selesai'          => set_value('selesai', $row->selesai),
+                'kapal'            => set_value('kapal', $row->kapal),
+                'tempat_muat'      => set_value('tempat_muat', $row->tempat_muat),
+                'barang'           => set_value('barang', $row->barang),
+                'tempat_bongkar'   => set_value('tempat_bongkar', $row->tempat_bongkar),
+                'jumlah_muatan'    => set_value('jumlah_muatan', $row->jumlah_muatan),
+                'jumlah_asli'      => set_value('jumlah_asli', $row->jumlah_asli),
+                'jumlah_bongkar'   => set_value('jumlah_bongkar', $row->jumlah_bongkar),
+                // 'asal_barang'      => set_value('asal_barang', $row->asal_barang),
+                 // 'perusahaan'       => set_value('perusahaan', $row->perusahaan),
+                 'status'           => set_value('status', $row->status),
+                'permohonan_jenis' => set_value('permohonan_jenis', $row->permohonan_jenis),
+            );
             $this->render_view('permohonan/permohonan_form', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
@@ -201,23 +202,23 @@ class Permohonan extends Admin_controller
             $this->update($this->input->post('id', true));
         } else {
             $data = array(
-        'parent' => $this->input->post('parent', true),
-        'operasional' => $this->input->post('operasional', true),
-        'no_rkbm' => $this->input->post('no_rkbm', true),
-        'mulai' => $this->input->post('mulai', true),
-        'selesai' => $this->input->post('selesai', true),
-        'kapal' => $this->input->post('kapal', true),
-        'tempat_muat' => $this->input->post('tempat_muat', true),
-        'barang' => $this->input->post('barang', true),
-        'tempat_bongkar' => $this->input->post('tempat_bongkar', true),
-        'jumlah_muatan' => $this->input->post('jumlah_muatan', true),
-        'jumlah_asli' => $this->input->post('jumlah_asli', true),
-        'jumlah_bongkar' => $this->input->post('jumlah_bongkar', true),
-        // 'asal_barang' => $this->input->post('asal_barang', true),
-        // 'perusahaan' => $this->input->post('perusahaan', true),
-        'status' => $this->input->post('status', true),
-        'permohonan_jenis' => $this->input->post('permohonan_jenis', true),
-        );
+                'parent'           => $this->input->post('parent', true),
+                'operasional'      => $this->input->post('operasional', true),
+                'no_rkbm'          => $this->input->post('no_rkbm', true),
+                'mulai'            => $this->input->post('mulai', true),
+                'selesai'          => $this->input->post('selesai', true),
+                'kapal'            => $this->input->post('kapal', true),
+                'tempat_muat'      => $this->input->post('tempat_muat', true),
+                'barang'           => $this->input->post('barang', true),
+                'tempat_bongkar'   => $this->input->post('tempat_bongkar', true),
+                'jumlah_muatan'    => $this->input->post('jumlah_muatan', true),
+                'jumlah_asli'      => $this->input->post('jumlah_asli', true),
+                'jumlah_bongkar'   => $this->input->post('jumlah_bongkar', true),
+                // 'asal_barang' => $this->input->post('asal_barang', true),
+                 // 'perusahaan' => $this->input->post('perusahaan', true),
+                 'status'           => $this->input->post('status', true),
+                'permohonan_jenis' => $this->input->post('permohonan_jenis', true),
+            );
 
             $this->Permohonan_model->update($this->input->post('id', true), $data);
             $this->session->set_flashdata('message', 'Update Record Success');
@@ -234,7 +235,8 @@ class Permohonan extends Admin_controller
             // var_dump($re);
             if ($re == 'foreign_key') {
                 echo json_encode(array('status' => 'error', 'data' => 'Foreign Key, Permohonan ini punya anak, mohon hapus anak untuk menghapus permohonan ini..'));
-            } else { //
+            } else {
+                //
                 echo json_encode(array('status' => 'success', 'data' => 'Permohonan Berhasil dihapus'));
             }
         } else {
@@ -244,7 +246,7 @@ class Permohonan extends Admin_controller
         }
     }
 
-    public function _rules()
+    public function rules()
     {
         $this->form_validation->set_rules('parent', 'parent', 'trim|required|numeric');
         $this->form_validation->set_rules('operasional', 'operasional', 'trim|required|numeric');
