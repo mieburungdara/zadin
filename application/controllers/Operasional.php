@@ -299,7 +299,7 @@ class Operasional extends Admin_controller
                                         </a>
                                         <div class="dropdown-menu dropdown-menu-right category-menu shadow" style="">
                                             <a class="dropdown-item text-info" data-toggle="modal" data-target="#permohonanmodal" data-permohonan=' . "$atribut_json" . ' data-idpermohonan="' . $pal['id'] . '" href="javascript:void(0);"><i class="fa-duotone fa-edit  mr-1"></i> Ubah</a>
-            <a class="dropdown-item text-success" data-toggle="modal" data-target="#cetak-permohonan' . $pal['id'] . '" data-permohonan=' . "$atribut_json" . ' href="javascript:void(0);"><i class="fa-duotone fa-print  mr-1"></i>Cetak</a>
+            <a class="dropdown-item text-success" href="' . base_url() . 'kegiatan/permohonan_cetak/' . $pal['id'] . '" target="_blank"><i class="fa-duotone fa-print  mr-1"></i>Cetak</a>
             <a class="dropdown-item text-danger menghapuspermohonan" id="' . $pal['id'] . '" data-idpermohonan="' . $pal['id'] . '" href="javascript:void(0);"><i class="fa-duotone fa-trash-alt  mr-1"></i>Hapus</a>
             </div>
             </div>

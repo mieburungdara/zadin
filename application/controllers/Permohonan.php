@@ -150,9 +150,8 @@ class Permohonan extends Admin_controller
                 'jumlah_muatan'    => $this->input->post('jumlah_muatan', true),
                 'jumlah_asli'      => $this->input->post('jumlah_asli', true),
                 'jumlah_bongkar'   => $this->input->post('jumlah_bongkar', true),
-                // 'asal_barang' => $this->input->post('asal_barang', true),
-                 // 'perusahaan' => $this->input->post('perusahaan', true),
-                 'status'           => $this->input->post('status', true),
+                'status'           => $this->input->post('status', true),
+                'permohonan_ke'    => $this->input->post('permohonan_ke', true),
                 'permohonan_jenis' => $this->input->post('permohonan_jenis', true),
             );
 
@@ -182,9 +181,8 @@ class Permohonan extends Admin_controller
                 'jumlah_muatan'    => set_value('jumlah_muatan', $row->jumlah_muatan),
                 'jumlah_asli'      => set_value('jumlah_asli', $row->jumlah_asli),
                 'jumlah_bongkar'   => set_value('jumlah_bongkar', $row->jumlah_bongkar),
-                // 'asal_barang'      => set_value('asal_barang', $row->asal_barang),
-                 // 'perusahaan'       => set_value('perusahaan', $row->perusahaan),
-                 'status'           => set_value('status', $row->status),
+                'status'           => set_value('status', $row->status),
+                'permohonan_ke'    => set_value('permohonan_ke', $row->permohonan_ke),
                 'permohonan_jenis' => set_value('permohonan_jenis', $row->permohonan_jenis),
             );
             $this->render_view('permohonan/permohonan_form', $data);
@@ -217,6 +215,7 @@ class Permohonan extends Admin_controller
                 // 'asal_barang' => $this->input->post('asal_barang', true),
                  // 'perusahaan' => $this->input->post('perusahaan', true),
                  'status'           => $this->input->post('status', true),
+                'permohonan_ke'    => $this->input->post('permohonan_ke', true),
                 'permohonan_jenis' => $this->input->post('permohonan_jenis', true),
             );
 

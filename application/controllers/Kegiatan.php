@@ -330,10 +330,14 @@ class Kegiatan extends Admin_Controller
     }
     public function permohonan_cetak($id)
     {
+
         $row = $this->Permohonan_model->get_by_id($id);
         if ($row) {
-            // echo json_encode($data);
-            // return $row;
+            $op = $this->Operasional_model->get_by_id($row->operasional);
+
+            $this->db->where('id', $op->perusahaan);
+            $get_perusahaan = $this->db->get('perusahaan')->row();
+
             $data = array(
                 'id'               => $row->id,
                 'parent'           => $row->parent,
@@ -348,10 +352,14 @@ class Kegiatan extends Admin_Controller
                 'jumlah_muatan'    => $row->jumlah_muatan,
                 'jumlah_asli'      => $row->jumlah_asli,
                 'jumlah_bongkar'   => $row->jumlah_bongkar,
-                // 'asal_barang' => $row->asal_barang,
-                 // 'perusahaan' => $row->perusahaan,
-                 'status'           => $row->status,
+                'permohonan_ke'    => $row->permohonan_ke,
+                'status'           => $row->status,
                 'permohonan_jenis' => $row->permohonan_jenis,
+                'nama'             => $op->nama,
+                'barang_asal'      => $op->barang_asal,
+                'barang_pemilik'   => $op->barang_pemilik,
+                'perusahaan'       => $get_perusahaan,
+                'created_by'       => $op->created_by,
             );
             $this->load->view('cetak/permohonan', $data);
             // echo json_encode($data);
