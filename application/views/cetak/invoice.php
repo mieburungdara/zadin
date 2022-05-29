@@ -170,45 +170,111 @@ function terbilang($nilai)
                                                     <?php
 $this->db->where('cetak', 1);
 $this->db->where('operasional', $db_permohonan->id);
-$permohonan = $this->db->get('permohonan')->result();
-$naik       = 1;
-$sub_total  = 0;
-foreach ($permohonan as $permohonan) {
+$permohonans = $this->db->get('permohonan')->result();
+$naik        = 1;
+$sub_total   = 0;
+foreach ($permohonans as $permohonan) {
 // echo '<pre>';
-    $status = $permohonan->status;
-
+    $peje = $permohonan->permohonan_jenis;
+    if ($peje == 1) {
+        $jusli      = $permohonan->jumlah_asli;
+        $text_jusli = "Muat";
+    }
+    if ($peje == 2) {
+        $jusli      = $permohonan->jumlah_bongkar;
+        $text_jusli = "Bongkar";
+    }
+    if ($peje == 3) {
+        $jusli      = $permohonan->jumlah_asli;
+        $text_jusli = "Muat & Bongkar";
+    }
+    $status  = $permohonan->status;
+    $payment = (int)$permohonan->payment;
+    if (!is_null($permohonan->payment) || !empty($permohonan->payment) || $permohonan->payment != '0' || $permohonan->payment != 0) {
+        $payment = $permohonan->payment;
+    } else {
+        $payment = '';
+    }
+    unset($tarif);
+    unset($tarif_saja);
+    // if ($payment) {
+    //     echo 'ada';
+    // } else {
+    //     echo 'kosong';
+    // }
+    // var_dump($payment);
     if ($status == 1) {
-        $status     = 'Baru';
-        $tarif      = '&ensp;x &ensp;' . $asal_barang->tarif_baru;
-        $tarif_saja = $asal_barang->tarif_baru;
+        $status = 'Baru';
+        if ($payment) {
+            $tarif      = '';
+            $tarif_saja = '';
+            $total      = $payment;
+        } else {
+            $tarif      = '&ensp;x &ensp;Rp.' . $asal_barang->tarif_baru;
+            $tarif_saja = $asal_barang->tarif_baru;
+            $total      = (int)str_replace('000', '', $jusli) * $tarif_saja;
+        }
     }
     if ($status == 2) {
-        $status     = 'Perpanjang';
-        $tarif      = '&ensp;x &ensp;' . $asal_barang->tarif_perpanjang;
-        $tarif_saja = $asal_barang->tarif_perpanjang;
+        $status = 'Perpanjang';
+        if ($payment) {
+            $tarif      = '';
+            $tarif_saja = $payment;
+            $total      = $payment;
+        } else {
+            $tarif      = '&ensp;x &ensp;Rp.' . $asal_barang->tarif_perpanjang;
+            $tarif_saja = $asal_barang->tarif_perpanjang;
+            $total      = (int)str_replace('000', '', $jusli) * $tarif_saja;
+        }
     }
     if ($status == 3) {
-        $status     = 'Revisi';
-        $tarif      = '&ensp;x &ensp;' . $asal_barang->tarif_revisi;
-        $tarif_saja = $asal_barang->tarif_revisi;
+        $status = 'Revisi';
+        if ($payment) {
+            $tarif      = '';
+            $tarif_saja = $payment;
+            $total      = $payment;
+        } else {
+            $tarif      = '&ensp;x &ensp;Rp.' . $asal_barang->tarif_revisi;
+            $tarif_saja = $asal_barang->tarif_revisi;
+            $total      = (int)str_replace('000', '', $jusli) * $tarif_saja;
+        }
+    }
+    if ($status == 4) {
+        $status = 'Batal';
+        if ($payment) {
+            $tarif      = '';
+            $tarif_saja = $payment;
+            $total      = $payment;
+        } else {
+            $tarif      = '&ensp;x &ensp;Rp.' . $asal_barang->tarif_revisi;
+            $tarif_saja = $asal_barang->tarif_revisi;
+            $total      = (int)str_replace('000', '', $jusli) * $tarif_saja;
+        }
     }
     $this->db->where('id', $permohonan->kapal);
     $nama_kapal = $this->db->get('kapal')->row()->nama;
 
-// var_dump($permohonan->id);
+    // var_dump($permohonan->id);
     // // var_dump($operasional->parent);
     // print'</pre>';
     // echo $tarif;
-    $sub_total += (int)str_replace('000', '', $permohonan->jumlah_asli) * (int)$tarif_saja;
-    ?>
+    // $sub_total += (int)str_replace('000', '', $jusli) * (int)$total;
+    $sub_total += (int)$total;
+    // $sub_total += '1'; ?>
 
                                                     <tr>
                                                         <th scope="row" style="text-align: center;vertical-align: middle;!important"><?=$naik++; ?></th>
-                                                        <td colspan="1">Jasa PBM (RKBM <?=$status; ?>)<br>No RKBM : <?=$permohonan->no_rkbm; ?><br>Tanggal : <?=tgl_in($permohonan->mulai); ?><br>Nama Kapal : <?=$nama_kapal; ?><br>Muatan : <?=number_format(str_replace('000', '', $permohonan->jumlah_asli), 0, ',', '.'); ?>&ensp;&ensp;&ensp;MT <?=$tarif; ?></td>
+                                                        <td colspan="1">
+                                                            Jasa PBM <?=$text_jusli; ?> (RKBM <?=$status; ?>)<br>
+                                                            No RKBM : <?=$permohonan->no_rkbm; ?><br>
+                                                            Tanggal : <?=tgl_in($permohonan->mulai); ?><br>Nama Kapal : <?=$nama_kapal; ?><br>
+                                                            Muatan : <?=number_format(str_replace('000', '', $jusli), 0, ',', '.'); ?>
+                                                            &ensp;&ensp;&ensp;MT <?=$tarif; ?>
+                                                        </td>
                                                         <td class="doks" style="text-align: left;vertical-align: middle;!important">
                                                             <div class="d-flex">
                                                                 <div class="pull-left">Rp</div>
-                                                                <div class="ml-auto"><?=number_format((int)str_replace('000', '', $permohonan->jumlah_asli) * (int)$tarif_saja, 0, ',', '.'); ?></div>
+                                                                <div class="ml-auto"><?=number_format($total); ?></div>
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -261,7 +327,7 @@ foreach ($permohonan as $permohonan) {
 
 
         <script>
-        window.print();
+        // window.print();
         </script>
     </body>
 

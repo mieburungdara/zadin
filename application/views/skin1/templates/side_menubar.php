@@ -14,6 +14,8 @@
             <ul id="sidebarnav">
                 <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?php echo base_url('dashboard'); ?>" aria-expanded="false"><i class="fa-duotone fa-file-chart-column mr-2"></i><span class="hide-menu"> Dashboard</span></a>
                 </li>
+                <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?php echo base_url('laporan'); ?>" aria-expanded="false"><i class="fa-duotone fa-scroll-old mr-2"></i><span class="hide-menu"> Laporan</span></a>
+                </li>
                 <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?php echo base_url('operasional'); ?>" aria-expanded="false"><i class="fa-duotone fa-scroll-old mr-2"></i><span class="hide-menu"> Operasional</span></a>
                 </li>
 
