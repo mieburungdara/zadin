@@ -170,19 +170,21 @@ class Kegiatan extends Admin_Controller
 
         if ($this->form_validation->run() == false) {
             echo json_encode(array('status' => 'error', 'data' => validation_errors()));
-            // exit;
         } else {
             $permohonan_jenis = $this->input->post('permohonan_jenis', true);
-            $pj_txt           = $permohonan_jenis;
-            if ($permohonan_jenis == 0) {
+            // $pj_txt           = $permohonan_jenis;
+            if ($permohonan_jenis == 1) {
                 $pj_txt = 'muat';
             }
-            if ($permohonan_jenis == 1) {
+            if ($permohonan_jenis == 2) {
                 $pj_txt = 'bongkar';
             }
             $data = array(
-                // 'operasional'          => $this->input->post('operasional', true),
-                 'mulai'            => $this->input->post('mulai', true),
+                'mulai'            => $this->input->post('mulai', true),
+                'status'           => $this->input->post('status_permohonan', true),
+                'permohonan_ke'    => $this->input->post('permohonan_ke', true),
+
+                'mulai'            => $this->input->post('mulai', true),
                 'selesai'          => $this->input->post('selesai', true),
                 'kapal'            => $this->input->post('nama_kapal', true),
                 'tempat_muat'      => $this->input->post('tempat_muat', true),
@@ -191,99 +193,26 @@ class Kegiatan extends Admin_Controller
                 'jumlah_muatan'    => str_replace('.', '', $this->input->post('jumlah_muatan', true)),
                 'jumlah_asli'      => str_replace('.', '', $this->input->post('jumlah_asli', true)),
                 'jumlah_bongkar'   => str_replace('.', '', $this->input->post('jumlah_bongkar', true)),
-                // 'asal_barang'          => $this->input->post('asal_barang', true),
-                 // 'perusahaan'          => $this->input->post('perusahaan', true),
-                 'permohonan_jenis' => $permohonan_jenis,
+                'payment'          => str_replace('.', '', $this->input->post('payment', true)),
+                'permohonan_jenis' => $permohonan_jenis,
             );
             $this->db->where('id', $id);
             $this->db->where('operasional', $this->input->post('operasional', true));
-            $this->db->update('permohonan', $data);
-            echo json_encode(array('status' => 'success', 'data' => 'Permohonan ' . $pj_txt . ' berhasil diupdate'));
-        }
-    }
-    public function permohonan_revisi($id)
-    {
-        $this->permohonan_rules();
-
-        if ($this->form_validation->run() == false) {
-            echo json_encode(array('status' => 'error', 'data' => validation_errors()));
-            // exit;
-        } else {
-            $permohonan_jenis = $this->input->post('permohonan_jenis', true);
-            $permohonan_jenis = str_replace('revisi', '', $permohonan_jenis);
-            $permohonan_jenis = str_replace('_', '', $permohonan_jenis);
-            $pj_txt           = $permohonan_jenis;
-            if ($permohonan_jenis == 'muat') {
-                $permohonan_jenis = 1;
-            } elseif ($permohonan_jenis == 'bongkar') {
-                $permohonan_jenis = 2;
+            $res = $this->db->update('permohonan', $data);
+            if (!$res) {
+                $error = $this->db->error();
+                echo json_encode(array('status' => 'error', 'data' => print_r($error)));
             } else {
-                $permohonan_jenis = 3;
+                echo json_encode(array('status' => 'success', 'data' => 'Permohonan ' . $pj_txt . ' berhasil dibuat'));
             }
-            $data = array(
-                'parent'           => $id,
-                'operasional'      => $this->input->post('operasional', true),
-                'mulai'            => $this->input->post('mulai', true),
-                'selesai'          => $this->input->post('selesai', true),
-                'kapal'            => $this->input->post('nama_kapal', true),
-                'tempat_muat'      => $this->input->post('tempat_muat', true),
-                'barang'           => $this->input->post('barang', true),
-                'tempat_bongkar'   => $this->input->post('tempat_bongkar', true),
-                'jumlah_muatan'    => str_replace('.', '', $this->input->post('jumlah_muatan', true)),
-                'jumlah_asli'      => str_replace('.', '', $this->input->post('jumlah_asli', true)),
-                'jumlah_bongkar'   => str_replace('.', '', $this->input->post('jumlah_bongkar', true)),
-                // 'asal_barang'          => $this->input->post('asal_barang', true),
-                 // 'perusahaan'          => $this->input->post('perusahaan', true),
-                 'permohonan_jenis' => $permohonan_jenis,
-                'status'           => 3,
-            );
-            $this->db->insert('permohonan', $data);
-            echo json_encode(array('status' => 'success', 'data' => 'Permohonan ' . $pj_txt . ' berhasil diupdate'));
-        }
-    }
-    public function permohonan_perpanjang($id)
-    {
-        $this->permohonan_rules();
 
-        if ($this->form_validation->run() == false) {
-            echo json_encode(array('status' => 'error', 'data' => validation_errors()));
-            // exit;
-        } else {
-            $permohonan_jenis = $this->input->post('permohonan_jenis', true);
-            $permohonan_jenis = str_replace('perpanjang', '', $permohonan_jenis);
-            $permohonan_jenis = str_replace('_', '', $permohonan_jenis);
-            $pj_txt           = $permohonan_jenis;
-            if ($permohonan_jenis == 'muat') {
-                $permohonan_jenis = 1;
-            } elseif ($permohonan_jenis == 'bongkar') {
-                $permohonan_jenis = 2;
-            } else {
-                $permohonan_jenis = 3;
-            }
-            $data = array(
-                'parent'           => $id,
-                'operasional'      => $this->input->post('operasional', true),
-                'mulai'            => $this->input->post('mulai', true),
-                'selesai'          => $this->input->post('selesai', true),
-                'kapal'            => $this->input->post('nama_kapal', true),
-                'tempat_muat'      => $this->input->post('tempat_muat', true),
-                'barang'           => $this->input->post('barang', true),
-                'tempat_bongkar'   => $this->input->post('tempat_bongkar', true),
-                'jumlah_muatan'    => str_replace('.', '', $this->input->post('jumlah_muatan', true)),
-                'jumlah_asli'      => str_replace('.', '', $this->input->post('jumlah_asli', true)),
-                'jumlah_bongkar'   => str_replace('.', '', $this->input->post('jumlah_bongkar', true)),
-                // 'asal_barang'          => $this->input->post('asal_barang', true),
-                 // 'perusahaan'          => $this->input->post('perusahaan', true),
-                 'permohonan_jenis' => $permohonan_jenis,
-                'status'           => 2,
-            );
-            $this->db->insert('permohonan', $data);
-            echo json_encode(array('status' => 'success', 'data' => 'Permohonan ' . $pj_txt . ' berhasil diupdate'));
+            // echo json_encode(array('status' => 'success', 'data' => 'Permohonan ' . $pj_txt . ' berhasil diupdate'));
         }
     }
 
     public function permohonan_rules()
     {
+        $this->form_validation->set_rules('status_permohonan', 'Status Permohonan', 'trim|required', array('required' => '%s tidak boleh kosong.'));
         $this->form_validation->set_rules('mulai', 'Tanggal Mulai', 'trim|required', array('required' => '%s tidak boleh kosong.'));
         $this->form_validation->set_rules('operasional', 'Judul Operasional', 'trim|required', array('required' => '%s tidak boleh kosong.'));
         $this->form_validation->set_rules('nama_kapal', 'Nama Kapal', 'trim|required', array('required' => '%s tidak boleh kosong.'));

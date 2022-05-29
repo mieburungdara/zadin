@@ -30,10 +30,10 @@ class Operasional extends Admin_controller
         $start                    = urldecode($this->input->post('start', true));
         $length                   = urldecode($this->input->post('length', true));
         $search                   = urldecode($this->input->post('search[value]', true));
-        $perusahaan               = urldecode($this->input->post('perusahaan', true)) ?? null;
-        $status                   = urldecode($this->input->post('status', true)) ?? null;
         $bulan                    = urldecode($this->input->post('bulan', true)) ?? null;
         $tahun                    = urldecode($this->input->post('tahun', true)) ?? null;
+        $perusahaan               = urldecode($this->input->post('perusahaan', true)) ?? null;
+        $status                   = urldecode($this->input->post('status', true)) ?? null;
         $operasional              = $this->Operasional_model->get_limit_data_array($length, $start, $search, $perusahaan, $bulan, $tahun, $status);
         $get_all_data_operasional = $this->Operasional_model->get_all();
         $count_all_results        = count($operasional);
@@ -182,16 +182,14 @@ class Operasional extends Admin_controller
         $start                   = urldecode($this->input->post('start', true));
         $length                  = urldecode($this->input->post('length', true));
         $search                  = urldecode($this->input->post('search[value]', true));
-        $perusahaan              = urldecode($this->input->post('perusahaan', true)) ?? null;
+        $permohonan_jenis        = urldecode($this->input->post('jenis_permohonan', true)) ?? null;
         $bulan                   = urldecode($this->input->post('bulan', true)) ?? null;
         $tahun                   = urldecode($this->input->post('tahun', true)) ?? null;
         $status                  = urldecode($this->input->post('status', true)) ?? null;
         $kapal                   = urldecode($this->input->post('kapal', true)) ?? null;
         $barang                  = urldecode($this->input->post('barang', true)) ?? null;
         $tempat_muat             = urldecode($this->input->post('tempat_muat', true)) ?? null;
-        $no_rkbm                 = urldecode($this->input->post('no_rkbm', true)) ?? null;
-        $permohonan_jenis        = urldecode($this->input->post('permohonan_jenis', true)) ?? null;
-        $permohonan_modelnya     = $this->Permohonan_model->get_limit_data_array($id, $start, $length, $search, $perusahaan, $bulan, $tahun, $status, $kapal, $barang, $no_rkbm, $tempat_muat, $permohonan_jenis);
+        $permohonan_modelnya     = $this->Permohonan_model->get_limit_data_array($id, $start, $length, $search, $permohonan_jenis, $bulan, $tahun, $status, $kapal, $barang, $tempat_muat);
         $get_all_data_permohonan = $this->Permohonan_model->get_all();
         $count_all_results       = count($permohonan_modelnya);
         $count_all_data          = count($get_all_data_permohonan);
@@ -219,27 +217,37 @@ class Operasional extends Admin_controller
             $get_perusahaan = $this->db->get('perusahaan')->row();
 
             $perusahaan_mana = date("Y", strtotime($tanggal_mulai));
+            $jesur           = '';
+            $stasur          = '';
+            $perke           = $pal['permohonan_ke'] == 0 ? '' : $pal['permohonan_ke'];
 
             if ($pal['status'] == 1) {
                 $ngaray['detail'] .= '<span class="badge ml-2 mr-1 badge-success">BARU</span>';
+                $stasur = 'B';
             }
             if ($pal['status'] == 2) {
                 $ngaray['detail'] .= '<span class="badge ml-2 mr-1 badge-success">PERPANJANG</span>';
+                $stasur = 'P';
             }
             if ($pal['status'] == 3) {
                 $ngaray['detail'] .= '<span class="badge ml-2 mr-1 badge-success">REVISI</span>';
+                $stasur = 'PR';
             }
             if ($pal['status'] == 4) {
                 $ngaray['detail'] .= '<span class="badge ml-2 mr-1 badge-success">BATAL</span>';
+                $stasur = 'X';
             }
             if ($pal['permohonan_jenis'] == 1) {
                 $ngaray['detail'] .= '<span class="badge mr-1 badge-danger">MUAT</span>';
+                $jesur = 'M';
             }
             if ($pal['permohonan_jenis'] == 2) {
                 $ngaray['detail'] .= '<span class="badge mr-1 badge-danger">BONGKAR</span>';
+                $jesur = 'B';
             }
             if ($pal['permohonan_jenis'] == 3) {
                 $ngaray['detail'] .= '<span class="badge mr-1 badge-danger">MUAT & BONGKAR</span>';
+                $jesur = 'MB';
             }
             if ($pal['no_rkbm']) {
                 $erkabem = $pal['no_rkbm'];
@@ -250,7 +258,7 @@ class Operasional extends Admin_controller
                             <div class="row mb-2">
                                 <div class="col-auto border-right align-self-center">
                                     <div class="d-flex">
-                                        <code>No Surat :<br> 0' . $pal['id'] . '/RKBM-' . $get_perusahaan->inisial . "/SMD/" . $romawi . '/' . $taon . '</code>
+                                        <code>No Surat :<br> 0' . $pal['id'] . '/' . $jesur . '/' . $stasur . $perke . '/RKBM-' . $get_perusahaan->inisial . "/SMD/" . $romawi . '/' . $taon . '</code>
                                     </div>
                                 </div>
                                 <div class="col-auto" data-toggle="modal" data-target="#modal-norkbm" data-nosurat="' . $pal['id'] . '"><code>No RKBM :<br>
@@ -289,7 +297,7 @@ class Operasional extends Admin_controller
 
             $permohonan_jenis = $this->Reza_model->get_ref_val($this->db->database, 'permohonan', 'permohonan_jenis', $pal['permohonan_jenis'])->nama;
 
-            $ngaray['aksi'] .= '<span onclick="return AddFeedVotes(this)" class="mr-1 btn-sm btn waves-effect btn-' . $warna . ' inpoice invoice' . $pal['id'] . '" data-id="' . $pal['id'] . '"> <i class="fa voice' . $pal['id'] . ' fa-' . $fa . ' mr-2"></i>Invoice</span>';
+            $ngaray['aksi'] .= '<span class="mr-1 btn-sm btn waves-effect btn-' . $warna . ' inpoice invoice' . $pal['id'] . '" data-id="' . $pal['id'] . '"> <i class="fa voice' . $pal['id'] . ' fa-' . $fa . ' mr-2"></i>Invoice</span>';
             $ngaray['aksi'] .= '<div class="ml-auto mt-1">
                                     <div class="category-selector btn-group">
                                         <a class="nav-link category-dropdown label-group p-0" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
@@ -403,10 +411,10 @@ class Operasional extends Admin_controller
             $data = array(
                 'nama'               => $this->input->post('nama', true),
                 'keterangan'         => $this->input->post('keterangan', true),
-                'operasional_status' => $this->input->post('operasional_status', true),
                 'barang_asal'        => $this->input->post('asal_barang', true),
                 'barang_pemilik'     => $this->input->post('pemilik_barang', true),
                 'perusahaan'         => $this->input->post('perusahaan', true),
+                'operasional_status' => $this->input->post('operasional_status', true),
             );
 
             $this->Operasional_model->update($this->input->post('id', true), $data);

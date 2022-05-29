@@ -95,8 +95,8 @@ class Permohonan extends Admin_controller
                 'jumlah_asli'      => $row->jumlah_asli,
                 'jumlah_bongkar'   => $row->jumlah_bongkar,
                 'permohonan_ke'    => $row->permohonan_ke,
-                // 'perusahaan' => $row->perusahaan,
-                 'status'           => $row->status,
+                'payment'          => $row->payment,
+                'status'           => $row->status,
                 'permohonan_jenis' => $row->permohonan_jenis,
             );
             // $this->render_view('permohonan/permohonan_read', $data);

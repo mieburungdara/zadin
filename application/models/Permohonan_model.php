@@ -72,13 +72,10 @@ class Permohonan_model extends CI_Model
     }
 
     // get data with limit and search
-    public function get_limit_data_array($id, $start = 0, $limit, $q = null, $perusahaan = null, $bulan = null, $tahun = null, $status = null, $kapal = null, $barang = null, $no_rkbm = null, $tempat_muat = null, $permohonan_jenis = null)
+    public function get_limit_data_array($id, $start = 0, $limit, $q = null, $permohonan_jenis = null, $bulan = null, $tahun = null, $status = null, $kapal = null, $barang = null, $tempat_muat = null)
     {
         $this->db->where('operasional', $id);
-        $this->db->order_by($this->id, "ASC");
-        if ($perusahaan != null) {
-            $this->db->where('perusahaan', $perusahaan);
-        }
+        $this->db->order_by($this->id, "DESC");
         if ($bulan != null) {
             $this->db->where('MONTH(mulai)', $bulan);
         }
@@ -93,9 +90,6 @@ class Permohonan_model extends CI_Model
         }
         if ($barang != null) {
             $this->db->where('barang', $barang);
-        }
-        if ($no_rkbm != null) {
-            $this->db->where('no_rkbm', $no_rkbm);
         }
         if ($permohonan_jenis != null) {
             $this->db->where('permohonan_jenis', $permohonan_jenis);

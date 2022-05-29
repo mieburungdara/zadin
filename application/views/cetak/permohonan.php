@@ -56,7 +56,7 @@ if ($status == 1) {
     $espe              = 'Revisi';
 } else {
     $status_permohonan = '';
-    $espe              = 'batal';
+    $espe              = 'Batal';
 }
 $this->db->where('id', $kapal);
 $permohonan_kapal = $this->db->get('kapal')->row();
@@ -91,6 +91,22 @@ $asal_barang  = $this->db->get('barang_asal')->row();
 $asal_barang  = $asal_barang->nama;
 $jenis_barang = $this->Reza_model->get_ref_val($this->db->database, 'permohonan', 'barang', $barang)->nama;
 $atribut_json = json_encode(array("agen_kapal" => $permohonan_kapal->agen_kapal, 'jenis_tempat_muat' => $id_jenis_tempat_muat));
+
+$ketsur = '';
+$perke  = $permohonan_ke == 0 ? '' : $permohonan_ke;
+
+if ($status == 1) {
+    $ketsur = 'B';
+}
+if ($status == 2) {
+    $ketsur = 'P';
+}
+if ($status == 3) {
+    $ketsur = 'PR';
+}
+if ($status == 4) {
+    $ketsur = 'X';
+}
 
 ?>
 
@@ -343,7 +359,7 @@ $atribut_json = json_encode(array("agen_kapal" => $permohonan_kapal->agen_kapal,
                                     <tr>
                                         <th>Nomor </th>
                                         <td style="padding-left: 10px"> : </td>
-                                        <td style="padding-left: 10px">0<?=$id; ?>/<?=$perusahaan->inisial; ?>/SMD/<?=romawi(date("m")); ?>/<?=date('Y'); ?></span></td>
+                                        <td style="padding-left: 10px">0<?=$id; ?>/<?=$ketsur; ?><?=$perke; ?>/<?=$perusahaan->inisial; ?>/SMD/<?=romawi(date("m")); ?>/<?=date('Y'); ?></span></td>
                                     </tr>
                                     <tr>
                                         <th>Lampiran</th>

@@ -65,8 +65,8 @@ function integerToRoman($integer)
 <script src="<?=base_url(); ?>assets/libs/sweetalert2/dist/sweetalert2.all.min.js" aria-hidden="true"></script>
 <!-- <script src="<?=base_url(); ?>assets/libs/bootstrap-switch/dist/js/bootstrap-switch.min.js"></script> -->
 <script src="https://www.jqueryscript.net/demo/bootstrap-toaster/js/bootstrap-toaster.min.js"></script>
-<link rel="stylesheet" type="text/css" href="<?=base_url(); ?>assets/libs/leader-line/leader-line.css">
-<script src="https://anseki.github.io/leader-line/js/libs-d4667dd-211118164156.js"></script>
+<!-- <link rel="stylesheet" type="text/css" href="<?=base_url(); ?>assets/libs/leader-line/leader-line.css"> -->
+<!-- <script src="https://anseki.github.io/leader-line/js/libs-d4667dd-211118164156.js"></script> -->
 <script src="https://cdn.jsdelivr.net/npm/anim-event@1.0.16/anim-event.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
@@ -93,30 +93,35 @@ function integerToRoman($integer)
         <div class="col-12 mt-3">
             <?php
 $this->db->select('id');
-$this->db->where('parent IS NULL', null, false);
+// $this->db->where('parent IS NULL', null, false);
 $this->db->where('operasional', $id);
 $check_jumlah_permohonan = $this->db->get('permohonan')->result();
 $hitung_permohonan       = count($check_jumlah_permohonan);
-$jumlah_revisi           = count($this->db->query("SELECT id FROM permohonan where status = '3' and operasional = '$id'")->result());
+$jumlah_baru             = count($this->db->query("SELECT id FROM permohonan where status = '1' and operasional = '$id'")->result());
 $jumlah_perpanjang       = count($this->db->query("SELECT id FROM permohonan where status = '2' and operasional = '$id'")->result());
+$jumlah_revisi           = count($this->db->query("SELECT id FROM permohonan where status = '3' and operasional = '$id'")->result());
+$jumlah_batal            = count($this->db->query("SELECT id FROM permohonan where status = '4' and operasional = '$id'")->result());
 $jumlah_muat             = count($this->db->query("SELECT id FROM permohonan where permohonan_jenis = '1' and operasional = '$id'")->result());
 $jumlah_bongkar          = count($this->db->query("SELECT id FROM permohonan where permohonan_jenis = '2' and operasional = '$id'")->result());
 // $jumlah_muat_bongkar     = count($this->db->query("SELECT id FROM permohonan where permohonan_jenis = '3' and operasional = '$id'")->result()); ?>
 
             <div class="col-12 mt-3">
+                <span class="btn waves-effect waves-light btn-sm btn-success collapsed mr-3">Permohonan <span class="badge badge-light"><?=$hitung_permohonan; ?></span></span>
+                <span class="btn waves-effect waves-light btn-sm btn-success collapsed mr-3">Baru <span class="badge badge-light"><?=$jumlah_baru; ?></span></span>
+                <span class="btn waves-effect waves-light btn-sm btn-success collapsed mr-3">Perpanjang <span class="badge badge-light"><?=$jumlah_perpanjang; ?></span></span>
+                <span class="btn waves-effect waves-light btn-sm btn-success collapsed mr-3">Revisi <span class="badge badge-light"><?=$jumlah_revisi; ?></span></span>
+                <span class="btn waves-effect waves-light btn-sm btn-success collapsed mr-3">Batal <span class="badge badge-light"><?=$jumlah_batal; ?></span></span>
+                <span class="btn waves-effect waves-light btn-sm btn-danger collapsed mr-3">Muat <span class="badge badge-light"><?=$jumlah_muat; ?></span></span>
+                <span class="btn waves-effect waves-light btn-sm btn-danger collapsed mr-3">Bongkar <span class="badge badge-light"><?=$jumlah_bongkar; ?></span></span>
+                <!-- <span class="btn waves-effect waves-light btn-sm btn-danger collapsed mr-3">Muat & Bongar <span class="badge badge-light"><?=$jumlah_muat_bongkar; ?></span></span> -->
+            </div>
+
+            <div class="col-12 mt-3">
                 <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#permohonanmodal">Buat Permohonan</button>
-                <a class="btn waves-effect waves-light btn-sm btn-info collapsed ml-3" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                    Cetak Invoice
-                </a>
-                <a class="btn waves-effect waves-light btn-sm btn-info collapsed ml-3" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                <a class="btn waves-effect waves-light btn-sm btn-info collapsed mr-3" href="<?=base_url(); ?>kegiatan/invoice_cetak/<?=$id; ?>" target="_blank"><i class="fa-duotone fa-print  mr-1"></i>Cetak Invoice</a>
+                <a class="btn waves-effect waves-light btn-sm btn-info collapsed mr-3" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                     Filter Permohonan
                 </a>
-                <span class="btn waves-effect waves-light btn-sm btn-success collapsed ml-3">Permohonan <span class="badge badge-light"><?=$hitung_permohonan; ?></span></span>
-                <span class="btn waves-effect waves-light btn-sm btn-success collapsed ml-3">Revisi <span class="badge badge-light"><?=$jumlah_revisi; ?></span></span>
-                <span class="btn waves-effect waves-light btn-sm btn-success collapsed ml-3">Perpanjang <span class="badge badge-light"><?=$jumlah_perpanjang; ?></span></span>
-                <span class="btn waves-effect waves-light btn-sm btn-danger collapsed ml-3">Muat <span class="badge badge-light"><?=$jumlah_muat; ?></span></span>
-                <span class="btn waves-effect waves-light btn-sm btn-danger collapsed ml-3">Bongkar <span class="badge badge-light"><?=$jumlah_bongkar; ?></span></span>
-                <!-- <span class="btn waves-effect waves-light btn-sm btn-danger collapsed ml-3">Muat & Bongar <span class="badge badge-light"><?=$jumlah_muat_bongkar; ?></span></span> -->
             </div>
 
 
@@ -136,19 +141,47 @@ $jumlah_bongkar          = count($this->db->query("SELECT id FROM permohonan whe
                     <div class="d-flex flex-wrap">
                         <div class="row">
                             <div class="col-1 form-group mb-4">
-                                <label class="mr-sm-2" for="bulan">Bulan</label>
-                                <input type="text" class="form-control ngambilbulan" id="bulan" name="bulan">
+                                <label class="mr-sm-2" for="filter_bulan">Bulan</label>
+                                <input type="text" class="form-control ngambilbulan" id="filter_bulan" name="filter_bulan">
                             </div>
                             <div class="col-1 form-group mb-4">
-                                <label class="mr-sm-2" for="tahun">Tahun</label>
-                                <input type="text" class="form-control ngambitahun" id="tahun" name="tahun">
+                                <label class="mr-sm-2" for="filter_tahun">Tahun</label>
+                                <input type="text" class="form-control ngambitahun" id="filter_tahun" name="filter_tahun">
                             </div>
+
                             <div class="col-2 form-group mb-4">
-                                <label class="mr-sm-2" for="select_perusahaan">Perusahaan</label>
-                                <select class="custom-select mr-sm-2" id="select_perusahaan" name="select_perusahaan">
+                                <label class="mr-sm-2" for="filter_permohonan_jenis">Jenis Permohonan</label>
+                                <select class="custom-select mr-sm-2" id="filter_permohonan_jenis" name="filter_permohonan_jenis">
                                     <option selected value="">Semua</option>
                                     <?php
-$perusahaan = $this->db->get('perusahaan')->result();
+$this->db->select('permohonan_jenis');
+$this->db->where('operasional', $id);
+$kapals = $this->db->get('permohonan')->result();
+$cruiut = array();
+foreach ($kapals as $entry => $tery) {
+    if (!in_array($tery->permohonan_jenis, $cruiut)) {
+        $cruiut[] = $tery->permohonan_jenis;
+    }
+}
+foreach ($cruiut as $crui) {
+    $this->db->select('id');
+    $this->db->select('nama');
+    $this->db->where('id', $crui);
+    $palu = $this->db->get('permohonan_jenis')->result();
+    foreach ($palu as $key) {
+        echo "<option value='" . $key->id . "'>" . $key->nama . "</option>";
+    }
+}
+?>
+                                </select>
+                            </div>
+
+                            <div class="col-2 form-group mb-4">
+                                <label class="mr-sm-2" for="filter_status">Status</label>
+                                <select class="custom-select mr-sm-2" id="filter_status" name="filter_status">
+                                    <option selected value="">Semua</option>
+                                    <?php
+$perusahaan = $this->db->get('permohonan_status')->result();
 foreach ($perusahaan as $palu) {
     echo "<option value='" . $palu->id . "'>" . $palu->nama . "</option>";
 }
@@ -156,9 +189,9 @@ foreach ($perusahaan as $palu) {
                                 </select>
                             </div>
                             <div class="col-2 form-group mb-4">
-                                <label class="mr-sm-2" for="select_kapal">Kapal</label>
-                                <select class="custom-select mr-sm-2" id="select_kapal" name="select_kapal">
-                                    <option selected value="">Semua/Kosong</option>
+                                <label class="mr-sm-2" for="filter_kapal">Kapal</label>
+                                <select class="custom-select mr-sm-2" id="filter_kapal" name="filter_kapal">
+                                    <option selected value="">Semua</option>
                                     <?php
 $this->db->select('kapal');
 $this->db->where('operasional', $id);
@@ -182,9 +215,9 @@ foreach ($cruiut as $crui) {
                                 </select>
                             </div>
                             <div class="col-2 form-group mb-4">
-                                <label class="mr-sm-2" for="select_tempat_muat">Terminal Muat</label>
-                                <select class="custom-select mr-sm-2" id="select_tempat_muat" name="select_tempat_muat">
-                                    <option selected value="">Semua/Kosong</option>
+                                <label class="mr-sm-2" for="filter_tempat_muat">Terminal Muat</label>
+                                <select class="custom-select mr-sm-2" id="filter_tempat_muat" name="filter_tempat_muat">
+                                    <option selected value="">Semua</option>
                                     <?php
 $this->db->select('tempat_muat');
 $this->db->where('operasional', $id);
@@ -208,9 +241,9 @@ foreach ($cruiut as $crui) {
                                 </select>
                             </div>
                             <div class="col-2 form-group mb-4">
-                                <label class="mr-sm-2" for="select_barang">Barang</label>
-                                <select class="custom-select mr-sm-2" id="select_barang" name="select_barang">
-                                    <option selected value="">Semua/Kosong</option>
+                                <label class="mr-sm-2" for="filter_barang">Barang</label>
+                                <select class="custom-select mr-sm-2" id="filter_barang" name="filter_barang">
+                                    <option selected value="">Semua</option>
                                     <?php
 $this->db->select('barang');
 $this->db->where('operasional', $id);
@@ -233,41 +266,6 @@ foreach ($cruiut as $crui) {
 ?>
                                 </select>
                             </div>
-                            <div class="col-2 form-group mb-4">
-                                <label class="mr-sm-2" for="select_permohonan_jenis">Jenis Permohonan</label>
-                                <select class="custom-select mr-sm-2" id="select_permohonan_jenis" name="select_permohonan_jenis">
-                                    <option selected value="">Semua/Kosong</option>
-                                    <?php
-$this->db->select('permohonan_jenis');
-$this->db->where('operasional', $id);
-$kapals = $this->db->get('permohonan')->result();
-$cruiut = array();
-foreach ($kapals as $entry => $tery) {
-    if (!in_array($tery->permohonan_jenis, $cruiut)) {
-        $cruiut[] = $tery->permohonan_jenis;
-    }
-}
-foreach ($cruiut as $crui) {
-    $this->db->select('id');
-    $this->db->select('nama');
-    $this->db->where('id', $crui);
-    $palu = $this->db->get('permohonan_jenis')->result();
-    foreach ($palu as $key) {
-        echo "<option value='" . $key->id . "'>" . $key->nama . "</option>";
-    }
-}
-?>
-                                </select>
-                            </div>
-                            <!-- <div class="col-auto form-group mb-4">
-                            <label class="mr-sm-2" for="status">Status</label>
-                            <select class="custom-select mr-sm-2" id="status" name="status">
-                                <option selected value="">Semua</option>
-                                <option value="1">Active</option>
-                                <option value="2">Selesai</option>
-                                <option value="3">Arsip</option>
-                            </select>
-                        </div> -->
                         </div>
                     </div>
                 </div>
@@ -285,79 +283,6 @@ foreach ($cruiut as $crui) {
 
 
             <script>
-            function AddFeedVotes(e) {
-                let id = e.dataset.id;
-                var invoice = '0';
-                if ($(e).hasClass("btn-danger")) {
-                    invoice = 1;
-                }
-                if ($(e).hasClass("btn-info")) {
-                    invoice = 0;
-                }
-                $.getJSON("<?=base_url('kegiatan/update_cetak'); ?>", {
-                    invoice: invoice,
-                    invoice_id: id
-                }, function(data) {
-                    //   $( ".result" ).html( data );
-                    if (data.data == 1) {
-                        Toast.setPlacement(TOAST_PLACEMENT.MIDDLE_CENTER);
-                        Toast.setTheme(TOAST_THEME.DARK);
-
-                        Toast.create("Success", 'Permohonan dimasukkan ke dalam daftar cetak invoice..', TOAST_STATUS.SUCCESS, 3000);
-                        $('.invoice' + id).addClass("btn-info");
-                        $('.invoice' + id).removeClass("btn-danger");
-                        $('.voice' + id).removeClass("fa-times");
-                        $('.voice' + id).addClass("fa-check");
-                    }
-                    if (data.data == 0) {
-                        Toast.setPlacement(TOAST_PLACEMENT.MIDDLE_CENTER);
-                        Toast.setTheme(TOAST_THEME.DARK);
-
-                        Toast.create("Success", 'Permohonan dikeluarkan dalam daftar cetak invoice..', TOAST_STATUS.SUCCESS, 3000);
-                        $('.invoice' + id).addClass("btn-danger");
-                        $('.invoice' + id).removeClass("btn-info");
-                        $('.voice' + id).removeClass("fa-check");
-                        $('.voice' + id).addClass("fa-times");
-                    }
-                });
-            }
-            $('.inpoice').click(function() {
-                var id = $(this).attr('data-id');
-                var invoice = '0';
-                if ($(this).hasClass("btn-danger")) {
-                    invoice = 1;
-                }
-                if ($(this).hasClass("btn-info")) {
-                    invoice = 0;
-                }
-                $.getJSON("<?=base_url('kegiatan/update_cetak'); ?>", {
-                    invoice: invoice,
-                    invoice_id: id
-                }, function(data) {
-                    //   $( ".result" ).html( data );
-                    if (data.data == 1) {
-                        Toast.setPlacement(TOAST_PLACEMENT.MIDDLE_CENTER);
-                        Toast.setTheme(TOAST_THEME.DARK);
-
-                        Toast.create("Success", 'Permohonan dimasukkan ke dalam daftar cetak invoice..', TOAST_STATUS.SUCCESS, 3000);
-                        $('.invoice' + id).addClass("btn-info");
-                        $('.invoice' + id).removeClass("btn-danger");
-                        $('.voice' + id).removeClass("fa-times");
-                        $('.voice' + id).addClass("fa-check");
-                    }
-                    if (data.data == 0) {
-                        Toast.setPlacement(TOAST_PLACEMENT.MIDDLE_CENTER);
-                        Toast.setTheme(TOAST_THEME.DARK);
-
-                        Toast.create("Success", 'Permohonan dikeluarkan dalam daftar cetak invoice..', TOAST_STATUS.SUCCESS, 3000);
-                        $('.invoice' + id).addClass("btn-danger");
-                        $('.invoice' + id).removeClass("btn-info");
-                        $('.voice' + id).removeClass("fa-check");
-                        $('.voice' + id).addClass("fa-times");
-                    }
-                });
-            });
-
             jQuery('.ngambilbulan').datepicker({
                 orientation: "bottom",
                 maxViewMode: 2,
@@ -405,10 +330,13 @@ foreach ($cruiut as $crui) {
                         'url': "<?=base_url(); ?>operasional/load_no/<?=$id; ?>",
                         'type': 'post',
                         'data': function(d) {
-                            // d.bulan = $('input[name=bulan]').val();
-                            // d.tahun = $('input[name=tahun]').val();
-                            // d.perusahaan = $('select[name=perusahaan]').val();
-                            // d.status = $('select[name=status]').val();
+                            d.bulan = $('input[name=filter_bulan]').val();
+                            d.tahun = $('input[name=filter_tahun]').val();
+                            d.jenis_permohonan = $('select[name=filter_permohonan_jenis]').val();
+                            d.status = $('select[name=filter_status]').val();
+                            d.kapal = $('select[name=filter_kapal]').val();
+                            d.tempat_muat = $('select[name=filter_tempat_muat]').val();
+                            d.barang = $('select[name=filter_barang]').val();
                         },
                     },
                     "columns": [{
@@ -426,24 +354,36 @@ foreach ($cruiut as $crui) {
                     ]
                 });
 
-                // $('#bulan').on('change', function(e) {
-                //     t.draw();
-                //     e.preventDefault();
-                // });
+                $('#filter_bulan').on('change', function(e) {
+                    t.draw();
+                    e.preventDefault();
+                });
 
-                // $('#tahun').on('change', function(e) {
-                //     t.draw();
-                //     e.preventDefault();
-                // });
+                $('#filter_tahun').on('change', function(e) {
+                    t.draw();
+                    e.preventDefault();
+                });
 
-                // $('#perusahaan').on('change', function(e) {
-                //     t.draw();
-                //     e.preventDefault();
-                // });
-                // $('#status').on('change', function(e) {
-                //     t.draw();
-                //     e.preventDefault();
-                // });
+                $('#filter_permohonan_jenis').on('change', function(e) {
+                    t.draw();
+                    e.preventDefault();
+                });
+                $('#filter_status').on('change', function(e) {
+                    t.draw();
+                    e.preventDefault();
+                });
+                $('#filter_kapal').on('change', function(e) {
+                    t.draw();
+                    e.preventDefault();
+                });
+                $('#filter_tempat_muat').on('change', function(e) {
+                    t.draw();
+                    e.preventDefault();
+                });
+                $('#filter_barang').on('change', function(e) {
+                    t.draw();
+                    e.preventDefault();
+                });
 
                 // t.on('xhr', function(e, settings, json) {
                 //     var month = json.month;
@@ -619,7 +559,7 @@ foreach ($agen_kapals as $palu) {
 
                                     <div class="col-sm-12 col-md-6">
                                         <div class="form-group">
-                                            <label for="payment" class="text-danger" data-toggle="tooltip" data-placement="top" title="" data-original-title="Jenis Permohonan">Jenis Permohonan</label>
+                                            <label for="permohonan_jenis" class="text-danger" data-toggle="tooltip" data-placement="top" title="" data-original-title="Muat Atau Bongkar?">Jenis Permohonan</label>
                                             <select class="custom-select mr-sm-2" name="permohonan_jenis" id="permohonan_jenis" placeholder="Muat Atau Bongkar?">
                                                 <option value="1">Muat</option>
                                                 <option value="2">Bongkar</option>
@@ -846,6 +786,20 @@ foreach ($agen_kapals as $palu) {
         </div>
     </div>
 
+    <?php
+$this->db->select('tujuan');
+$hasil = $this->db->get('rkbm')->result();
+$ds    = array();
+foreach ($hasil as $key => $value) {
+    if (!in_array($value, $ds)) {
+        $ds[$key] = $value;
+    }
+}
+foreach ($ds as $item) {
+    $dull[] = $item->tujuan;
+}
+$red = json_encode($dull);
+?>
 
     <script>
     kkMessgae.uri = ' <?=base_url(); ?>assets/libs/jquery-kk-message/'; // this is the id of the form
@@ -861,7 +815,7 @@ foreach ($agen_kapals as $palu) {
             success: function(data) {
                 if (data.status == 'success') {
                     kkMessgae.success(data.data);
-                    // window.location.reload();
+                    window.location.reload();
                 } else {
                     kkMessgae.error(data.data);
                 }
@@ -869,9 +823,58 @@ foreach ($agen_kapals as $palu) {
         });
     });
 
+    $(document).on('click', '.menghapuspermohonan', function() {
+        var idpermohonan = $(this).attr("id");
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'mr-2 btn btn-danger'
+            },
+            buttonsStyling: false,
+        })
 
-    $('.inpoice').click(function() {
-        alert('yes');
+        swalWithBootstrapButtons.fire({
+            title: 'Apa kamu yakin ingin menghapus permohonan ini?',
+            text: "Permohonan yg dihapus tidak dapat dikembalikan lagi..",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Tidak jadi!',
+            // reverseButtons: true
+        }).then((result) => {
+            if (result.value) {
+                $.getJSON("<?=base_url(); ?>permohonan/delete/" + idpermohonan, function(data, status) {
+                    console.log(data);
+                    if (data.status == 'success') {
+                        swalWithBootstrapButtons.fire(
+                            'Telah Dihapus!',
+                            'Permohonan berhasil dihapus.',
+                            'success'
+                        );
+                        location.reload();
+                    } else {
+                        swalWithBootstrapButtons.fire(
+                            'Gagal..',
+                            'Permohonan tidak dapat dihapus, mungkin permohonan ini memiliki perpanjang atau revisi, mohon hapus terlebih dahulu sebelum menghapus permohonan awal..',
+                            'error'
+                        )
+                    }
+
+                });
+            } else if (
+                // Read more about handling dismissals
+                result.dismiss === Swal.DismissReason.cancel
+            ) {
+                swalWithBootstrapButtons.fire(
+                    'Dibatalkan..',
+                    'Permohonan tidak dihapus..',
+                    'error'
+                )
+            }
+        })
+    });
+
+    $(document).on('click', '.inpoice', function() {
         var id = $(this).attr('data-id');
         var invoice = '0';
         if ($(this).hasClass("btn-danger")) {
@@ -888,7 +891,6 @@ foreach ($agen_kapals as $palu) {
             if (data.data == 1) {
                 Toast.setPlacement(TOAST_PLACEMENT.MIDDLE_CENTER);
                 Toast.setTheme(TOAST_THEME.DARK);
-
                 Toast.create("Success", 'Permohonan dimasukkan ke dalam daftar cetak invoice..', TOAST_STATUS.SUCCESS, 3000);
                 $('.invoice' + id).addClass("btn-info");
                 $('.invoice' + id).removeClass("btn-danger");
@@ -898,7 +900,6 @@ foreach ($agen_kapals as $palu) {
             if (data.data == 0) {
                 Toast.setPlacement(TOAST_PLACEMENT.MIDDLE_CENTER);
                 Toast.setTheme(TOAST_THEME.DARK);
-
                 Toast.create("Success", 'Permohonan dikeluarkan dalam daftar cetak invoice..', TOAST_STATUS.SUCCESS, 3000);
                 $('.invoice' + id).addClass("btn-danger");
                 $('.invoice' + id).removeClass("btn-info");
@@ -956,6 +957,10 @@ foreach ($agen_kapals as $palu) {
         });
     });
 
+    function getNumberWithCommas(number) {
+        return parseInt(number).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
     $('#permohonanmodal').on('shown.bs.modal', function(event) {
         var memuat = '';
         var aseli = '';
@@ -975,7 +980,7 @@ foreach ($agen_kapals as $palu) {
             document.getElementById("ket").innerHTML = '';
             var permohonan = button.data('permohonan')
             modal.find('.jenismodal').text('Ubah Permohonan');
-            $('#form-permohonan').attr('action', '<?=base_url(); ?>kegiatan/permohonan_revisi/' + idpermohonan);
+            $('#form-permohonan').attr('action', '<?=base_url(); ?>kegiatan/permohonan_update/' + idpermohonan);
             $.getJSON("<?=base_url(); ?>permohonan/read_json/" + idpermohonan, function(data, status) {
                 $('#agen_kapal').val(permohonan.agen_kapal).change();
                 $('#jenis_terminal').val(permohonan.jenis_tempat_muat).change();
@@ -996,26 +1001,32 @@ foreach ($agen_kapals as $palu) {
                         $('#tempat_muat').val(data.tempat_muat).change();
                     }
                 })
-                if (data.jumlah_muatan == '0') {
+                if (data.jumlah_muatan == '0' || data.jumlah_muatan == 0 || data.jumlah_muatan == '') {
                     memuat = '';
                 } else {
-                    memuat = data.jumlah_muatan;
+                    memuat = getNumberWithCommas(data.jumlah_muatan);
                 }
-                if (data.jumlah_asli == '0') {
+                if (data.jumlah_asli == '' || data.jumlah_asli == 0 || data.jumlah_asli == '0') {
                     aseli = '';
                 } else {
-                    aseli = data.jumlah_asli;
+                    aseli = getNumberWithCommas(data.jumlah_asli);
                 }
-                if (data.jumlah_bongkar == '0') {
+                if (data.jumlah_bongkar == 0 || data.jumlah_bongkar == '0' || data.jumlah_bongkar == '') {
                     bungkar = '';
                 } else {
-                    bungkar = data.jumlah_bongkar;
+                    bungkar = getNumberWithCommas(data.jumlah_bongkar);
+                }
+                if (data.payment == 0 || data.payment == '0' || data.payment == '') {
+                    pemen = '';
+                } else {
+                    pemen = getNumberWithCommas(data.payment);
                 }
                 $('#tempat_bongkar').val(data.tempat_bongkar);
+                $('#status_permohonan').val(data.status);
                 $('#permohonan_ke').val(data.permohonan_ke);
                 $('#barang').val(data.barang);
                 $('#permohonan_jenis').val(data.permohonan_jenis);
-                $('#payment').val(data.payment);
+                $('#payment').val(pemen);
                 $('#jumlah_muatan').val(memuat);
                 $('#jumlah_asli').val(aseli);
                 $('#jumlah_bongkar').val(bungkar);
@@ -1024,8 +1035,7 @@ foreach ($agen_kapals as $palu) {
             });
         }
     })
-    </script>
-    <script>
+
     var substringMatcher = function(strs) {
         return function findMatches(q, cb) {
             var matches, substringRegex;
@@ -1040,36 +1050,58 @@ foreach ($agen_kapals as $palu) {
         };
     };
 
-    $(".masinput").inputmask("9.999.999");
-    <?php
+    $('input.masinput').keyup(function(event) {
+        if (event.which >= 37 && event.which <= 40) return;
+        $(this).val(function(index, value) {
+            return value
+                .replace(/\D/g, "")
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        });
+    });
+    // $('.masinput').inputmask({
+    //     alias: 'numeric',
+    //     allowMinus: false,
+    //     digits: 3,
+    //     max: '999.999.999.999'
+    // });
+    // $(".masinput").numeric({
+    //     decimal: ".",
+    //     negative: false,
+    //     scale: 3
+    // });
+    // $('.masinput').inputmask("Z", {
+    //     translation: {
+    //         'Z': {
+    //             pattern: /[0-9,.]/,
+    //             recursive: true
+    //         }
+    //     }
+    // });
+    // $(".masinput").inputmask("decimal", {
+    //     rightAlign: true
+    // });
+    // Inputmask("decimal", {
+    //     positionCaretOnClick: "radixFocus",
+    //     radixPoint: ".",
+    //     _radixDance: true,
+    //     numericInput: true,
+    //     placeholder: "0",
+    //     definitions: {
+    //         "0": {
+    //             validator: "[0-9\uFF11-\uFF19]"
+    //         }
+    //     }
+    // }).mask(".masinput");
 
-$this->db->select('tujuan');
-$hasil = $this->db->get('rkbm')->result();
-$ds    = array();
-foreach ($hasil as $key => $value) {
-    if (!in_array($value, $ds)) {
-        $ds[$key] = $value;
-    }
-}
-foreach ($ds as $item) {
-    $dull[] = $item->tujuan;
-}
-$red = json_encode($dull);
-?>
     var xer = <?php echo $red; ?>;
     $('#tempat_bongkar').typeahead({
         hint: true,
         highlight: true,
         minLength: 1
     }, {
-        // name: 'states',
         source: substringMatcher(xer)
     });
 
-
-
-
-    // Date Picker
     jQuery('.mydatepicker').datepicker({
         maxViewMode: 2,
         todayBtn: "linked",
@@ -1078,14 +1110,12 @@ $red = json_encode($dull);
         autoclose: true,
         todayHighlight: true
     });
-    </script>
-    <script>
+
     $(document).ready(function() {
 
         $('#nama_kapal').change(function() {
             var ukuran = $(this).children('option:selected').attr('data-ukuran');
             var bendera = $(this).children('option:selected').attr('data-bendera');
-            // alert($(this).children('option:selected').data('id'));
             $('#ket').html('' + bendera + ' ~ ' + ukuran + '');
         });
 
@@ -1107,32 +1137,6 @@ $red = json_encode($dull);
                 }
             });
         });
-
-        <?php
-
-$this->db->select('tujuan');
-$hasil = $this->db->get('rkbm')->result();
-$ds    = array();
-foreach ($hasil as $key => $value) {
-    if (!in_array($value, $ds)) {
-        $ds[$key] = $value;
-    }
-}
-foreach ($ds as $item) {
-    $dull[] = $item->tujuan;
-}
-$red = json_encode($dull);
-?>
-        var xer = <?php echo $red; ?>;
-        $('#tujuan').typeahead({
-            hint: true,
-            highlight: true,
-            minLength: 1
-        }, {
-            // name: 'states',
-            source: substringMatcher(xer)
-        });
-
 
     });
     </script>

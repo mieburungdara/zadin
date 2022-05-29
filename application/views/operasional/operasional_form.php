@@ -87,14 +87,18 @@ foreach ($perusahaan_list as $palu) {
                                 <div class="form-group mb-4">
                                     <label class="mr-sm-2" for="operasional_status">Select</label>
                                     <select class="custom-select mr-sm-2" name="operasional_status" id="operasional_status" placeholder="Operasional Status">
-                                        <option value="0" <?php if ($operasional_status == 0) {
-    echo ' selected';
+                                        <?php
+$operasional_status = $this->db->get('operasional_status')->result();
+foreach ($operasional_status as $palu) {
+    if ($palu->id == $perusahaan) {
+        $selected = 'selected';
+    } else {
+        $selected = '';
+    }
+
+    echo "<option value='" . $palu->id . "' $selected>" . $palu->nama . "</option>";
 }
-?>>Tidak Aktif</option>
-                                        <option value="1" <?php if ($operasional_status == 1) {
-    echo ' selected';
-}
-?>>Aktif</option>
+?>
                                     </select>
                                 </div>
                             </div>
