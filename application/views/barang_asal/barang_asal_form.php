@@ -1,3 +1,18 @@
+<link rel="stylesheet" type="text/css" href="<?=base_url(); ?>assets/libs/bootstrap-touchspin/dist/jquery.bootstrap-touchspin.min.css">
+<script src="<?=base_url(); ?>assets/libs/bootstrap-touchspin/dist/jquery.bootstrap-touchspin.min.js"></script>
+<style>
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
+</style>
 <div class="row page-titles">
     <div class="col-md-5 col-12 align-self-center">
         <h3 class="text-themecolor mb-0">Tambah Asal Barang</h3>
@@ -18,50 +33,48 @@
                             </div>
                             <div class="col-sm-12 col-md-6">
                                 <div class="form-group">
+                                    <label for="varchar">Inisial <?php echo form_error('inisial'); ?></label>
+                                    <input type="text" class="form-control" name="inisial" id="inisial" placeholder="inisial" value="<?php echo $inisial; ?>" />
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-12">
+                                <div class="form-group">
                                     <label for="varchar">Alamat <?php echo form_error('alamat'); ?></label>
                                     <input type="text" class="form-control" name="alamat" id="alamat" placeholder="Alamat" value="<?php echo $alamat; ?>" />
                                 </div>
                             </div>
                             <div class="col-sm-12 col-md-6">
                                 <div class="form-group">
-                                    <label for="varchar">Sk Brg <?php echo form_error('sk_brg'); ?></label>
+                                    <label for="varchar">SK Barang <?php echo form_error('sk_brg'); ?></label>
                                     <input type="text" class="form-control" name="sk_brg" id="sk_brg" placeholder="Sk Brg" value="<?php echo $sk_brg; ?>" />
                                 </div>
                             </div>
                             <div class="col-sm-12 col-md-6">
                                 <div class="form-group">
-                                    <label for="varchar">Npwp <?php echo form_error('npwp'); ?></label>
+                                    <label for="varchar">NPWP <?php echo form_error('npwp'); ?></label>
                                     <input type="text" class="form-control" name="npwp" id="npwp" placeholder="Npwp" value="<?php echo $npwp; ?>" />
                                 </div>
                             </div>
                             <div class="col-sm-12 col-md-6">
                                 <div class="form-group">
-                                    <label for="int">Jenis <?php echo form_error('jenis'); ?></label>
-                                    <input type="text" class="form-control" name="jenis" id="jenis" placeholder="Jenis" value="<?php echo $jenis; ?>" />
+                                    <label for="pph">Pakai Pph? <?php echo form_error('pph'); ?></label>
+                                    <?php
+if ($pph) {
+    $selected = 'selected="selected"';
+} else {
+    $selected = '';
+}
+?>
+                                    <select class="custom-select mr-sm-2" id="inlineFormCustomSelect">
+                                        <option value="0" <?php echo $selected; ?>>Tidak</option>
+                                        <option value="1" <?php echo $selected; ?>>Ya</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-sm-12 col-md-6">
                                 <div class="form-group">
-                                    <label for="int">Pph <?php echo form_error('pph'); ?></label>
-                                    <input type="text" class="form-control" name="pph" id="pph" placeholder="Pph" value="<?php echo $pph; ?>" />
-                                </div>
-                            </div>
-                            <div class="col-sm-12 col-md-6">
-                                <div class="form-group">
-                                    <label for="int">Total Pph <?php echo form_error('total_pph'); ?></label>
-                                    <input type="text" class="form-control" name="total_pph" id="total_pph" placeholder="Total Pph" value="<?php echo $total_pph; ?>" />
-                                </div>
-                            </div>
-                            <div class="col-sm-12 col-md-6">
-                                <div class="form-group">
-                                    <label for="smallint">Unix <?php echo form_error('unix'); ?></label>
-                                    <input type="text" class="form-control" name="unix" id="unix" placeholder="Unix" value="<?php echo $unix; ?>" />
-                                </div>
-                            </div>
-                            <div class="col-sm-12 col-md-6">
-                                <div class="form-group">
-                                    <label for="int">Data Status <?php echo form_error('data_status'); ?></label>
-                                    <input type="text" class="form-control" name="data_status" id="data_status" placeholder="Data Status" value="<?php echo $data_status; ?>" />
+                                    <label for="int">Jumlah Pph <?php echo form_error('total_pph'); ?></label>
+                                    <input type="number" style="text-align: right;" class="form-control" name="total_pph" id="total_pph" placeholder="Total Pph" value="<?php echo $total_pph; ?>">
                                 </div>
                             </div>
                             <div class="col-sm-12 col-md-6">
@@ -82,21 +95,9 @@
                                     <input type="text" class="form-control" name="tarif_revisi" id="tarif_revisi" placeholder="Tarif Revisi" value="<?php echo $tarif_revisi; ?>" />
                                 </div>
                             </div>
-                            <div class="col-sm-12 col-md-6">
-                                <div class="form-group">
-                                    <label for="timestamp">Created At <?php echo form_error('created_at'); ?></label>
-                                    <input type="text" class="form-control" name="created_at" id="created_at" placeholder="Created At" value="<?php echo $created_at; ?>" />
-                                </div>
-                            </div>
-                            <div class="col-sm-12 col-md-6">
-                                <div class="form-group">
-                                    <label for="timestamp">Updated At <?php echo form_error('updated_at'); ?></label>
-                                    <input type="text" class="form-control" name="updated_at" id="updated_at" placeholder="Updated At" value="<?php echo $updated_at; ?>" />
-                                </div>
-                            </div>
                             <div class="card-body">
                                 <div class="action-form">
-                                    <div class="form-group mb-0 text-right"><input type="hidden" name="id" value="<?php echo $id; ?>" /><button type="submit" class="btn btn-info waves-effect waves-light">Save</button><a href="<?=site_url('barang_asal'); ?>" class="btn btn-dark waves-effect waves-light">Cancel</a></div>
+                                    <div class="form-group mb-0 text-right"><input type="hidden" name="id" value="<?php echo $id; ?>" /><button type="submit" class="btn btn-info waves-effect waves-light mr-3">Save</button><a href="<?=site_url('barang_asal'); ?>" class="btn btn-dark waves-effect waves-light">Cancel</a></div>
                                 </div>
                             </div>
                         </div>
@@ -106,3 +107,14 @@
         </div>
     </div>
 </div>
+
+<script>
+$("input[name='total_pph']").TouchSpin({
+    min: 0,
+    max: 100,
+    decimals: 1,
+    boostat: 1,
+    maxboostedstep: 10,
+    postfix: '%'
+});
+</script>

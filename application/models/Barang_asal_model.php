@@ -38,16 +38,12 @@ class Barang_asal_model extends CI_Model
         $this->db->or_like('alamat', $q);
         $this->db->or_like('sk_brg', $q);
         $this->db->or_like('npwp', $q);
-        $this->db->or_like('jenis', $q);
         $this->db->or_like('pph', $q);
         $this->db->or_like('total_pph', $q);
-        $this->db->or_like('unix', $q);
-        $this->db->or_like('data_status', $q);
         $this->db->or_like('tarif_baru', $q);
         $this->db->or_like('tarif_perpanjang', $q);
         $this->db->or_like('tarif_revisi', $q);
-        $this->db->or_like('created_at', $q);
-        $this->db->or_like('updated_at', $q);
+
         $this->db->from($this->table);
         return $this->db->count_all_results();
     }
@@ -85,13 +81,9 @@ class Barang_asal_model extends CI_Model
         $this->db->or_like('npwp', $q);
         $this->db->or_like('pph', $q);
         $this->db->or_like('total_pph', $q);
-        $this->db->or_like('unix', $q);
-        $this->db->or_like('data_status', $q);
         $this->db->or_like('tarif_baru', $q);
         $this->db->or_like('tarif_perpanjang', $q);
         $this->db->or_like('tarif_revisi', $q);
-        $this->db->or_like('created_at', $q);
-        $this->db->or_like('updated_at', $q);
         $this->db->limit($limit, $start);
         return $this->db->get($this->table)->result();
     }

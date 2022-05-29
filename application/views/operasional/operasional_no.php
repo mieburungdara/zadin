@@ -1001,22 +1001,22 @@ $red = json_encode($dull);
                         $('#tempat_muat').val(data.tempat_muat).change();
                     }
                 })
-                if (data.jumlah_muatan == '0' || data.jumlah_muatan == 0 || data.jumlah_muatan == '') {
+                if (data.jumlah_muatan == '0' || data.jumlah_muatan == 0 || data.jumlah_muatan == '' || data.jumlah_muatan == null || data.jumlah_muatan == undefined) {
                     memuat = '';
                 } else {
                     memuat = getNumberWithCommas(data.jumlah_muatan);
                 }
-                if (data.jumlah_asli == '' || data.jumlah_asli == 0 || data.jumlah_asli == '0') {
+                if (data.jumlah_asli == '' || data.jumlah_asli == 0 || data.jumlah_asli == '0' || data.jumlah_asli == null || data.jumlah_asli == undefined) {
                     aseli = '';
                 } else {
                     aseli = getNumberWithCommas(data.jumlah_asli);
                 }
-                if (data.jumlah_bongkar == 0 || data.jumlah_bongkar == '0' || data.jumlah_bongkar == '') {
+                if (data.jumlah_bongkar == 0 || data.jumlah_bongkar == '0' || data.jumlah_bongkar == '' || data.jumlah_bongkar == null || data.jumlah_bongkar == undefined) {
                     bungkar = '';
                 } else {
                     bungkar = getNumberWithCommas(data.jumlah_bongkar);
                 }
-                if (data.payment == 0 || data.payment == '0' || data.payment == '') {
+                if (data.payment == 0 || data.payment == '0' || data.payment == '' || data.payment == null || data.payment == undefined) {
                     pemen = '';
                 } else {
                     pemen = getNumberWithCommas(data.payment);
