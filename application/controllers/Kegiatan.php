@@ -138,10 +138,14 @@ class Kegiatan extends Admin_Controller
             if ($permohonan_jenis == 2) {
                 $pj_txt = 'bongkar';
             }
-
+            $this->db->select('no_surat');
+            $this->db->order_by('no_surat', 'desc');
+            $nomor_surat = $this->db->get('permohonan')->row()->no_surat;
+            // var_dump($nomor_surat);
             $payment = str_replace('.', '', $this->input->post('jumlah_bongkar', true)) ?? null;
             $data    = array(
                 'operasional'      => $this->input->post('operasional', true),
+                'no_surat'         => ++$nomor_surat,
                 'mulai'            => $this->input->post('mulai', true),
                 'selesai'          => $this->input->post('selesai', true),
                 'kapal'            => $this->input->post('nama_kapal', true),

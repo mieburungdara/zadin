@@ -258,7 +258,7 @@ class Operasional extends Admin_controller
                             <div class="row mb-2">
                                 <div class="col-auto border-right align-self-center">
                                     <div class="d-flex">
-                                        <code>No Surat :<br> 0' . $pal['id'] . '/' . $jesur . '/' . $stasur . $perke . '/RKBM-' . $get_perusahaan->inisial . "/SMD/" . $romawi . '/' . $taon . '</code>
+                                        <code>No Surat :<br> 0' . $pal['no_surat'] . '/' . $jesur . '/' . $stasur . $perke . '/RKBM-' . $get_perusahaan->inisial . "/SMD/" . $romawi . '/' . $taon . '</code>
                                     </div>
                                 </div>
                                 <div class="col-auto" data-toggle="modal" data-target="#modal-norkbm" data-nosurat="' . $pal['id'] . '"><code>No RKBM :<br>
@@ -307,6 +307,7 @@ class Operasional extends Admin_controller
                                         </a>
                                         <div class="dropdown-menu dropdown-menu-right category-menu shadow" style="">
                                             <a class="dropdown-item text-info" data-toggle="modal" data-target="#permohonanmodal" data-permohonan=' . "$atribut_json" . ' data-idpermohonan="' . $pal['id'] . '" href="javascript:void(0);"><i class="fa-duotone fa-edit  mr-1"></i> Ubah</a>
+                                            <a class="dropdown-item text-primary" data-toggle="modal" data-target="#permohonan_update" data-permohonan=' . "$atribut_json" . ' data-idpermohonan="' . $pal['id'] . '" href="javascript:void(0);"><i class="fa-duotone fa-arrows-repeat  mr-1"></i> Update</a>
             <a class="dropdown-item text-success" href="' . base_url() . 'kegiatan/permohonan_cetak/' . $pal['id'] . '" target="_blank"><i class="fa-duotone fa-print  mr-1"></i>Cetak</a>
             <a class="dropdown-item text-danger menghapuspermohonan" id="' . $pal['id'] . '" data-idpermohonan="' . $pal['id'] . '" href="javascript:void(0);"><i class="fa-duotone fa-trash-alt  mr-1"></i>Hapus</a>
             </div>

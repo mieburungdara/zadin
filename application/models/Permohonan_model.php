@@ -33,21 +33,21 @@ class Permohonan_model extends CI_Model
     public function total_rows($q = null)
     {
         $this->db->like('id', $q);
-        $this->db->or_like('parent', $q);
+        // $this->db->or_like('parent', $q);
         $this->db->or_like('operasional', $q);
-        $this->db->or_like('no_rkbm', $q);
-        $this->db->or_like('mulai', $q);
-        $this->db->or_like('selesai', $q);
-        $this->db->or_like('kapal', $q);
-        $this->db->or_like('tempat_muat', $q);
-        $this->db->or_like('barang', $q);
+        // $this->db->or_like('no_rkbm', $q);
+        // $this->db->or_like('mulai', $q);
+        // $this->db->or_like('selesai', $q);
+        // $this->db->or_like('kapal', $q);
+        // $this->db->or_like('tempat_muat', $q);
+        // $this->db->or_like('barang', $q);
         $this->db->or_like('tempat_bongkar', $q);
-        $this->db->or_like('jumlah_muatan', $q);
-        $this->db->or_like('jumlah_asli', $q);
-        $this->db->or_like('jumlah_bongkar', $q);
-        $this->db->or_like('asal_barang', $q);
-        $this->db->or_like('perusahaan', $q);
-        $this->db->or_like('status', $q);
+        // $this->db->or_like('jumlah_muatan', $q);
+        // $this->db->or_like('jumlah_asli', $q);
+        // $this->db->or_like('jumlah_bongkar', $q);
+        // $this->db->or_like('asal_barang', $q);
+        // $this->db->or_like('perusahaan', $q);
+        // $this->db->or_like('status', $q);
         $this->db->or_like('permohonan_jenis', $q);
         $this->db->from($this->table);
         return $this->db->count_all_results();

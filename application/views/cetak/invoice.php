@@ -202,7 +202,8 @@ foreach ($permohonans as $permohonan) {
     // } else {
     //     echo 'kosong';
     // }
-    // var_dump($payment);
+    // var_dump($peje);
+    // var_dump($jusli);
     if ($status == 1) {
         $status = 'Baru';
         if ($payment) {
