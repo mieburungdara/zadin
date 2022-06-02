@@ -73,7 +73,10 @@ function tgl_in($date)
         }
         </style>
     </head>
-
+<?php
+$this->db->where('id', $perusahaan);
+$get_perusahaan = $this->db->get('perusahaan')->row();
+// echo ; ?>
     <body>
         <div class="container">
             <div class="row">
@@ -85,32 +88,35 @@ function tgl_in($date)
                             <tr style="height: 16px;">
                                 <th>Nama Perusahaan</th>
                                 <td style="padding-left: 10px"> : </td>
-                                <td style="padding-left: 10px"><strong>PT. Zadin Mitra Abadi</strong></td>
+                                <td style="padding-left: 10px"><strong><?=$get_perusahaan->nama; ?></strong></td>
                             </tr>
                             <tr style="height: 16px;">
                                 <th>Alamat Perusahaan</th>
                                 <td style="padding-left: 10px"> : </td>
-                                <td style="padding-left: 10px">Jl. Gunung Cermai Gg. 2 No. 65, Samarinda</td>
+                                <td style="padding-left: 10px"><?=$get_perusahaan->alamat; ?></td>
                             </tr>
                             <tr style="height: 16px;">
                                 <th>Pelabuhan Bongkar Muat</th>
                                 <td style="padding-left: 10px"> : </td>
-                                <td style="padding-left: 10px">Pelabuhan Samarinda</td>
+                                <td style="padding-left: 10px"><?=$get_perusahaan->pelabuhan; ?></td>
                             </tr>
                             <tr style="height: 16px;">
                                 <th>Nomor SIUP PBM</th>
                                 <td style="padding-left: 10px"> : </td>
-                                <td style="padding-left: 10px">NO. 503/315/SIUPBM-HUB/DPMPTSP/III/2019</td>
+                                <td style="padding-left: 10px"><?=$get_perusahaan->sk_tuks; ?></td>
                             </tr>
                             <tr style="height: 16px;">
                                 <th>Nomor Pokok Wajib Pajak</th>
                                 <td style="padding-left: 10px"> : </td>
-                                <td style="padding-left: 10px">90.537.956.6-741.000</td>
+                                <td style="padding-left: 10px"><?=$get_perusahaan->npwp; ?></td>
                             </tr>
                             <tr style="height: 16px;">
                                 <th>Laporan Bulan</th>
                                 <td style="padding-left: 10px"> : </td>
-                                <td style="padding-left: 10px">Mei 2022</td>
+                                <?php
+$bulan = date('F', strtotime($bulan));
+?>
+                                <td style="padding-left: 10px"><?=$bulan; ?> <?=$tahun; ?></td>
                             </tr>
                         </tbody>
                     </table>
@@ -141,63 +147,123 @@ function tgl_in($date)
                         </thead>
                         <tbody>
                             <?php
-// echo '<pre>';
-// var_dump($permohonan);
-// echo '</pre>';
 
 $nomor_ke      = 1;
 $total_bongkar = 0;
 $total_muat    = 0;
 $total_asli    = 0;
+$ortu          = array();
+$anak          = array();
+$daftar_tampil = array();
 foreach ($permohonan as $perm) {
+    $anak[] = $perm->id;
+    $ortu[] = $perm->parent;
 
-    $this->db->where('id', $perm->kapal);
-    $get_kapal = $this->db->get('kapal')->row();
+}
+$array = (array_diff($anak, $ortu));
+// $datanya;
+function rekursip($id, $datanya)
+{
+    // global $datanya;
+    // $datanya = array();
+    $ci =& get_instance();
+    $ci->db->where('id', $id);
+    $permohonan = $ci->db->get('permohonan')->row();
+    // var_dump($ci->db->last_query());
+    if ($permohonan) {
+        if ($permohonan->parent) {
+            // var_dump($permohonan->parent);
+            $datanya[] = $permohonan->parent;
+            // var_dump($datanya);
+            // array_merge($datanya, rekursip($permohonan->parent));
+            return rekursip($permohonan->parent, $datanya);
+        }
+    }
+    return $datanya;
+}
+// echo '<pre>';
+// $datanya    = array();
+// $datanyaaaa = array_reverse(rekursip(63, $datanya));
+// var_dump(rekursip(63));
+// print_r($datanyaaaa);
+// $dung = '';
+// foreach ($datanyaaaa as $dt) {
+//     // echo $dt;
+//     $this->db->where('id', $dt);
+//     $ngerow = $this->db->get('permohonan')->row();
+//     $dung .= $ngerow->no_rkbm . ',';
+// }
+// var_dump($dung);
+// var_dump($permohonan);
+// echo '</pre>';
 
-    $this->db->where('id', $get_kapal->agen_kapal);
-    $get_agen_kapal  = $this->db->get('agen_kapal')->row();
-    $tanggal_mulai   = $perm->mulai != '0000-00-00' ? tgl_in($perm->mulai) : 'BELUM DI ISI';
-    $tanggal_selesai = $perm->selesai != '0000-00-00' ? tgl_in($perm->selesai) : 'BELUM DI ISI';
+$total_permohoan = 0;
 
-    $this->db->where('id', $perm->operasional);
-    $get_operasional = $this->db->get('operasional')->row();
-    $barang_asal     = $get_operasional->barang_asal;
-    $barang_pemilik  = $get_operasional->barang_pemilik;
-    $perusahaan_data = $get_operasional->perusahaan;
-    $id_created_by   = $get_operasional->created_by;
+foreach ($permohonan as $perm) {
+    $total_permohoan++;
 
-    $this->db->where('id', $barang_asal);
-    $get_barang_asal = $this->db->get('barang_asal')->row();
+    if (in_array($perm->id, $array)) {
 
-    $this->db->where('id', $perm->barang);
-    $get_barang_jenis = $this->db->get('barang_jenis')->row();
+        $datanya    = array();
+        $datanyaaaa = array_reverse(rekursip($perm->id, $datanya));
+        $dung       = array();
+        foreach ($datanyaaaa as $dt) {
+            // echo $dt;
+            $this->db->where('id', $dt);
+            $ngerow = $this->db->get('permohonan')->row();
+            // $dung .= $ngerow->no_rkbm;
+            array_push($dung, $ngerow->no_rkbm);
+        }
+        array_push($dung, $perm->no_rkbm);
+        // var_dump($dung);
+        $this->db->where('id', $perm->kapal);
+        $get_kapal = $this->db->get('kapal')->row();
 
-    $this->db->where('id', $perm->tempat_muat);
-    $get_terminal   = $this->db->get('terminal')->row();
-    $terminal_jenis = $get_terminal->jenis;
-    $tempat_muatnya = $get_terminal->nama;
+        $this->db->where('id', $get_kapal->agen_kapal);
+        $get_agen_kapal  = $this->db->get('agen_kapal')->row();
+        $tanggal_mulai   = $perm->mulai != '0000-00-00' ? tgl_in($perm->mulai) : 'BELUM DI ISI';
+        $tanggal_selesai = $perm->selesai != '0000-00-00' ? tgl_in($perm->selesai) : 'BELUM DI ISI';
 
-    $total_bongkar = ($total_bongkar + $perm->jumlah_bongkar);
-    $total_muat    = ($total_muat + $perm->jumlah_muatan);
-    $total_asli    = ($total_asli + $perm->jumlah_asli);
+        $this->db->where('id', $perm->operasional);
+        $get_operasional = $this->db->get('operasional')->row();
+        $barang_asal     = $get_operasional->barang_asal;
+        $barang_pemilik  = $get_operasional->barang_pemilik;
+        $perusahaan_data = $get_operasional->perusahaan;
+        $id_created_by   = $get_operasional->created_by;
 
-    echo '<tr>';
-    echo "<td>" . $nomor_ke++ . "</td>";
-    echo "<td>" . $get_kapal->nama . "</td>";
-    echo "<td>" . strtoupper($get_kapal->bendera) . "</td>";
-    echo "<td>" . $get_kapal->ukuran . "</td>";
-    echo "<td>" . $get_agen_kapal->nama . "</td>";
-    echo "<td>" . number_format($perm->jumlah_bongkar, 0, ',', '.') . "</td>";
-    echo "<td>" . number_format($perm->jumlah_muatan, 0, ',', '.') . "</td>";
-    echo "<td>" . $tanggal_mulai . "</td>";
-    echo "<td>" . $tanggal_selesai . "</td>";
-    echo "<td>" . $get_barang_asal->nama . "</td>";
-    echo "<td>" . $perm->tempat_bongkar . "</td>";
-    echo "<td>" . strtoupper($get_barang_jenis->nama) . "</td>";
-    echo "<td>" . strtoupper($tempat_muatnya) . "</td>";
-    echo "<td>" . strtoupper($perm->no_rkbm) . "</td>";
-    echo "<td>" . number_format($perm->jumlah_asli, 0, ',', '.') . "</td>";
-    echo '</tr>';
+        $this->db->where('id', $barang_asal);
+        $get_barang_asal = $this->db->get('barang_asal')->row();
+
+        $this->db->where('id', $perm->barang);
+        $get_barang_jenis = $this->db->get('barang_jenis')->row();
+
+        $this->db->where('id', $perm->tempat_muat);
+        $get_terminal   = $this->db->get('terminal')->row();
+        $terminal_jenis = $get_terminal->jenis;
+        $tempat_muatnya = $get_terminal->nama;
+
+        $total_bongkar = ($total_bongkar + $perm->jumlah_bongkar);
+        $total_muat    = ($total_muat + $perm->jumlah_muatan);
+        $total_asli    = ($total_asli + $perm->jumlah_asli);
+
+        echo '<tr>';
+        echo "<td>" . $nomor_ke++ . "</td>";
+        echo "<td>" . $get_kapal->nama . "</td>";
+        echo "<td>" . strtoupper($get_kapal->bendera) . "</td>";
+        echo "<td>" . $get_kapal->ukuran . "</td>";
+        echo "<td>" . $get_agen_kapal->nama . "</td>";
+        echo "<td>" . number_format($perm->jumlah_bongkar, 0, ',', '.') . "</td>";
+        echo "<td>" . number_format($perm->jumlah_muatan, 0, ',', '.') . "</td>";
+        echo "<td>" . $tanggal_mulai . "</td>";
+        echo "<td>" . $tanggal_selesai . "</td>";
+        echo "<td>" . $get_barang_asal->nama . "</td>";
+        echo "<td>" . $perm->tempat_bongkar . "</td>";
+        echo "<td>" . strtoupper($get_barang_jenis->nama) . "</td>";
+        echo "<td>" . strtoupper($tempat_muatnya) . "</td>";
+        echo "<td>" . implode(',', $dung) . "</td>";
+        echo "<td>" . number_format($perm->jumlah_asli, 0, ',', '.') . "</td>";
+        echo '</tr>';
+    }
 
 }
 ?>
@@ -217,7 +283,7 @@ foreach ($permohonan as $perm) {
                                 <td><strong></strong></td>
                                 <td><strong></strong></td>
                                 <td><strong></strong></td>
-                                <td><strong>35</strong></td>
+                                <td><strong><?=$total_permohoan; ?></strong></td>
                                 <td><strong><?=number_format($total_asli, 0, ',', '.'); ?></strong></td>
                             </tr>
                         </tfoot>
@@ -242,7 +308,11 @@ foreach ($permohonan as $perm) {
                             </div>
                         </div>
                         <div class="col-xs-4" style="text-align: left">
-                            Samarinda, 30 Mei 2022<br>
+<?php
+date_default_timezone_set('Asia/Makassar');
+// $dateYmd = date('d Mm Y');
+; ?>
+                            Samarinda, <?=tgl_in(date('Y-m-d')); ?><br>
                             PT. Zadin Mitra Abadi
                             <div style="margin-top: 50px; text-align: left">
                                 <strong>Syamsudin Murais</strong><br>

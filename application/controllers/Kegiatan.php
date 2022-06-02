@@ -168,7 +168,7 @@ class Kegiatan extends Admin_Controller
         }
     }
 
-    public function permohonan_update($id)
+    public function permohonan_ubah($id)
     {
         $this->permohonan_rules();
 
@@ -211,6 +211,66 @@ class Kegiatan extends Admin_Controller
             }
 
             // echo json_encode(array('status' => 'success', 'data' => 'Permohonan ' . $pj_txt . ' berhasil diupdate'));
+        }
+    }
+
+    public function permohonan_update($id)
+    {
+        $this->permohonan_rules();
+
+        if ($this->form_validation->run() == false) {
+            echo json_encode(array('status' => 'error', 'data' => validation_errors()));
+        } else {
+            $this->db->where('id', $id);
+            $get_permohonan    = $this->db->get('permohonan')->row();
+            $status_permohonan = $this->input->post('status_permohonan', true);
+            $permohonan_ke     = $get_permohonan->permohonan_ke;
+            $permohonan_ke     = $permohonan_ke ? (intval($permohonan_ke) + (int) 1) : 1;
+            $permohonan_jenis  = $this->input->post('permohonan_jenis', true);
+            $pj_txt            = $permohonan_jenis;
+            if ($permohonan_jenis == 1) {
+                $pj_txt = 'muat';
+            }
+            if ($permohonan_jenis == 2) {
+                $pj_txt = 'bongkar';
+            }
+            $sp_txt = $status_permohonan;
+            if ($status_permohonan == 2) {
+                $sp_txt = 'Perpanjang';
+            }
+            if ($status_permohonan == 3) {
+                $sp_txt = 'Revisi';
+            }
+            if ($status_permohonan == 4) {
+                $sp_txt = 'Batal';
+            }
+            $data = array(
+                'parent'           => $get_permohonan->id,
+                'no_surat'         => $get_permohonan->no_surat,
+                'operasional'      => $get_permohonan->operasional,
+                'no_rkbm'          => '',
+                'status'           => $status_permohonan,
+                'permohonan_ke'    => $permohonan_ke,
+                'mulai'            => $this->input->post('mulai', true),
+                'selesai'          => $this->input->post('selesai', true),
+                'kapal'            => $this->input->post('nama_kapal', true),
+                'tempat_muat'      => $this->input->post('tempat_muat', true),
+                'barang'           => $this->input->post('barang', true),
+                'tempat_bongkar'   => $this->input->post('tempat_bongkar', true),
+                'jumlah_muatan'    => str_replace('.', '', $this->input->post('jumlah_muatan', true)),
+                'jumlah_asli'      => str_replace('.', '', $this->input->post('jumlah_asli', true)),
+                'jumlah_bongkar'   => str_replace('.', '', $this->input->post('jumlah_bongkar', true)),
+                'payment'          => str_replace('.', '', $this->input->post('payment', true)),
+                'permohonan_jenis' => $permohonan_jenis,
+            );
+            // var_dump($data);
+            $apdet = $this->db->insert('permohonan', $data);
+            if (!$apdet) {
+                $error = $this->db->error();
+                echo json_encode(array('status' => 'error', 'data' => print_r($error)));
+            } else {
+                echo json_encode(array('status' => 'success', 'data' => 'Permohonan ' . $pj_txt . ' berhasil di' . $sp_txt));
+            }
         }
     }
 

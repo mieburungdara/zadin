@@ -19,7 +19,11 @@ class Laporan extends Admin_controller
     }
     public function perusahaan()
     {
-        $this->render_view('laporan/laporan_index');
+        $this->render_view('laporan/laporan_perusahaan');
+    }
+    public function terminal()
+    {
+        $this->render_view('laporan/laporan_terminal');
     }
 
     public function tgl_in($date)
@@ -46,7 +50,7 @@ class Laporan extends Admin_controller
         $get_all_data_permohonan = $this->Permohonan_model->get_all();
         // var_dump($permohonan_modelnya);
 
-        $nomor_ke = 0;
+        $nomor_ke = $start;
 
         if ($permohonan_modelnya) {
             foreach ($permohonan_modelnya as $pal) {
@@ -133,8 +137,12 @@ class Laporan extends Admin_controller
                 }
                 $bum[] = $ngaray;
             }
-            // $count_all_results = count($permohonan_modelnya);
-            $count_all_results = $this->Laporan_model->total_rows($search);
+            if (!empty($perusahaan)) {
+                $count_all_results = count($permohonan_modelnya);
+            } else {
+                $count_all_results = $this->Laporan_model->total_rows($search);
+
+            }
 
         } else {
             $count_all_results = 0;
@@ -323,6 +331,7 @@ class Laporan extends Admin_controller
                 $this->db->where('MONTH(mulai)', $bulan);
                 $this->db->where('YEAR(mulai)', $tahun);
                 $permohonan = $this->db->get('permohonan')->result();
+                // var_dump($permohonan);
             }
         }
         // $permohonan =
@@ -330,9 +339,45 @@ class Laporan extends Admin_controller
             "bulan"      => $bulan,
             "tahun"      => $tahun,
             "perusahaan" => $perusahaan,
+            "bulan"      => $bulan,
+            "tahun"      => $tahun,
             "permohonan" => $permohonan,
         );
         $this->load->view('laporan/cetak_perusahaan', $data);
+    }
+    public function cetak_terminal($perusahaan, $bulan, $tahun)
+    {
+        $perusahaan = $perusahaan ?? null;
+        $bulan      = $bulan == 'undefined' || !is_numeric($bulan) ? idate("m") : $bulan;
+        $tahun      = $tahun == 'undefined' || !is_numeric($tahun) ? idate("Y") : $tahun;
+
+        // if (is_null($bulan) || is_null($tahun)) {
+        // echo $month = idate("yyyy");
+        // }
+        $permohonan = '';
+        if ($perusahaan) {
+            $this->db->where('perusahaan', $perusahaan);
+            $get_operasional = $this->db->get('operasional')->result();
+            if ($get_operasional) {
+                foreach ($get_operasional as $operasional_item) {
+                    $this->db->where('operasional', $operasional_item->id);
+                }
+                $this->db->where('MONTH(mulai)', $bulan);
+                $this->db->where('YEAR(mulai)', $tahun);
+                $permohonan = $this->db->get('permohonan')->result();
+                // var_dump($bulan);
+            }
+        }
+        // $permohonan =
+        $data = array(
+            "bulan"      => $bulan,
+            "tahun"      => $tahun,
+            "perusahaan" => $perusahaan,
+            "bulan"      => $bulan,
+            "tahun"      => $tahun,
+            "permohonan" => $permohonan,
+        );
+        $this->load->view('laporan/cetak_terminal', $data);
     }
 }
 

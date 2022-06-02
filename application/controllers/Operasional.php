@@ -176,9 +176,6 @@ class Operasional extends Admin_controller
     {
         // echo $id;
 
-        // $this->db->where('operasional', $id);
-        // $result = $this->db->get('permohonan')->result();
-
         $start                   = urldecode($this->input->post('start', true));
         $length                  = urldecode($this->input->post('length', true));
         $search                  = urldecode($this->input->post('search[value]', true));
@@ -190,9 +187,10 @@ class Operasional extends Admin_controller
         $barang                  = urldecode($this->input->post('barang', true)) ?? null;
         $tempat_muat             = urldecode($this->input->post('tempat_muat', true)) ?? null;
         $permohonan_modelnya     = $this->Permohonan_model->get_limit_data_array($id, $start, $length, $search, $permohonan_jenis, $bulan, $tahun, $status, $kapal, $barang, $tempat_muat);
-        $get_all_data_permohonan = $this->Permohonan_model->get_all();
-        $count_all_results       = count($permohonan_modelnya);
-        $count_all_data          = count($get_all_data_permohonan);
+        $get_all_data_permohonan = $this->Permohonan_model->get_all_filter($id);
+        // $get_all_data_permohonan = $this->Permohonan_model->get_all();
+        $count_all_results = count($permohonan_modelnya);
+        $count_all_data    = count($get_all_data_permohonan);
 
         // var_dump($permohonan_modelnya);
         foreach ($permohonan_modelnya as $pal) {

@@ -21,6 +21,13 @@ class Permohonan_model extends CI_Model
         $this->db->order_by($this->id, $this->order);
         return $this->db->get($this->table)->result();
     }
+    // get all
+    public function get_all_filter($asdadsdadsad)
+    {
+        $this->db->order_by($this->id, $this->order);
+        $this->db->where('operasional', $asdadsdadsad);
+        return $this->db->get($this->table)->result();
+    }
 
     // get data by id
     public function get_by_id($id)

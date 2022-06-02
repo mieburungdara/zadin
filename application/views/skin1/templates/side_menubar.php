@@ -14,7 +14,11 @@
             <ul id="sidebarnav">
                 <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?php echo base_url('dashboard'); ?>" aria-expanded="false"><i class="fa-duotone fa-file-chart-column mr-2"></i><span class="hide-menu"> Dashboard</span></a>
                 </li>
-                <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?php echo base_url('laporan'); ?>" aria-expanded="false"><i class="fa-duotone fa-scroll-old mr-2"></i><span class="hide-menu"> Laporan</span></a>
+                <li class="sidebar-item"> <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="fa-duotone fa-scroll-old mr-2"></i><span class="hide-menu">Laporan</span></a>
+                    <ul aria-expanded="false" class="collapse first-level">
+                        <li class="sidebar-item"> <a href="<?php echo base_url('laporan/perusahaan'); ?>" class="sidebar-link"><i class="fa-duotone fa-buildings mr-2"></i><span class="hide-menu"> Perusahaan</span></a></li>
+                        <li class="sidebar-item"> <a href="<?php echo base_url('laporan/terminal'); ?>" class="sidebar-link"><i class="fa-duotone fa-garage mr-2"></i><span class="hide-menu"> Terminal</span></a></li>
+                    </ul>
                 </li>
                 <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?php echo base_url('operasional'); ?>" aria-expanded="false"><i class="fa-duotone fa-scroll-old mr-2"></i><span class="hide-menu"> Operasional</span></a>
                 </li>

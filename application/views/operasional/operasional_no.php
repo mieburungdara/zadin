@@ -79,8 +79,10 @@ function integerToRoman($integer)
             <div class="card-body border-bottom">
                 <div class="row">
                     <div class="col-9">
-                        <h4 class="card-title"><?=$nama; ?></h4>
-                        <h6 class="card-subtitle"><?=$keterangan; ?></h6>
+                        <h4 class="card-title"><?=$nama; ?>
+                        </h4>
+                        <h6 class="card-subtitle"><?=$keterangan; ?>
+                        </h6>
                         <small class="font-12 text-muted"><i class="icon-calender mr-1"></i><?=tgl_ind(date_format(date_create($created_at), "Y-m-d H:i:s")); ?></small>
                     </div>
                     <div class="ml-auto mr-2">
@@ -585,42 +587,78 @@ foreach ($agen_kapals as $palu) {
             </div><!-- /.modal-dialog -->
         </div>
 
+<style>
+    .blink {
+ animation: blinkMe 0.5s linear infinite;
+}
+@keyframes blinkMe {
+ 0% {
+  opacity: 0;
+ }
+ 50% {
+  opacity: 1;
+ }
+ 100% {
+  opacity: 0;
+ }
+}
+</style>
 
-        <div id="signup-modal" class="modal fade" tabindex="-1" data-backdrop="static" role="dialog" style="display: none;" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
+
+
+        <div id="permohonan_update" class="modal fade" tabindex="-1" data-backdrop="static" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
 
                     <div class="modal-body">
                         <div class="text-center mt-2 mb-4">
-                            <h4>Buat Permohona</h4>
+                            <h4 class="jenismodal">Update Permohonan</h4>
                         </div>
 
-                        <form action="rkbm/create_action" method="post">
+                        <form action="" method="post" id="form-permohonan_update">
                             <div class="card-body">
                                 <div class="row mt-3">
 
                                     <div class="col-sm-12 col-md-6">
-                                        <label for="tanggal_muat">Rencana Muat / Mulai</label>
+                                        <div class="form-group">
+                                            <label for="update_status_permohonan" data-toggle="tooltip" data-placement="top" title="" data-original-title="Status Permohonan" class="text-danger blink">Status Permohonan</label>
+                                            <select class="custom-select mr-sm-2" name="status_permohonan" id="update_status_permohonan" placeholder="Perpanjang / Revisi">
+                                                <option value="2">Perpanjang</option>
+                                                <option value="3">Revisi</option>
+                                                <option value="4">Batal</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-12 col-md-6">
+                                        <div class="form-group">
+                                            <label for="update_permohonan_ke" data-toggle="tooltip" data-placement="top" title="" data-original-title="Permohonan Ke?">Permohonan (Perpanjang/Revisi) Ke</label>
+                                            <input type="number" class="form-control" disabled value="" name="permohonan_ke" id="update_permohonan_ke" placeholder="Akan Terisi Otomatis">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-12 col-md-6">
+                                        <label for="update_tanggal_muat">Rencana Mulai Muat/Bongkar</label>
                                         <div class="input-group form-group">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="icon-calender"></i></span>
                                             </div>
-                                            <input type="text" id="tanggal_muat" class=" form-control mydatepicker" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd">
+                                            <input type="text" id="update_tanggal_muat" name="mulai" class="form-control mydatepicker" autocomplete="off" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd">
                                         </div>
                                     </div>
                                     <div class="col-sm-12 col-md-6">
-                                        <label for="tanggal_selesai">Tanggal Selesai</label>
+                                        <label for="update_tanggal_selesai">Tanggal Selesai</label>
                                         <div class="input-group form-group">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="icon-calender"></i></span>
                                             </div>
-                                            <input type="text" id="tanggal_selesai" class="form-control mydatepicker" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd">
+                                            <input type="text" id="update_tanggal_selesai" name="selesai" class="form-control mydatepicker" autocomplete="off" data-date-format="yyyy-mm-dd" placeholder="yyyy-mm-dd">
                                         </div>
                                     </div>
                                     <div class="col-sm-12 col-md-6">
                                         <div class="form-group">
-                                            <label for="agen_kapal">Agen Kapal</label>
-                                            <select class="custom-select mr-sm-2 wide" name="agen_kapal" id="agen_kapal" placeholder="Agen Kapal">
+                                            <label for="update_agen_kapal">Agen Kapal</label>
+                                            <select class="custom-select mr-sm-2 wide" name="agen_kapal" id="update_agen_kapal" placeholder="Agen Kapal">
                                                 <option disabled <?php
 echo 'selected="selected"';
 ?>>Pilih...
@@ -636,16 +674,16 @@ foreach ($agen_kapals as $palu) {
                                     </div>
                                     <div class="col-sm-12 col-md-6">
                                         <div class="form-group">
-                                            <label for="nama_kapal">Nama Kapal</label>
-                                            <code id="ket"></code>
-                                            <select class="custom-select mr-sm-2" disabled name="nama_kapal" id="nama_kapal" placeholder="Nama Kapal">
+                                            <label for="update_nama_kapal">Nama Kapal</label>
+                                            <code id="update_ket"></code>
+                                            <select class="custom-select mr-sm-2" disabled name="nama_kapal" id="update_nama_kapal" placeholder="Nama Kapal">
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-sm-12 col-md-6">
                                         <div class="form-group">
-                                            <label for="jenis_terminal">Jenis Terminal</label>
-                                            <select class="custom-select mr-sm-2 wide" name="jenis_terminal" id="jenis_terminal" placeholder="Jenis Terminal">
+                                            <label for="update_jenis_terminal">Jenis Terminal</label>
+                                            <select class="custom-select mr-sm-2 wide" name="jenis_terminal" id="update_jenis_terminal" placeholder="Jenis Terminal">
                                                 <option disabled <?php
 echo 'selected="selected"';
 
@@ -662,21 +700,21 @@ foreach ($agen_kapals as $palu) {
                                     </div>
                                     <div class="col-sm-12 col-md-6">
                                         <div class="form-group">
-                                            <label for="username">Nama Terminal</label>
-                                            <select class="custom-select mr-sm-2" disabled name="nama_terminal" id="nama_terminal" placeholder="Nama Terminal">
+                                            <label for="update_tempat_muat" data-toggle="tooltip" data-placement="top" title="" data-original-title="Terminal tempat memuat barang">Tempat Muat</label>
+                                            <select class="custom-select mr-sm-2" disabled name="tempat_muat" id="update_tempat_muat" placeholder="Pilih">
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-sm-12 col-md-6">
                                         <div class="form-group">
-                                            <label for="tujuan">Tempat Bongkar/Tujuan</label>
-                                            <input class="form-control" type="text" id="tujuan" name="tujuan" placeholder="Pilih..">
+                                            <label for="update_tempat_bongkar" data-toggle="tooltip" data-placement="top" title="" data-original-title="Tempat barang dibongkar Atau Tujuan barang">Tempat Bongkar/Tujuan</label>
+                                            <input class="form-control" type="text" id="update_tempat_bongkar" name="tempat_bongkar" placeholder="Pilih..">
                                         </div>
                                     </div>
                                     <div class="col-sm-12 col-md-6">
                                         <div class="form-group">
-                                            <label for="barang">Jenis Barang</label>
-                                            <select class="custom-select mr-sm-2" name="barang" id="barang" placeholder="Nama Terminal">
+                                            <label for="update_barang">Jenis Barang</label>
+                                            <select class="custom-select mr-sm-2" name="barang" id="update_barang" placeholder="Nama Terminal">
                                                 <option disabled <?php
 echo 'selected="selected"';
 ?>>Pilih..
@@ -692,62 +730,47 @@ foreach ($agen_kapals as $palu) {
                                     </div>
                                     <div class="col-sm-4 col-md-4">
                                         <div class="form-group">
-                                            <label for="username" data-toggle="tooltip" data-placement="top" title="" data-original-title="Muatan yang direncanakan">Jumlah Muat</label>
-                                            <input class="form-control" type="text" id="jumlah" name="jumlah" placeholder="Contoh: 7500">
+                                            <label for="update_jumlah_muatan" data-toggle="tooltip" data-placement="top" title="" data-original-title="Muatan yang direncanakan">Muatan Perkiraan</label>
+                                            <input class="form-control hapus masinput" type="text" id="update_jumlah_muatan" name="jumlah_muatan">
                                         </div>
                                     </div>
                                     <div class="col-sm-4 col-md-4">
                                         <div class="form-group">
-                                            <label for="jumlah_real" data-toggle="tooltip" data-placement="top" title="" data-original-title="Muatan yang sebenarnya">Jumlah Sebenarnya</label>
-                                            <input class="form-control" type="text" id="jumlah_real" name="jumlah_real" placeholder="Contoh: 7500">
+                                            <label for="update_jumlah_asli" data-toggle="tooltip" data-placement="top" title="" data-original-title="Muatan yang sebenarnya">Muatan Sebenarnya</label>
+                                            <input class="form-control hapus masinput" type="text" id="update_jumlah_asli" name="jumlah_asli">
                                         </div>
                                     </div>
                                     <div class="col-sm-4 col-md-4">
                                         <div class="form-group">
-                                            <label for="bongkar" data-toggle="tooltip" data-placement="top" title="" data-original-title="RKBM bongkar">Jumlah Bongkaran</label>
-                                            <input class="form-control" type="text" id="bongkar" name="bongkar" placeholder="Contoh: 7500">
+                                            <label for="update_jumlah_bongkar" data-toggle="tooltip" data-placement="top" title="" data-original-title="Muatan bongkar">Bongkaran Akhir</label>
+                                            <input class="form-control hapus masinput" type="text" id="update_jumlah_bongkar" name="jumlah_bongkar">
                                         </div>
                                     </div>
+
                                     <div class="col-sm-12 col-md-6">
                                         <div class="form-group">
-                                            <label for="asal_brg">Asal Barang</label>
-                                            <select class="custom-select mr-sm-2 wide" name="asal_brg" id="asal_brg" placeholder="Asal Barang">
-                                                <option disabled <?php
-echo 'selected="selected"';
-
-?>>Choose...
-                                                </option>
-                                                <?php
-$agen_kapals = $this->Asal_pemilik_model->get_asal();
-foreach ($agen_kapals as $palu) {
-    echo "<option value='" . $palu->id . "'>" . $palu->nama . "</option>";
-}
-?>
-                                            </select>
+                                            <label for="update_payment" data-toggle="tooltip" data-placement="top" title="" data-original-title="Masukkan jumlah biaya manual">Penagihan</label>
+                                            <input class="form-control hapus masinput" type="text" id="update_payment" name="payment" placeholder="Kosongkan Jika Biaya Otomatis">
                                         </div>
                                     </div>
+
                                     <div class="col-sm-12 col-md-6">
                                         <div class="form-group">
-                                            <label for="perusahaan">Perusahaan PBM</label>
-                                            <select class="custom-select mr-sm-2 wide" name="perusahaan" id="perusahaan" placeholder="Agen Kapal">
-                                                <option disabled <?php
-echo 'selected="selected"';
-
-?>>Choose...
-                                                </option>
-                                                <?php
-$agen_kapals = $this->Perusahaan_model->get_all();
-foreach ($agen_kapals as $palu) {
-    echo "<option value='" . $palu->id . "'>" . $palu->nama . "</option>";
-}
-?>
+                                            <label for="update_permohonan_jenis" class="text-danger" data-toggle="tooltip" data-placement="top" title="" data-original-title="Muat Atau Bongkar?">Jenis Permohonan</label>
+                                            <select class="custom-select mr-sm-2" name="permohonan_jenis" id="update_permohonan_jenis" placeholder="Muat Atau Bongkar?">
+                                                <option value="1">Muat</option>
+                                                <option value="2">Bongkar</option>
                                             </select>
                                         </div>
                                     </div>
 
                                     <div class="card-body">
                                         <div class="action-form">
-                                            <div class="form-group mb-0 text-right"><input type="hidden" name="id" value="<?php echo $id; ?>" /><button type="submit" class="btn btn-info waves-effect waves-light">Save</button><a href="<?=site_url('rkbm'); ?>" class="btn btn-dark waves-effect waves-light">Cancel</a></div>
+                                            <div class="form-group mb-0 text-right">
+                                                <input type="hidden" name="operasional" value="<?php echo $id; ?>" />
+                                                <button type="submit" class="btn btn-info waves-effect waves-light">Simpan</button>
+                                                <button type="button" class="btn btn-dark waves-effect waves-light" data-dismiss="modal" aria-hidden="true">Batal</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -758,6 +781,7 @@ foreach ($agen_kapals as $palu) {
                 </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->
         </div>
+
 
 
 
@@ -804,6 +828,25 @@ $red = json_encode($dull);
     <script>
     kkMessgae.uri = ' <?=base_url(); ?>assets/libs/jquery-kk-message/'; // this is the id of the form
     $("#form-permohonan").submit(function(e) {
+        e.preventDefault(); // avoid to execute the actual submit of the form.
+        var form = $(this);
+        var actionUrl = form.attr('action');
+        $.ajax({
+            type: "POST",
+            url: actionUrl,
+            data: form.serialize(), // serializes the form's elements.
+            dataType: "json",
+            success: function(data) {
+                if (data.status == 'success') {
+                    kkMessgae.success(data.data);
+                    window.location.reload();
+                } else {
+                    kkMessgae.error(data.data);
+                }
+            }
+        });
+    });
+    $("#form-permohonan_update").submit(function(e) {
         e.preventDefault(); // avoid to execute the actual submit of the form.
         var form = $(this);
         var actionUrl = form.attr('action');
@@ -956,6 +999,20 @@ $red = json_encode($dull);
             }
         });
     });
+    $("#update_jenis_terminal").change(function() {
+        field = this.value;
+        $('#update_tempat_muat').prop("disabled", false); // Element(s) are now enabled.
+        $.ajax({
+            type: "POST",
+            data: {
+                "id": field
+            },
+            url: "<?=base_url(); ?>terminal/read_json",
+            success: function(data) {
+                $("#update_tempat_muat").html(data);
+            }
+        });
+    });
 
     function getNumberWithCommas(number) {
         return parseInt(number).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -980,7 +1037,7 @@ $red = json_encode($dull);
             document.getElementById("ket").innerHTML = '';
             var permohonan = button.data('permohonan')
             modal.find('.jenismodal').text('Ubah Permohonan');
-            $('#form-permohonan').attr('action', '<?=base_url(); ?>kegiatan/permohonan_update/' + idpermohonan);
+            $('#form-permohonan').attr('action', '<?=base_url(); ?>kegiatan/permohonan_ubah/' + idpermohonan);
             $.getJSON("<?=base_url(); ?>permohonan/read_json/" + idpermohonan, function(data, status) {
                 $('#agen_kapal').val(permohonan.agen_kapal).change();
                 $('#jenis_terminal').val(permohonan.jenis_tempat_muat).change();
@@ -1032,6 +1089,79 @@ $red = json_encode($dull);
                 $('#jumlah_bongkar').val(bungkar);
                 // $('#asal_barang').val(data.asal_barang);
                 // $('#perusahaan').val(data.perusahaan);
+            });
+        }
+    })
+
+    $('#permohonan_update').on('shown.bs.modal', function(event) {
+        var memuat = '';
+        var aseli = '';
+        var bungkar = '';
+        var button = $(event.relatedTarget)
+        var modal = $(this)
+        var idpermohonan = button.data('idpermohonan')
+        $('#form-update_permohonan').trigger("reset");
+        document.getElementById("update_nama_kapal").options.length = 0;
+        $('#update_nama_kapal').prop('disabled', 'disabled');
+        document.getElementById("update_tempat_muat").options.length = 0;
+        $('#update_tempat_muat').prop('disabled', 'disabled');
+        if (!idpermohonan) {
+            $('#form-update_permohonan').attr('action', '<?=base_url(); ?>kegiatan/permohonan_update');
+            document.getElementById("ket").innerHTML = '';
+        } else {
+            document.getElementById("ket").innerHTML = '';
+            var permohonan = button.data('permohonan')
+            $('#form-permohonan_update').attr('action', '<?=base_url(); ?>kegiatan/permohonan_update/' + idpermohonan);
+            $.getJSON("<?=base_url(); ?>permohonan/read_json/" + idpermohonan, function(data, status) {
+                $('#update_agen_kapal').val(permohonan.agen_kapal).change();
+                $('#update_jenis_terminal').val(permohonan.jenis_tempat_muat).change();
+                $('#update_tanggal_muat').datepicker('update', data.mulai);
+                if (data.mulai != "0000-00-00") {
+                    $('#update_tanggal_mulai').datepicker('update', data.mulai);
+                }
+                if (data.selesai != "0000-00-00") {
+                    $('#update_tanggal_selesai').datepicker('update', data.selesai);
+                }
+                $(document).on("ajaxComplete", function(event, xhr, settings) {
+                    if (settings.url == "<?=base_url(); ?>kapal/read_json") {
+                        $('#update_nama_kapal').val(data.kapal).change();
+                    }
+                })
+                $(document).on("ajaxComplete", function(event, xhr, settings) {
+                    if (settings.url == "<?=base_url(); ?>terminal/read_json") {
+                        $('#update_tempat_muat').val(data.tempat_muat).change();
+                    }
+                })
+                if (data.jumlah_muatan == '0' || data.jumlah_muatan == 0 || data.jumlah_muatan == '' || data.jumlah_muatan == null || data.jumlah_muatan == undefined) {
+                    memuat = '';
+                } else {
+                    memuat = getNumberWithCommas(data.jumlah_muatan);
+                }
+                if (data.jumlah_asli == '' || data.jumlah_asli == 0 || data.jumlah_asli == '0' || data.jumlah_asli == null || data.jumlah_asli == undefined) {
+                    aseli = '';
+                } else {
+                    aseli = getNumberWithCommas(data.jumlah_asli);
+                }
+                if (data.jumlah_bongkar == 0 || data.jumlah_bongkar == '0' || data.jumlah_bongkar == '' || data.jumlah_bongkar == null || data.jumlah_bongkar == undefined) {
+                    bungkar = '';
+                } else {
+                    bungkar = getNumberWithCommas(data.jumlah_bongkar);
+                }
+                if (data.payment == 0 || data.payment == '0' || data.payment == '' || data.payment == null || data.payment == undefined) {
+                    pemen = '';
+                } else {
+                    pemen = getNumberWithCommas(data.payment);
+                }
+                $('#update_tempat_bongkar').val(data.tempat_bongkar);
+                $('#update_status_permohonan').val(data.status);
+                $('#update_permohonan_ke').val(data.permohonan_ke);
+                $('#update_barang').val(data.barang);
+                $('#update_permohonan_ke').val(data.permohonan_ke ? ++data.permohonan_ke : 1);
+                $('#update_permohonan_jenis').val(data.permohonan_jenis);
+                $('#update_payment').val(pemen);
+                $('#update_jumlah_muatan').val(memuat);
+                $('#update_jumlah_asli').val(aseli);
+                $('#update_jumlah_bongkar').val(bungkar);
             });
         }
     })
@@ -1101,6 +1231,13 @@ $red = json_encode($dull);
     }, {
         source: substringMatcher(xer)
     });
+    $('#update_tempat_bongkar').typeahead({
+        hint: true,
+        highlight: true,
+        minLength: 1
+    }, {
+        source: substringMatcher(xer)
+    });
 
     jQuery('.mydatepicker').datepicker({
         maxViewMode: 2,
@@ -1118,10 +1255,19 @@ $red = json_encode($dull);
             var bendera = $(this).children('option:selected').attr('data-bendera');
             $('#ket').html('' + bendera + ' ~ ' + ukuran + '');
         });
+        $('#update_nama_kapal').change(function() {
+            var ukuran = $(this).children('option:selected').attr('data-ukuran');
+            var bendera = $(this).children('option:selected').attr('data-bendera');
+            $('#update_ket').html('' + bendera + ' ~ ' + ukuran + '');
+        });
 
-        $("#jumlah").inputmask("9.999.999");
-        $("#jumlah_real").inputmask("9.999.999");
-        $("#bongkar").inputmask("9.999.999");
+        // $("#jumlah").inputmask("9.999.999");
+        // $("#jumlah_real").inputmask("9.999.999");
+        // $("#bongkar").inputmask("9.999.999");
+
+        // $("#update_jumlah").inputmask("9.999.999");
+        // $("#update_jumlah_real").inputmask("9.999.999");
+        // $("#update_bongkar").inputmask("9.999.999");
 
         $("#agen_kapal").change(function() {
             field = this.value;
@@ -1134,6 +1280,20 @@ $red = json_encode($dull);
                 url: "<?=base_url(); ?>kapal/read_json",
                 success: function(data) {
                     $("#nama_kapal").html(data);
+                }
+            });
+        });
+        $("#update_agen_kapal").change(function() {
+            field = this.value;
+            $('#update_nama_kapal').prop("disabled", false); // Element(s) are now enabled.
+            $.ajax({
+                type: "POST",
+                data: {
+                    "id": field
+                },
+                url: "<?=base_url(); ?>kapal/read_json",
+                success: function(data) {
+                    $("#update_nama_kapal").html(data);
                 }
             });
         });

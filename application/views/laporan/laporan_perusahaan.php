@@ -44,7 +44,8 @@ $jumlah_bongkar          = count($this->db->query("SELECT id FROM permohonan whe
             </div>
 
             <div class="col-12 mt-3">
-                <button class="btn waves-effect waves-light btn-sm btn-info collapsed mr-3 bukacetak" data-link="" disabled><i class="fa-duotone fa-print  mr-1"></i>Cetak Kegiatan Perusahaan</button>
+                <button class="btn waves-effect waves-light btn-sm btn-info collapsed mr-3 bukacetak" data-link="" disabled><i class="fa-duotone fa-print  mr-1"></i>Cetak Laporan</button>
+                <button class="btn waves-effect waves-light btn-sm btn-info collapsed mr-3 bukacetak" data-link="" disabled><i class="fa-duotone fa-print  mr-1"></i>Cetak Surat</button>
                 <a class="btn waves-effect waves-light btn-sm btn-info collapsed mr-3" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                     Filter Permohonan
                 </a>
@@ -303,6 +304,7 @@ $(function() {
         if (ngeper != undefined) {
             $(".bukacetak").prop("disabled", false);
             ngeling = "<?=base_url(); ?>laporan/cetak_perusahaan/" + ngeper + "/" + ngebulan + "/" + ngetahun;
+            ngeling = "<?=base_url(); ?>laporan/cetak_terminal/" + ngeper + "/" + ngebulan + "/" + ngetahun;
             $(".bukacetak").attr('data-link', ngeling);
             // console.log(ngeling);
         } else {
