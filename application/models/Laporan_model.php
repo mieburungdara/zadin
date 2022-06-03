@@ -97,7 +97,7 @@ class Laporan_model extends CI_Model
             return $this->db->get($this->table)->result_array();
         }
     }
-    public function get_terminal_data($start = 0, $limit, $bulan = null, $tahun = null, $terminal = null)
+    public function get_terminal_data($start = 0, $limit, $bulan = null, $tahun = null)
     {
         $this->db->order_by($this->id, "DESC");
         if ($bulan != null) {
@@ -106,12 +106,7 @@ class Laporan_model extends CI_Model
         if ($tahun != null) {
             $this->db->where('YEAR(mulai)', $tahun);
         }
-        $this->db->where('perusahaan', $perusahaan);
-        $perusahaan_data = $this->db->get('operasional')->result();
-        foreach ($perusahaan_data as $perusahaan_item) {
-            $this->db->where('perusahaan', $perusahaan_item->id);
-        }
         $this->db->limit($limit, $start);
-        return $this->db->get($this->table)->result_array();
+        return $this->db->get('permohonan')->result_array();
     }
 }

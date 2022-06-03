@@ -44,8 +44,8 @@ $jumlah_bongkar          = count($this->db->query("SELECT id FROM permohonan whe
             </div>
 
             <div class="col-12 mt-3">
-                <button class="btn waves-effect waves-light btn-sm btn-info collapsed mr-3 bukacetak" data-link="" disabled><i class="fa-duotone fa-print  mr-1"></i>Cetak Laporan</button>
-                <button class="btn waves-effect waves-light btn-sm btn-info collapsed mr-3 bukacetak" data-link="" disabled><i class="fa-duotone fa-print  mr-1"></i>Cetak Surat</button>
+                <button class="btn waves-effect waves-light btn-sm btn-info collapsed mr-3 cetaklaporan" data-link="" disabled><i class="fa-duotone fa-print  mr-1"></i>Cetak Laporan</button>
+                <button class="btn waves-effect waves-light btn-sm btn-info collapsed mr-3 cetaksurat" data-link="" disabled><i class="fa-duotone fa-print  mr-1"></i>Cetak Surat</button>
                 <a class="btn waves-effect waves-light btn-sm btn-info collapsed mr-3" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                     Filter Permohonan
                 </a>
@@ -278,7 +278,7 @@ $(function() {
         ]
     });
 
-    var ngeling, ngebulan, ngetahun, ngeper;
+    var cetaklaporan, cetaksurat, ngebulan, ngetahun, ngeper;
 
     $('#filter_bulan').on('change', function(e) {
         t.draw();
@@ -302,13 +302,16 @@ $(function() {
     });
     t.on('xhr', function(e, settings, json) {
         if (ngeper != undefined) {
-            $(".bukacetak").prop("disabled", false);
-            ngeling = "<?=base_url(); ?>laporan/cetak_perusahaan/" + ngeper + "/" + ngebulan + "/" + ngetahun;
-            ngeling = "<?=base_url(); ?>laporan/cetak_terminal/" + ngeper + "/" + ngebulan + "/" + ngetahun;
-            $(".bukacetak").attr('data-link', ngeling);
+            $(".cetaklaporan").prop("disabled", false);
+            $(".cetaksurat").prop("disabled", false);
+            cetaklaporan = "<?=base_url(); ?>laporan/cetak_perusahaan/" + ngeper + "/" + ngebulan + "/" + ngetahun;
+            cetaksurat = "<?=base_url(); ?>laporan/cetak_terminal/" + ngeper + "/" + ngebulan + "/" + ngetahun;
+            $(".cetaklaporan").attr('data-link', cetaklaporan);
+            $(".cetaksurat").attr('data-link', cetaksurat);
             // console.log(ngeling);
         } else {
-            $(".bukacetak").prop("disabled", true);
+            $(".cetaklaporan").prop("disabled", true);
+            $(".cetaksurat").prop("disabled", true);
             // ngeling = "<?=base_url(); ?>laporan/cetak/perusahaan/" + ngeper + "/" + ngebulan + "/" + ngetahun;
             // console.log(ngeling);
         }
@@ -330,7 +333,11 @@ $(function() {
     });
 
     $(document).ready(function() {
-        $(".bukacetak").on("click", function() {
+        $(".cetaklaporan").on("click", function() {
+            var linknya = $(this).attr("data-link");
+            window.open(linknya, '_blank');
+        });
+        $(".cetaksurat").on("click", function() {
             var linknya = $(this).attr("data-link");
             window.open(linknya, '_blank');
         });

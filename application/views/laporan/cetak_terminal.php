@@ -260,11 +260,8 @@ foreach ($permohonan as $perm) {
         // echo "<td>" . implode(',', $dung) . "</td>";
         // echo "<td>" . number_format($perm->jumlah_asli, 0, ',', '.') . "</td>";
         // echo '</tr>';
-    }
 
-    if (in_array($perm->id, $array)) {
     }
-
 }
 ; // var_dump($parai); ?>
 
@@ -288,19 +285,19 @@ function object_to_array($data)
     }
     return $data;
 }
-$permohonan    = object_to_array($permohonan);
+$this->db->where_in('id', $array);
+$semua = $this->db->get('permohonan')->result();
+
+$semua         = object_to_array($semua);
 $newPermohonan = array();
 
-foreach ($permohonan as $value) {
+foreach ($semua as $value) {
     if (empty($newPermohonan[$value['tempat_muat']])) {
         $newPermohonan[$value['tempat_muat']] = $value;
     } else {
-        if ($newPermohonan[$value['tempat_muat']]['permohonan_jenis'] == 1) {
-            $newPermohonan[$value['tempat_muat']]['jumlah_muatan'] += $value['jumlah_muatan'];
-        }
-        if ($newPermohonan[$value['tempat_muat']]['permohonan_jenis'] == 2) {
-            $newPermohonan[$value['tempat_muat']]['jumlah_muatan'] += $value['jumlah_bongkar'];
-        }
+        $newPermohonan[$value['tempat_muat']]['jumlah_asli'] += $value['jumlah_asli'];
+        $newPermohonan[$value['tempat_muat']]['cetak'] += $value['cetak'];
+        $newPermohonan[$value['tempat_muat']]['inc'] += $value['inc'];
 
     }
 }
@@ -311,19 +308,19 @@ foreach ($newPermohonan as $ogog) {
 
     echo "<td>" . $nomor_ke++ . "</td>";
     echo "<td>" . strtoupper($asdasdas->nama) . "</td>";
-    // echo "<td>" . implode(',', $dung) . "</td>";
-    echo "<td>" . number_format($ogog['jumlah_muatan'], 0, ',', '.') . "</td>";
+    echo "<td>" . $ogog['inc'] . "</td>";
+    echo "<td>" . number_format($ogog['jumlah_asli'], 0, ',', '.') . "</td>";
     echo '</tr>';
 
 }
-?>
+; ?>
                                     </tbody>
                                 </table>
                             </div>
                             <?php
 
-echo "<pre>";
-// var_dump($permohonan);
+// echo "<pre>";
+// var_dump($semua);
 
 // $products = array(
 //     array(
@@ -340,7 +337,7 @@ echo "<pre>";
 //     ),
 // );
 
-var_dump($newPermohonan);
+// var_dump($newPermohonan);
 
 // $products = array(
 //     array(
@@ -368,9 +365,9 @@ var_dump($newPermohonan);
 
 // var_dump($newProducts);
 
-echo "</pre>";
+// echo "</pre>";
 
-?>
+; ?>
                             <br>Terlampir juga rincian rekapitulasi diatas yang merupakan satu kesatuan dengan
                             laporan ini.<br><br>
                             Demikian Permohonan ini Kami Buat, atas perhatian dan kerjasamanya kami

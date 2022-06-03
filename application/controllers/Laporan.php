@@ -38,6 +38,35 @@ class Laporan extends Admin_controller
         $result = $tgl . " " . $Bulan[(int)$bulan - 1] . " " . $tahun;
         return $result;
     }
+    public function object_to_array($data)
+    {
+        if (is_array($data) || is_object($data)) {
+            $result = [];
+            foreach ($data as $key => $value) {
+                $result[$key] = (is_array($value) || is_object($value)) ? $this->object_to_array($value) : $value;
+            }
+            return $result;
+        }
+        return $data;
+    }
+    public function rekursip($id, $datanya)
+    {
+        $this->db->where('id', $id);
+        $permohonan = $this->db->get('permohonan')->row();
+        if ($permohonan) {
+            if ($permohonan->parent) {
+                $datanya[] = $permohonan->parent;
+                return $this->rekursip($permohonan->parent, $datanya);
+            }
+        }
+        return $datanya;
+    }
+    public function dd($data)
+    {
+        echo '<pre>';
+        var_dump($data);
+        echo '</pre>';
+    }
     public function load_perusahaan()
     {
         $start                   = urldecode($this->input->post('start', true));
@@ -158,157 +187,200 @@ class Laporan extends Admin_controller
         );
         echo json_encode($output);
     }
+    // public function buka_perusahaan($start = null, $length = null, $bulan = null, $tahun = null)
+    public function buka_perusahaan($bulan = null, $tahun = null)
+    {
+
+        if ($bulan != null) {
+            $this->db->where('MONTH(mulai)', $bulan);
+        }
+        if ($tahun != null) {
+            $this->db->where('YEAR(mulai)', $tahun);
+        }
+
+        $get_perusahaan_list = $this->db->get('permohonan')->result();
+        $list_surat          = [];
+        foreach ($get_perusahaan_list as $get_perusahaan) {
+            $list_surat[] = $get_perusahaan->no_surat;
+        }
+        // var_dump(array_unique($list_surat));
+        $list_surat      = array_unique($list_surat);
+        $list_permohonan = [];
+        foreach ($list_surat as $surat) {
+            $this->db->order_by('id', 'desc');
+            $this->db->where_in('no_surat', $surat);
+            $get_perusahaan_list = $this->db->get('permohonan')->row();
+            $list_permohonan[]   = array('id' => $get_perusahaan_list->id, 'tempat_muat' => $get_perusahaan_list->tempat_muat, 'inc' => $get_perusahaan_list->inc, 'jumlah_asli' => $get_perusahaan_list->jumlah_asli);
+        }
+
+        $semua         = $this->object_to_array($list_permohonan);
+        $newPermohonan = array();
+
+        foreach ($semua as $value) {
+            if (empty($newPermohonan[$value['tempat_muat']])) {
+                $newPermohonan[$value['tempat_muat']] = $value;
+            } else {
+                $newPermohonan[$value['tempat_muat']]['jumlah_asli'] += $value['jumlah_asli'];
+                $newPermohonan[$value['tempat_muat']]['inc'] += $value['inc'];
+            }
+        }
+
+        // $this->dd($newPermohonan);
+        return $newPermohonan;
+
+        // $this->db->where_in('no_surat', $list_surat);
+        // $get_perusahaan_list = $this->db->get('permohonan')->row();
+        // var_dump($get_perusahaan_list);
+
+    }
     public function load_terminal()
     {
-        $start                   = urldecode($this->input->post('start', true));
-        $length                  = urldecode($this->input->post('length', true));
         $bulan                   = urldecode($this->input->post('bulan', true)) ?? null;
         $tahun                   = urldecode($this->input->post('tahun', true)) ?? null;
-        $perusahaan              = urldecode($this->input->post('perusahaan', true)) ?? null;
-        $permohonan_modelnya     = $this->Laporan_model->get_perusahaan_data($start, $length, $bulan, $tahun, $perusahaan);
-        $get_all_data_permohonan = $this->Permohonan_model->get_all();
-        // $count_all_results       = $this->Permohonan_model->total_rows($search);
+        $get_permohonan_filtered = $this->buka_perusahaan($bulan, $tahun);
+        $count_all_results       = count($get_permohonan_filtered);
+        $nomor_ke                = 0;
 
-        $count_all_results = count($permohonan_modelnya);
-        $count_all_data    = count($get_all_data_permohonan);
-        $nomor_ke          = 0;
-        var_dump($permohonan_modelnya);
-        foreach ($permohonan_modelnya as $pal) {
-
-            // if ($pal['permohonan_jenis'] == 1) {
-            // $tanggal_mulai = $pal['mulai'];
-            // }
-            // if ($pal['permohonan_jenis'] == 2) {
-            //     $tanggal_mulai = $pal['selesai'];
-            // }
-            // var_dump($tanggal_mulai);
-            // if ($tanggal_mulai == '0000-00-00') {
-            //     echo 'Tanggal mulai salah';
-            // }
-            $ngaray['no']       = ++$nomor_ke;
-            $ngaray['no_surat'] = $pal['id'];
-
-            $ngaray['no_rkbm'] = $pal['no_rkbm'];
-
-            $this->db->where('id', $pal['operasional']);
-            $get_operasional       = $this->db->get('operasional')->row();
-            $ngaray['operasional'] = $get_operasional->nama;
-
-            // $ngaray['detail'] = $this->tgl_in($tanggal_mulai);
-            // $romawi           = $this->integerToRoman(date("m", strtotime($tanggal_mulai)));
-            // $taon             = date("Y", strtotime($tanggal_mulai));
-            // $this->db->where('id', $id);
-            // $get_operasional = $this->db->get('operasional')->row();
-            // // var_dump($get_operasional);
-            // $this->db->where('id', $get_operasional->perusahaan);
-            // $get_perusahaan = $this->db->get('perusahaan')->row();
-
-            // $perusahaan_mana = date("Y", strtotime($tanggal_mulai));
-            // $jesur           = '';
-            // $stasur          = '';
-            // $perke           = $pal['permohonan_ke'] == 0 ? '' : $pal['permohonan_ke'];
-
-            // if ($pal['status'] == 1) {
-            //     $ngaray['detail'] .= '<span class="badge ml-2 mr-1 badge-success">BARU</span>';
-            //     $stasur = 'B';
-            // }
-            // if ($pal['status'] == 2) {
-            //     $ngaray['detail'] .= '<span class="badge ml-2 mr-1 badge-success">PERPANJANG</span>';
-            //     $stasur = 'P';
-            // }
-            // if ($pal['status'] == 3) {
-            //     $ngaray['detail'] .= '<span class="badge ml-2 mr-1 badge-success">REVISI</span>';
-            //     $stasur = 'PR';
-            // }
-            // if ($pal['status'] == 4) {
-            //     $ngaray['detail'] .= '<span class="badge ml-2 mr-1 badge-success">BATAL</span>';
-            //     $stasur = 'X';
-            // }
-            // if ($pal['permohonan_jenis'] == 1) {
-            //     $ngaray['detail'] .= '<span class="badge mr-1 badge-danger">MUAT</span>';
-            //     $jesur = 'M';
-            // }
-            // if ($pal['permohonan_jenis'] == 2) {
-            //     $ngaray['detail'] .= '<span class="badge mr-1 badge-danger">BONGKAR</span>';
-            //     $jesur = 'B';
-            // }
-            // if ($pal['permohonan_jenis'] == 3) {
-            //     $ngaray['detail'] .= '<span class="badge mr-1 badge-danger">MUAT & BONGKAR</span>';
-            //     $jesur = 'MB';
-            // }
-            // if ($pal['no_rkbm']) {
-            //     $erkabem = $pal['no_rkbm'];
-            // } else {
-            //     $erkabem = '<i class="fa fa-warning text-danger faa-flash faa-fast animated"></i> <code>belum ada</code>';
-            // }
-            // $ngaray['detail'] .= '
-            //                 <div class="row mb-2">
-            //                     <div class="col-auto border-right align-self-center">
-            //                         <div class="d-flex">
-            //                             <code>No Surat :<br> 0' . $pal['id'] . '/' . $jesur . '/' . $stasur . $perke . '/RKBM-' . $get_perusahaan->inisial . "/SMD/" . $romawi . '/' . $taon . '</code>
-            //                         </div>
-            //                     </div>
-            //                     <div class="col-auto" data-toggle="modal" data-target="#modal-norkbm" data-nosurat="' . $pal['id'] . '"><code>No RKBM :<br>
-            //                     ' . $erkabem . '
-            //                     </div>
-            //                 </div>';
-
-            // $this->db->where('id', $pal['kapal']);
-            // $permohonan_kapal = $this->db->get('kapal')->row();
-            // $agen_kapal       = $this->Reza_model->get_ref_val($this->db->database, 'kapal', 'agen_kapal', $permohonan_kapal->agen_kapal)->nama;
-
-            // $tempat_muat       = $this->Reza_model->get_ref_val($this->db->database, 'permohonan', 'tempat_muat', $pal['tempat_muat'])->nama;
-            // $jenis_tempat_muat = $this->Reza_model->get_ref_val($this->db->database, 'terminal', 'jenis', $this->Reza_model->get_ref_val($this->db->database, 'permohonan', 'tempat_muat', $pal['tempat_muat'])->jenis)->nama;
-
-            // $ngaray['deskripsi'] = '';
-            // $ngaray['deskripsi'] .= '
-            // <span class="ml-n2 text-left badge btn-outline-secondary">
-            // <span class="badge badge-light" data-toggle="tooltip" data-placement="top" title="' . strtoupper($agen_kapal) . '">Kapal</span> ' . $permohonan_kapal->nama . '<br>
-            // <span class="badge badge-light" data-toggle="tooltip" data-placement="top" title="' . strtoupper($jenis_tempat_muat) . '">Terminal Muat</span> ' . $tempat_muat . '<br>
-            // <span class="badge badge-light">Terminal Bongkar</span> ' . $pal['tempat_bongkar'] . '</span>';
-
-            // $ngaray['keterangan'] = '';
-            // $ngaray['keterangan'] .= '
-            // <span class="ml-n2 text-left badge btn-outline-secondary">
-            // <span class="badge badge-light">Muat Perkiraan</span> ' . number_format($pal['jumlah_muatan'], 0, ',', '.') . '<br>
-            // <span class="badge badge-light">Muat Asli</span> ' . number_format($pal['jumlah_asli'], 0, ',', '.') . '<br>
-            // <span class="badge badge-light">Bongkar</span> ' . number_format($pal['jumlah_bongkar'], 0, ',', '.') . '<br></span>';
-
-            // $ngaray['aksi'] = '';
-
-            // $warna = $pal['cetak'] ? 'info' : 'danger';
-            // $fa    = $pal['cetak'] ? 'check' : 'times';
-
-            // $id_jenis_tempat_muat = $this->Reza_model->get_ref_val($this->db->database, 'terminal', 'jenis', $this->Reza_model->get_ref_val($this->db->database, 'permohonan', 'tempat_muat', $pal['tempat_muat'])->jenis)->id;
-            // $atribut_json         = json_encode(array("agen_kapal" => $permohonan_kapal->agen_kapal, 'jenis_tempat_muat' => $id_jenis_tempat_muat));
-
-            // $permohonan_jenis = $this->Reza_model->get_ref_val($this->db->database, 'permohonan', 'permohonan_jenis', $pal['permohonan_jenis'])->nama;
-
-            // $ngaray['aksi'] .= '<span class="mr-1 btn-sm btn waves-effect btn-' . $warna . ' inpoice invoice' . $pal['id'] . '" data-id="' . $pal['id'] . '"> <i class="fa voice' . $pal['id'] . ' fa-' . $fa . ' mr-2"></i>Invoice</span>';
-            // $ngaray['aksi'] .= '<div class="ml-auto mt-1">
-            //                         <div class="category-selector btn-group">
-            //                             <a class="nav-link category-dropdown label-group p-0" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-            //                                 <div class="category">
-            //                                     <span class="btn-sm btn waves-effect btn-warning"><i class="fas fa-cog fa-spin"></i> Options</span>
-            //                                 </div>
-            //                             </a>
-            //                             <div class="dropdown-menu dropdown-menu-right category-menu shadow" style="">
-            //                                 <a class="dropdown-item text-info" data-toggle="modal" data-target="#permohonanmodal" data-permohonan=' . "$atribut_json" . ' data-idpermohonan="' . $pal['id'] . '" href="javascript:void(0);"><i class="fa-duotone fa-edit  mr-1"></i> Ubah</a>
-            // <a class="dropdown-item text-success" href="' . base_url() . 'kegiatan/permohonan_cetak/' . $pal['id'] . '" target="_blank"><i class="fa-duotone fa-print  mr-1"></i>Cetak</a>
-            // <a class="dropdown-item text-danger menghapuspermohonan" id="' . $pal['id'] . '" data-idpermohonan="' . $pal['id'] . '" href="javascript:void(0);"><i class="fa-duotone fa-trash-alt  mr-1"></i>Hapus</a>
-            // </div>
-            // </div>
-            // </div>';
-            $bum[] = $ngaray;
+        if ($get_permohonan_filtered) {
+            foreach ($get_permohonan_filtered as $pal) {
+                $ngaray['no'] = ++$nomor_ke;
+                $this->db->where('id', $pal['tempat_muat']);
+                $get_terminal = $this->db->get('terminal')->row();
+                $this->db->where('id', $get_terminal->jenis);
+                $get_jenis_terminal = $this->db->get('jenis_terminal')->row();
+                $ngaray['jenis']    = strtoupper($get_jenis_terminal->nama);
+                $ngaray['terminal'] = $get_terminal->nama;
+                $ngaray['kapal']    = $pal['inc'];
+                $ngaray['bm']       = number_format($pal['jumlah_asli'], 0, ',', '.');
+                $ngaray['aksi']     = 'Bulan & Tahun Kosong';
+                if ($bulan && $tahun) {
+                    $ngaray['aksi'] = '<a target="_blank"  href="' . base_url() . 'laporan/terminal_rekap/' . $pal['tempat_muat'] . '/' . $bulan . '/' . $tahun . '" class="btn waves-effect waves-light btn-sm btn-info mr-3" ><i class="fa-duotone fa-print  mr-1"></i> Rekap</a>';
+                    $ngaray['aksi'] .= '<a target="_blank" href="' . base_url() . 'laporan/terminal_data/' . $pal['tempat_muat'] . '/' . $bulan . '/' . $tahun . '" class="btn waves-effect waves-light btn-sm btn-info mr-3"><i class="fa-duotone fa-print  mr-1"></i> Data</a>';
+                }
+                $bum[] = $ngaray;
+            }
+        } else {
+            $count_all_results = 0;
         }
+        $count_all_data = count($get_permohonan_filtered);
+
         $bum    = $bum ?? null;
         $output = array(
-            "draw"            => $_POST['draw'],
-            "recordsTotal"    => $count_all_data,
-            "recordsFiltered" => $count_all_results,
-            "data"            => $bum,
+            "draw" => $_POST['draw'],
+            "data" => $bum,
         );
         echo json_encode($output);
+    }
+
+    public function terminal_rekap($terminal, $bulan, $tahun)
+    {
+
+        $this->db->where('tempat_muat', $terminal);
+        $this->db->where('MONTH(mulai)', $bulan);
+        $this->db->where('YEAR(mulai)', $tahun);
+        $get_perusahaan_list = $this->db->get('permohonan')->result();
+        $list_surat          = [];
+        foreach ($get_perusahaan_list as $get_perusahaan) {
+            $list_surat[] = $get_perusahaan->no_surat;
+        }
+        $list_surat = array_unique($list_surat);
+        // var_dump(($list_surat));
+        $list_permohonan = [];
+        foreach ($list_surat as $surat) {
+            $this->db->order_by('id', 'desc');
+            $this->db->where_in('no_surat', $surat);
+            $get_perusahaan_list = $this->db->get('permohonan')->row();
+            $list_permohonan[]   = array('id' => $get_perusahaan_list->id, 'tempat_muat' => $get_perusahaan_list->tempat_muat, 'inc' => $get_perusahaan_list->inc, 'jumlah_asli' => $get_perusahaan_list->jumlah_asli, 'operasional' => $get_perusahaan_list->operasional);
+        }
+
+        $semua         = $this->object_to_array($list_permohonan);
+        $newPermohonan = array();
+
+        foreach ($semua as $value) {
+            if (empty($newPermohonan[$value['tempat_muat']])) {
+                $newPermohonan[$value['tempat_muat']] = $value;
+            } else {
+                $newPermohonan[$value['tempat_muat']]['jumlah_asli'] += $value['jumlah_asli'];
+                $newPermohonan[$value['tempat_muat']]['inc'] += $value['inc'];
+            }
+        }
+
+        // $this->dd($newPermohonan);
+
+        // return $newPermohonan;
+
+        // $bum    = $newPermohonan;
+        // $output = array(
+        //     // "draw" => $_POST['draw'],
+        //      "data" => $bum,
+        // );
+        // echo json_encode($output);
+        $data = array(
+            'tempat_muat' => $terminal,
+            'bulan'       => $bulan,
+            'tahun'       => $tahun,
+            'datalist'    => $newPermohonan,
+        );
+        $this->load->view('cetak/laporan_terminal_rekap', $data);
+
+    }
+    public function terminal_data($terminal, $bulan, $tahun)
+    {
+
+        $this->db->where('tempat_muat', $terminal);
+        $this->db->where('MONTH(mulai)', $bulan);
+        $this->db->where('YEAR(mulai)', $tahun);
+        $get_perusahaan_list = $this->db->get('permohonan')->result();
+        $list_surat          = [];
+        foreach ($get_perusahaan_list as $get_perusahaan) {
+            $list_surat[] = $get_perusahaan->no_surat;
+        }
+        $list_surat = array_unique($list_surat);
+        // $this->dd($list_surat);
+
+        // var_dump(($list_surat));
+        $list_permohonan = [];
+        foreach ($list_surat as $surat) {
+            $this->db->order_by('id', 'asc');
+            $this->db->where_in('no_surat', $surat);
+            $get_perusahaan_list = $this->db->get('permohonan')->result();
+            foreach ($get_perusahaan_list as $getperlist) {
+                $list_permohonan[] = array('id' => $getperlist->id, 'inc' => $getperlist->inc, 'tempat_muat' => $getperlist->tempat_muat, 'no_surat' => $getperlist->no_surat, 'no_rkbm' => $getperlist->no_rkbm, 'jumlah_asli' => $getperlist->jumlah_asli, 'operasional' => $getperlist->operasional);
+            }
+        }
+
+        $semua = $this->object_to_array($list_permohonan);
+        // $this->dd($semua);
+        $newPermohonan = array();
+
+        foreach ($semua as $value) {
+            if (empty($newPermohonan[$value['no_surat']])) {
+                $newPermohonan[$value['no_surat']] = $value;
+            } else {
+                // $newPermohonan[$value['no_surat']]['jumlah_asli'] += $value['jumlah_asli'];
+                $newPermohonan[$value['no_surat']]['inc'] += $value['inc'];
+                $newPermohonan[$value['no_surat']]['no_rkbm'] .= ',' . $value['no_rkbm'];
+            }
+        }
+
+        // $this->dd($newPermohonan);
+
+        // return $newPermohonan;
+
+        // $bum    = $newPermohonan;
+        // $output = array(
+        //     // "draw" => $_POST['draw'],
+        //      "data" => $bum,
+        // );
+        // echo json_encode($output);
+        $data = array(
+            'tempat_muat' => $terminal,
+            'bulan'       => $bulan,
+            'tahun'       => $tahun,
+            'datalist'    => $newPermohonan,
+        );
+        $this->load->view('cetak/laporan_terminal_data', $data);
+
     }
 
     public function cetak_perusahaan($perusahaan, $bulan, $tahun)
