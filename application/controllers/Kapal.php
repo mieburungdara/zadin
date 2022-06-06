@@ -10,6 +10,7 @@ class Kapal extends Admin_controller
     {
         parent::__construct();
         $this->load->model('Kapal_model');
+        $this->load->model('Agen_kapal_model');
         $this->load->library('form_validation');
     }
 
@@ -136,7 +137,6 @@ class Kapal extends Admin_controller
                 'agen_kapal' => set_value('agen_kapal', $row->agen_kapal),
                 'bendera'    => set_value('bendera', $row->bendera),
                 'ukuran'     => set_value('ukuran', $row->ukuran),
-                'status'     => set_value('status', $row->status),
             );
             $this->render_view('kapal/kapal_form', $data);
         } else {
@@ -160,7 +160,7 @@ class Kapal extends Admin_controller
             );
 
             $this->Kapal_model->update($this->input->post('id', true), $data);
-            $this->session->set_flashdata('message', 'Update Record Success');
+            $this->session->set_flashdata('message', 'Berhasil diupdate');
             redirect(site_url('kapal'));
         }
     }

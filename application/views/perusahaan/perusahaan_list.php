@@ -51,9 +51,6 @@ if ($q != "") {
                                 <th>Pelabuhan</th>
                                 <th>Sk Tuks</th>
                                 <th>Npwp</th>
-                                <th>Status</th>
-                                <th>Created At</th>
-                                <th>Updated At</th>
                                 <th>Operasi</th>
                             </tr>
                         </thead>
@@ -68,9 +65,6 @@ foreach ($perusahaan_data as $perusahaan) {
                                 <td><?php echo $this->Reza_model->show_ref($this->db->database, "perusahaan", "pelabuhan") ? $this->Reza_model->get_ref_val($this->db->database, 'perusahaan', 'pelabuhan', $perusahaan->pelabuhan)->nama : $perusahaan->pelabuhan; ?></td>
                                 <td><?php echo $this->Reza_model->show_ref($this->db->database, "perusahaan", "sk_tuks") ? $this->Reza_model->get_ref_val($this->db->database, 'perusahaan', 'sk_tuks', $perusahaan->sk_tuks)->nama : $perusahaan->sk_tuks; ?></td>
                                 <td><?php echo $this->Reza_model->show_ref($this->db->database, "perusahaan", "npwp") ? $this->Reza_model->get_ref_val($this->db->database, 'perusahaan', 'npwp', $perusahaan->npwp)->nama : $perusahaan->npwp; ?></td>
-                                <td><?php echo $this->Reza_model->show_ref($this->db->database, "perusahaan", "status") ? $this->Reza_model->get_ref_val($this->db->database, 'perusahaan', 'status', $perusahaan->status)->nama : $perusahaan->status; ?></td>
-                                <td><?php echo $this->Reza_model->show_ref($this->db->database, "perusahaan", "created_at") ? $this->Reza_model->get_ref_val($this->db->database, 'perusahaan', 'created_at', $perusahaan->created_at)->nama : $perusahaan->created_at; ?></td>
-                                <td><?php echo $this->Reza_model->show_ref($this->db->database, "perusahaan", "updated_at") ? $this->Reza_model->get_ref_val($this->db->database, 'perusahaan', 'updated_at', $perusahaan->updated_at)->nama : $perusahaan->updated_at; ?></td>
                                 <td style="text-align:center" width="200px">
                                     <?php
 

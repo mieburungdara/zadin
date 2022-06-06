@@ -1,11 +1,12 @@
 <?php
 
-if (!defined('BASEPATH'))
+if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
+}
 
 class Jenis_terminal extends Admin_controller
 {
-    function __construct()
+    public function __construct()
     {
         parent::__construct();
         $this->load->model('Jenis_terminal_model');
@@ -14,32 +15,32 @@ class Jenis_terminal extends Admin_controller
 
     public function index()
     {
-        $q = urldecode($this->input->get('q', TRUE));
+        $q     = urldecode($this->input->get('q', true));
         $start = intval($this->input->get('start'));
 
-        if ($q <> '') {
-            $config['base_url'] = base_url() . 'jenis_terminal/index?q=' . urlencode($q);
+        if ($q != '') {
+            $config['base_url']  = base_url() . 'jenis_terminal/index?q=' . urlencode($q);
             $config['first_url'] = base_url() . 'jenis_terminal/index?q=' . urlencode($q);
         } else {
-            $config['base_url'] = base_url() . 'jenis_terminal/index';
+            $config['base_url']  = base_url() . 'jenis_terminal/index';
             $config['first_url'] = base_url() . 'jenis_terminal/index';
         }
 
-        $config['per_page'] = 10;
-        $config['page_query_string'] = TRUE;
-        $config['total_rows'] = $this->Jenis_terminal_model->total_rows($q);
-        $config['attributes'] = array('class' => 'page-link');
-        $jenis_terminal = $this->Jenis_terminal_model->get_limit_data($config['per_page'], $start, $q);
+        $config['per_page']          = 10;
+        $config['page_query_string'] = true;
+        $config['total_rows']        = $this->Jenis_terminal_model->total_rows($q);
+        $config['attributes']        = array('class' => 'page-link');
+        $jenis_terminal              = $this->Jenis_terminal_model->get_limit_data($config['per_page'], $start, $q);
 
         $this->load->library('pagination');
         $this->pagination->initialize($config);
 
         $data = array(
             'jenis_terminal_data' => $jenis_terminal,
-            'q' => $q,
-            'pagination' => $this->pagination->create_links(),
-            'total_rows' => $config['total_rows'],
-            'start' => $start,
+            'q'                   => $q,
+            'pagination'          => $this->pagination->create_links(),
+            'total_rows'          => $config['total_rows'],
+            'start'               => $start,
         );
         $this->render_view('jenis_terminal/jenis_terminal_list', $data);
     }
@@ -49,11 +50,10 @@ class Jenis_terminal extends Admin_controller
         $row = $this->Jenis_terminal_model->get_by_id($id);
         if ($row) {
             $data = array(
-		'id' => $row->id,
-		'nama' => $row->nama,
-		'keterangan' => $row->keterangan,
-		'css' => $row->css,
-	    );
+                'id'         => $row->id,
+                'nama'       => $row->nama,
+                'keterangan' => $row->keterangan,
+            );
             $this->render_view('jenis_terminal/jenis_terminal_read', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
@@ -64,28 +64,26 @@ class Jenis_terminal extends Admin_controller
     public function create()
     {
         $data = array(
-            'button' => 'Create',
-            'action' => site_url('jenis_terminal/create_action'),
-	    'id' => set_value('id'),
-	    'nama' => set_value('nama'),
-	    'keterangan' => set_value('keterangan'),
-	    'css' => set_value('css'),
-	);
+            'button'     => 'Create',
+            'action'     => site_url('jenis_terminal/create_action'),
+            'id'         => set_value('id'),
+            'nama'       => set_value('nama'),
+            'keterangan' => set_value('keterangan'),
+        );
         $this->render_view('jenis_terminal/jenis_terminal_form', $data);
     }
 
     public function create_action()
     {
-        $this->_rules();
+        $this->rules();
 
-        if ($this->form_validation->run() == FALSE) {
+        if ($this->form_validation->run() == false) {
             $this->create();
         } else {
             $data = array(
-		'nama' => $this->input->post('nama',TRUE),
-		'keterangan' => $this->input->post('keterangan',TRUE),
-		'css' => $this->input->post('css',TRUE),
-	    );
+                'nama'       => $this->input->post('nama', true),
+                'keterangan' => $this->input->post('keterangan', true),
+            );
 
             $this->Jenis_terminal_model->insert($data);
             $this->session->set_flashdata('message', 'Create Record Success');
@@ -99,13 +97,12 @@ class Jenis_terminal extends Admin_controller
 
         if ($row) {
             $data = array(
-                'button' => 'Update',
-                'action' => site_url('jenis_terminal/update_action'),
-		'id' => set_value('id', $row->id),
-		'nama' => set_value('nama', $row->nama),
-		'keterangan' => set_value('keterangan', $row->keterangan),
-		'css' => set_value('css', $row->css),
-	    );
+                'button'     => 'Update',
+                'action'     => site_url('jenis_terminal/update_action'),
+                'id'         => set_value('id', $row->id),
+                'nama'       => set_value('nama', $row->nama),
+                'keterangan' => set_value('keterangan', $row->keterangan),
+            );
             $this->render_view('jenis_terminal/jenis_terminal_form', $data);
         } else {
             $this->session->set_flashdata('message', 'Record Not Found');
@@ -115,18 +112,17 @@ class Jenis_terminal extends Admin_controller
 
     public function update_action()
     {
-        $this->_rules();
+        $this->rules();
 
-        if ($this->form_validation->run() == FALSE) {
-            $this->update($this->input->post('id', TRUE));
+        if ($this->form_validation->run() == false) {
+            $this->update($this->input->post('id', true));
         } else {
             $data = array(
-		'nama' => $this->input->post('nama',TRUE),
-		'keterangan' => $this->input->post('keterangan',TRUE),
-		'css' => $this->input->post('css',TRUE),
-	    );
+                'nama'       => $this->input->post('nama', true),
+                'keterangan' => $this->input->post('keterangan', true),
+            );
 
-            $this->Jenis_terminal_model->update($this->input->post('id', TRUE), $data);
+            $this->Jenis_terminal_model->update($this->input->post('id', true), $data);
             $this->session->set_flashdata('message', 'Update Record Success');
             redirect(site_url('jenis_terminal'));
         }
@@ -146,14 +142,13 @@ class Jenis_terminal extends Admin_controller
         }
     }
 
-    public function _rules()
+    public function rules()
     {
-	$this->form_validation->set_rules('nama', 'nama', 'trim|required');
-	$this->form_validation->set_rules('keterangan', 'keterangan', 'trim|required');
-	$this->form_validation->set_rules('css', 'css', 'trim|required');
+        $this->form_validation->set_rules('nama', 'nama', 'trim|required');
+        $this->form_validation->set_rules('keterangan', 'keterangan', 'trim|required');
 
-	$this->form_validation->set_rules('id', 'id', 'trim');
-	$this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
+        $this->form_validation->set_rules('id', 'id', 'trim');
+        $this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
     }
 
 }

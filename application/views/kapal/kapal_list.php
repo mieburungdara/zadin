@@ -66,10 +66,7 @@ foreach ($kapal_data as $kapal) {
                                 <td><?php echo $this->Reza_model->show_ref($this->db->database, "kapal", "status") ? $this->Reza_model->get_ref_val($this->db->database, 'kapal', 'status', $kapal->status)->nama : $kapal->status; ?></td>
                                 <td style="text-align:center" width="200px">
                                     <?php
-
-    echo anchor(site_url('kapal/read/' . $kapal->id), 'Lihat', 'class="btn btn-xs waves-effect waves-light btn-outline-dark"');
-    echo ' | ';
-    echo anchor(site_url('kapal/update/' . $kapal->id), 'Ubah', 'class="btn btn-xs waves-effect waves-light btn-outline-warning"');
+echo anchor(site_url('kapal/update/' . $kapal->id), 'Ubah', 'class="btn btn-xs waves-effect waves-light btn-outline-warning"');
     echo ' | ';
     echo anchor(site_url('kapal/delete/' . $kapal->id), 'Hapus', 'class="btn btn-xs waves-effect waves-light btn-outline-danger" onclick="javasciprt: return confirm(\'Apa kamu yakin? Data yg terhapus tidak dapat dikembalikan!!\')"');
     ?>

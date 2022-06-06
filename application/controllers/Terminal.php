@@ -54,16 +54,13 @@ class Terminal extends Admin_controller
         $row = $this->Terminal_model->get_by_id($id);
         if ($row) {
             $data = array(
-                'id'         => $row->id,
-                'nama'       => $row->nama,
-                'lokasi'     => $row->lokasi,
-                'pelabuhan'  => $row->pelabuhan,
-                'sk_tuks'    => $row->sk_tuks,
-                'npwp'       => $row->npwp,
-                'jenis'      => $row->jenis,
-                'status'     => $row->status,
-                'created_at' => $row->created_at,
-                'updated_at' => $row->updated_at,
+                'id'        => $row->id,
+                'nama'      => $row->nama,
+                'lokasi'    => $row->lokasi,
+                'pelabuhan' => $row->pelabuhan,
+                'sk_tuks'   => $row->sk_tuks,
+                'npwp'      => $row->npwp,
+                'jenis'     => $row->jenis,
             );
             $this->render_view('terminal/terminal_read', $data);
         } else {
@@ -99,39 +96,33 @@ class Terminal extends Admin_controller
     public function create()
     {
         $data = array(
-            'button'     => 'Create',
-            'action'     => site_url('terminal/create_action'),
-            'id'         => set_value('id'),
-            'nama'       => set_value('nama'),
-            'lokasi'     => set_value('lokasi'),
-            'pelabuhan'  => set_value('pelabuhan'),
-            'sk_tuks'    => set_value('sk_tuks'),
-            'npwp'       => set_value('npwp'),
-            'jenis'      => set_value('jenis'),
-            'status'     => set_value('status'),
-            'created_at' => set_value('created_at'),
-            'updated_at' => set_value('updated_at'),
+            'button'    => 'Create',
+            'action'    => site_url('terminal/create_action'),
+            'id'        => set_value('id'),
+            'nama'      => set_value('nama'),
+            'lokasi'    => set_value('lokasi'),
+            'pelabuhan' => set_value('pelabuhan'),
+            'sk_tuks'   => set_value('sk_tuks'),
+            'npwp'      => set_value('npwp'),
+            'jenis'     => set_value('jenis'),
         );
         $this->render_view('terminal/terminal_form', $data);
     }
 
     public function create_action()
     {
-        $this->_rules();
+        $this->rules();
 
         if ($this->form_validation->run() == false) {
             $this->create();
         } else {
             $data = array(
-                'nama'       => $this->input->post('nama', true),
-                'lokasi'     => $this->input->post('lokasi', true),
-                'pelabuhan'  => $this->input->post('pelabuhan', true),
-                'sk_tuks'    => $this->input->post('sk_tuks', true),
-                'npwp'       => $this->input->post('npwp', true),
-                'jenis'      => $this->input->post('jenis', true),
-                'status'     => $this->input->post('status', true),
-                'created_at' => $this->input->post('created_at', true),
-                'updated_at' => $this->input->post('updated_at', true),
+                'nama'      => $this->input->post('nama', true),
+                'lokasi'    => $this->input->post('lokasi', true),
+                'pelabuhan' => $this->input->post('pelabuhan', true),
+                'sk_tuks'   => $this->input->post('sk_tuks', true),
+                'npwp'      => $this->input->post('npwp', true),
+                'jenis'     => $this->input->post('jenis', true),
             );
 
             $this->Terminal_model->insert($data);
@@ -146,18 +137,15 @@ class Terminal extends Admin_controller
 
         if ($row) {
             $data = array(
-                'button'     => 'Update',
-                'action'     => site_url('terminal/update_action'),
-                'id'         => set_value('id', $row->id),
-                'nama'       => set_value('nama', $row->nama),
-                'lokasi'     => set_value('lokasi', $row->lokasi),
-                'pelabuhan'  => set_value('pelabuhan', $row->pelabuhan),
-                'sk_tuks'    => set_value('sk_tuks', $row->sk_tuks),
-                'npwp'       => set_value('npwp', $row->npwp),
-                'jenis'      => set_value('jenis', $row->jenis),
-                'status'     => set_value('status', $row->status),
-                'created_at' => set_value('created_at', $row->created_at),
-                'updated_at' => set_value('updated_at', $row->updated_at),
+                'button'    => 'Update',
+                'action'    => site_url('terminal/update_action'),
+                'id'        => set_value('id', $row->id),
+                'nama'      => set_value('nama', $row->nama),
+                'lokasi'    => set_value('lokasi', $row->lokasi),
+                'pelabuhan' => set_value('pelabuhan', $row->pelabuhan),
+                'sk_tuks'   => set_value('sk_tuks', $row->sk_tuks),
+                'npwp'      => set_value('npwp', $row->npwp),
+                'jenis'     => set_value('jenis', $row->jenis),
             );
             $this->render_view('terminal/terminal_form', $data);
         } else {
@@ -168,21 +156,18 @@ class Terminal extends Admin_controller
 
     public function update_action()
     {
-        $this->_rules();
+        $this->rules();
 
         if ($this->form_validation->run() == false) {
             $this->update($this->input->post('id', true));
         } else {
             $data = array(
-                'nama'       => $this->input->post('nama', true),
-                'lokasi'     => $this->input->post('lokasi', true),
-                'pelabuhan'  => $this->input->post('pelabuhan', true),
-                'sk_tuks'    => $this->input->post('sk_tuks', true),
-                'npwp'       => $this->input->post('npwp', true),
-                'jenis'      => $this->input->post('jenis', true),
-                'status'     => $this->input->post('status', true),
-                'created_at' => $this->input->post('created_at', true),
-                'updated_at' => $this->input->post('updated_at', true),
+                'nama'      => $this->input->post('nama', true),
+                'lokasi'    => $this->input->post('lokasi', true),
+                'pelabuhan' => $this->input->post('pelabuhan', true),
+                'sk_tuks'   => $this->input->post('sk_tuks', true),
+                'npwp'      => $this->input->post('npwp', true),
+                'jenis'     => $this->input->post('jenis', true),
             );
 
             $this->Terminal_model->update($this->input->post('id', true), $data);
@@ -213,9 +198,6 @@ class Terminal extends Admin_controller
         $this->form_validation->set_rules('sk_tuks', 'sk tuks', 'trim|required');
         $this->form_validation->set_rules('npwp', 'npwp', 'trim|required');
         $this->form_validation->set_rules('jenis', 'jenis', 'trim|required|numeric');
-        $this->form_validation->set_rules('status', 'status', 'trim|required');
-        $this->form_validation->set_rules('created_at', 'created at', 'trim|required');
-        $this->form_validation->set_rules('updated_at', 'updated at', 'trim|required');
 
         $this->form_validation->set_rules('id', 'id', 'trim');
         $this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
