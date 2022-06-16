@@ -85,12 +85,13 @@ foreach ($perusahaan_list as $palu) {
 
                             <div class="col-sm-12 col-md-6">
                                 <div class="form-group mb-4">
-                                    <label class="mr-sm-2" for="operasional_status">Select</label>
+                                    <label class="mr-sm-2 text-danger" for="operasional_status">Status Pembayaran</label>
                                     <select class="custom-select mr-sm-2" name="operasional_status" id="operasional_status" placeholder="Operasional Status">
                                         <?php
-$operasional_status = $this->db->get('operasional_status')->result();
-foreach ($operasional_status as $palu) {
-    if ($palu->id == $perusahaan) {
+// var_dump($operasional_status);
+$status_op = $this->db->get('operasional_status')->result();
+foreach ($status_op as $palu) {
+    if ($palu->id == $operasional_status) {
         $selected = 'selected';
     } else {
         $selected = '';

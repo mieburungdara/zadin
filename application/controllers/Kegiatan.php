@@ -142,7 +142,7 @@ class Kegiatan extends Admin_Controller
             $this->db->order_by('no_surat', 'desc');
             $nomor_surat = $this->db->get('permohonan')->row()->no_surat;
             // var_dump($nomor_surat);
-            $payment = str_replace('.', '', $this->input->post('jumlah_bongkar', true)) ?? null;
+            $payment = str_replace('.', '', $this->input->post('payment', true)) ?? null;
             $data    = array(
                 'operasional'      => $this->input->post('operasional', true),
                 'no_surat'         => ++$nomor_surat,
@@ -152,9 +152,8 @@ class Kegiatan extends Admin_Controller
                 'tempat_muat'      => $this->input->post('tempat_muat', true),
                 'barang'           => $this->input->post('barang', true),
                 'tempat_bongkar'   => $this->input->post('tempat_bongkar', true),
-                'jumlah_muatan'    => str_replace('.', '', $this->input->post('jumlah_muatan', true)),
                 'jumlah_asli'      => str_replace('.', '', $this->input->post('jumlah_asli', true)),
-                'jumlah_bongkar'   => str_replace('.', '', $this->input->post('jumlah_bongkar', true)),
+                'jumlah_kira'      => str_replace('.', '', $this->input->post('jumlah_kira', true)),
                 'payment'          => $payment,
                 'permohonan_jenis' => $this->input->post('permohonan_jenis', true),
             );
@@ -170,8 +169,8 @@ class Kegiatan extends Admin_Controller
 
     public function permohonan_ubah($id)
     {
+        // echo $id;
         $this->permohonan_rules();
-
         if ($this->form_validation->run() == false) {
             echo json_encode(array('status' => 'error', 'data' => validation_errors()));
         } else {
@@ -181,22 +180,27 @@ class Kegiatan extends Admin_Controller
                 $pj_txt = 'muat';
             }
             if ($permohonan_jenis == 2) {
-                $pj_txt = 'bongkar';
+                $pj_txt = 'muat & bongkar JETTY';
             }
+            if ($permohonan_jenis == 3) {
+                $pj_txt = 'bongkar JETTY';
+            }
+            if ($permohonan_jenis == 4) {
+                $pj_txt = 'bongkar STS';
+            }
+
             $data = array(
                 'mulai'            => $this->input->post('mulai', true),
                 'status'           => $this->input->post('status_permohonan', true),
                 'permohonan_ke'    => $this->input->post('permohonan_ke', true),
-
                 'mulai'            => $this->input->post('mulai', true),
                 'selesai'          => $this->input->post('selesai', true),
                 'kapal'            => $this->input->post('nama_kapal', true),
                 'tempat_muat'      => $this->input->post('tempat_muat', true),
                 'barang'           => $this->input->post('barang', true),
                 'tempat_bongkar'   => $this->input->post('tempat_bongkar', true),
-                'jumlah_muatan'    => str_replace('.', '', $this->input->post('jumlah_muatan', true)),
                 'jumlah_asli'      => str_replace('.', '', $this->input->post('jumlah_asli', true)),
-                'jumlah_bongkar'   => str_replace('.', '', $this->input->post('jumlah_bongkar', true)),
+                'jumlah_kira'      => str_replace('.', '', $this->input->post('jumlah_kira', true)),
                 'payment'          => str_replace('.', '', $this->input->post('payment', true)),
                 'permohonan_jenis' => $permohonan_jenis,
             );
@@ -232,7 +236,13 @@ class Kegiatan extends Admin_Controller
                 $pj_txt = 'muat';
             }
             if ($permohonan_jenis == 2) {
-                $pj_txt = 'bongkar';
+                $pj_txt = 'muat & bongkar JETTY';
+            }
+            if ($permohonan_jenis == 3) {
+                $pj_txt = 'bongkar JETTY';
+            }
+            if ($permohonan_jenis == 4) {
+                $pj_txt = 'bongkar STS';
             }
             $sp_txt = $status_permohonan;
             if ($status_permohonan == 2) {
@@ -257,9 +267,8 @@ class Kegiatan extends Admin_Controller
                 'tempat_muat'      => $this->input->post('tempat_muat', true),
                 'barang'           => $this->input->post('barang', true),
                 'tempat_bongkar'   => $this->input->post('tempat_bongkar', true),
-                'jumlah_muatan'    => str_replace('.', '', $this->input->post('jumlah_muatan', true)),
                 'jumlah_asli'      => str_replace('.', '', $this->input->post('jumlah_asli', true)),
-                'jumlah_bongkar'   => str_replace('.', '', $this->input->post('jumlah_bongkar', true)),
+                'jumlah_kira'      => str_replace('.', '', $this->input->post('jumlah_kira', true)),
                 'payment'          => str_replace('.', '', $this->input->post('payment', true)),
                 'permohonan_jenis' => $permohonan_jenis,
             );
@@ -283,9 +292,9 @@ class Kegiatan extends Admin_Controller
         $this->form_validation->set_rules('tempat_muat', 'Tempat Muat', 'trim|required', array('required' => '%s tidak boleh kosong.'));
         $this->form_validation->set_rules('barang', 'Jenis Barang', 'trim|required', array('required' => '%s tidak boleh kosong.'));
         $this->form_validation->set_rules('tempat_bongkar', 'Tempat Bongkar', 'trim|required', array('required' => '%s tidak boleh kosong.'));
-        $this->form_validation->set_rules('jumlah_muatan', 'jumlah_muatan', 'trim');
-        $this->form_validation->set_rules('jumlah_asli', 'jumlah_asli', 'trim');
-        $this->form_validation->set_rules('jumlah_bongkar', 'jumlah_bongkar', 'trim');
+        $this->form_validation->set_rules('jumlah_asli', 'jumlah Asli', 'trim');
+        $this->form_validation->set_rules('jumlah_kira', 'jumlah perkiraan', 'trim');
+        $this->form_validation->set_rules('payment', 'payment', 'trim');
         $this->form_validation->set_rules('permohonan_jenis', 'Jenis Permohonan', 'trim|required', array('required' => '%s harus jelas.'));
     }
 
@@ -336,15 +345,15 @@ class Kegiatan extends Admin_Controller
                 'parent'           => $row->parent,
                 'operasional'      => $row->operasional,
                 'no_rkbm'          => $row->no_rkbm,
+                'no_surat'         => $row->no_surat,
                 'mulai'            => $row->mulai,
                 'selesai'          => $row->selesai,
                 'kapal'            => $row->kapal,
                 'tempat_muat'      => $row->tempat_muat,
                 'barang'           => $row->barang,
                 'tempat_bongkar'   => $row->tempat_bongkar,
-                'jumlah_muatan'    => $row->jumlah_muatan,
                 'jumlah_asli'      => $row->jumlah_asli,
-                'jumlah_bongkar'   => $row->jumlah_bongkar,
+                'jumlah_kira'      => $row->jumlah_kira,
                 // 'payment'          => $row->payment,
                  'permohonan_ke'    => $row->permohonan_ke,
                 'status'           => $row->status,
@@ -376,6 +385,7 @@ class Kegiatan extends Admin_Controller
                 'perusahaan'         => $row->perusahaan,
                 'keterangan'         => $row->keterangan,
                 'operasional_status' => $row->operasional_status,
+                'created_by'         => $row->created_by,
                 'created_at'         => $row->created_at,
             );
             $this->load->view('cetak/invoice', $data);

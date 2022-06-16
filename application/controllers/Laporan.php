@@ -75,7 +75,9 @@ class Laporan extends Admin_controller
         $bulan                   = urldecode($this->input->post('bulan', true)) ?? null;
         $tahun                   = urldecode($this->input->post('tahun', true)) ?? null;
         $perusahaan              = urldecode($this->input->post('perusahaan', true)) ?? null;
-        $permohonan_modelnya     = $this->Laporan_model->get_perusahaan_data($start, $length, $bulan, $tahun, $perusahaan, $search);
+        $status_permohonan       = urldecode($this->input->post('status_permohonan', true)) ?? null;
+        $jenis_permohonan        = urldecode($this->input->post('jenis_permohonan', true)) ?? null;
+        $permohonan_modelnya     = $this->Laporan_model->get_perusahaan_data($start, $length, $bulan, $tahun, $perusahaan, $search, $status_permohonan, $jenis_permohonan);
         $get_all_data_permohonan = $this->Permohonan_model->get_all();
         // var_dump($permohonan_modelnya);
 
@@ -135,22 +137,41 @@ class Laporan extends Admin_controller
                 $get_jpermohonan_status = $this->db->get('permohonan_status')->row();
                 $status_permohonan      = $get_jpermohonan_status->nama;
 
-                $ngaray['ukuran']         = $get_kapal->ukuran;
-                $ngaray['jumlah_bongkar'] = number_format($pal['jumlah_bongkar'], 0, ',', '.');
-                $ngaray['jumlah_muatan']  = number_format($pal['jumlah_muatan'], 0, ',', '.');
-                $ngaray['jumlah_asli']    = number_format($pal['jumlah_asli'], 0, ',', '.');
-                $ngaray['mulai']          = $pal['mulai'] != '0000-00-00' ? $this->tgl_in($pal['mulai']) : 'BELUM ADA TANGGAL MULAI';
-                $ngaray['selesai']        = $pal['selesai'] != '0000-00-00' ? $this->tgl_in($pal['selesai']) : 'BELUM ADA TANGGAL SELESAI';
-                $ngaray['asal_barang']    = $nama_barang_asal; //pemilik barang
-                $ngaray['tujuan']         = $pal['tempat_bongkar'];
-                $ngaray['jenis']          = $nama_get_barang_jenis; // barang
-                $ngaray['shipper']        = strtoupper($jenis_terminal_jenis); //jenis_terminal
-                $ngaray['tempat_muat']    = $tempat_muatnya; //tempat_muat
-                $ngaray['pemilik']        = $nama_barang_pemilik;
-                $ngaray['perusahaan']     = $get_perusahaan->nama;
-                $ngaray['admin']          = $created_by;
-
+                $ngaray['ukuran'] = $get_kapal->ukuran;
                 $ngaray['status'] = '';
+
+                $permohonan_jenis = $pal['permohonan_jenis'];
+                if ($permohonan_jenis == 1) {
+                    $ngaray['jumlah_bongkar'] = 0;
+                    $ngaray['jumlah_muatan']  = number_format($pal['jumlah_kira'], 0, ',', '.');
+                    $ngaray['status'] .= '<span class="badge ml-2 mr-1 badge-danger">Muat</span>';
+                }
+                if ($permohonan_jenis == 2) {
+                    $ngaray['jumlah_bongkar'] = 0;
+                    $ngaray['jumlah_muatan']  = number_format($pal['jumlah_kira'], 0, ',', '.');
+                    $ngaray['status'] .= '<span class="badge ml-2 mr-1 badge-danger">Bongkar JETTY</span>';
+                }
+                if ($permohonan_jenis == 3) {
+                    $ngaray['jumlah_muatan']  = 0;
+                    $ngaray['jumlah_bongkar'] = number_format($pal['jumlah_kira'], 0, ',', '.');
+                    $ngaray['status'] .= '<span class="badge ml-2 mr-1 badge-danger">Bongkar STS</span>';
+                }
+                if ($permohonan_jenis == 4) {
+                    $ngaray['jumlah_muatan']  = 0;
+                    $ngaray['jumlah_bongkar'] = number_format($pal['jumlah_kira'], 0, ',', '.');
+                    $ngaray['status'] .= '<span class="badge ml-2 mr-1 badge-danger">Batal</span>';
+                }
+                $ngaray['jumlah_asli'] = number_format($pal['jumlah_asli'], 0, ',', '.');
+                $ngaray['mulai']       = $pal['mulai'] != '0000-00-00' ? $this->tgl_in($pal['mulai']) : 'BELUM ADA TANGGAL MULAI';
+                $ngaray['selesai']     = $pal['selesai'] != '0000-00-00' ? $this->tgl_in($pal['selesai']) : 'BELUM ADA TANGGAL SELESAI';
+                $ngaray['asal_barang'] = $nama_barang_asal; //pemilik barang
+                $ngaray['tujuan']      = $pal['tempat_bongkar'];
+                $ngaray['jenis']       = $nama_get_barang_jenis; // barang
+                $ngaray['shipper']     = strtoupper($jenis_terminal_jenis); //jenis_terminal
+                $ngaray['tempat_muat'] = $tempat_muatnya; //tempat_muat
+                $ngaray['pemilik']     = $nama_barang_pemilik;
+                $ngaray['perusahaan']  = $get_perusahaan->nama;
+                $ngaray['admin']       = $created_by;
 
                 if ($pal['status'] == 1) {
                     $ngaray['status'] .= '<span class="badge ml-2 mr-1 badge-info">BARU</span>';
@@ -345,7 +366,11 @@ class Laporan extends Admin_controller
             $this->db->where_in('no_surat', $surat);
             $get_perusahaan_list = $this->db->get('permohonan')->result();
             foreach ($get_perusahaan_list as $getperlist) {
-                $list_permohonan[] = array('id' => $getperlist->id, 'inc' => $getperlist->inc, 'tempat_muat' => $getperlist->tempat_muat, 'no_surat' => $getperlist->no_surat, 'no_rkbm' => $getperlist->no_rkbm, 'jumlah_asli' => $getperlist->jumlah_asli, 'operasional' => $getperlist->operasional);
+                $norkbm = $getperlist->no_rkbm;
+                $ngrien = explode('.', $norkbm);
+                $ooenr  = ltrim($ngrien[3], 0);
+
+                $list_permohonan[] = array('id' => $getperlist->id, 'inc' => $getperlist->inc, 'tempat_muat' => $getperlist->tempat_muat, 'no_surat' => $getperlist->no_surat, 'no_rkbm' => $ooenr, 'jumlah_kira' => $getperlist->jumlah_kira, 'jumlah_asli' => $getperlist->jumlah_asli, 'operasional' => $getperlist->operasional);
             }
         }
 
@@ -383,27 +408,60 @@ class Laporan extends Admin_controller
 
     }
 
-    public function cetak_perusahaan($perusahaan, $bulan, $tahun)
+    public function cetak_perusahaan($perusahaan, $permohonan, $status, $bulan, $tahun)
     {
         $perusahaan = $perusahaan ?? null;
+        $permohonan = $permohonan ?? null;
+        $status     = $status ?? null;
         $bulan      = $bulan == 'undefined' || !is_numeric($bulan) ? idate("m") : $bulan;
         $tahun      = $tahun == 'undefined' || !is_numeric($tahun) ? idate("Y") : $tahun;
 
         // if (is_null($bulan) || is_null($tahun)) {
         // echo $month = idate("yyyy");
         // }
-        $permohonan = '';
+        // $permohonan = '';
         if ($perusahaan) {
             $this->db->where('perusahaan', $perusahaan);
             $get_operasional = $this->db->get('operasional')->result();
             if ($get_operasional) {
+                // echo $permohonan;
                 foreach ($get_operasional as $operasional_item) {
                     $this->db->where('operasional', $operasional_item->id);
                 }
+                if ($permohonan == 1) {
+                    $this->db->where_in('permohonan_jenis', array(1, 2));
+                }
+                if ($permohonan == 2) {
+                    $this->db->where('permohonan_jenis', 3);
+                }
+                if ($permohonan == 3) {
+                    $this->db->where('permohonan_jenis', 4);
+                }
+                if ($status != null) {
+                    if ($status == 1) {
+                        // baru
+                        $this->db->where('status', 1);
+                    }
+                    if ($status == 2) {
+                        //perpanjang
+                        $this->db->where('status', 2);
+                    }
+                    if ($status == 3) {
+                        // revisi
+                        $this->db->where('status', 3);
+                    }
+                    if ($status == 4) {
+                        //batal
+                        $this->db->where('status', 4);
+                    }
+                }
+
                 $this->db->where('MONTH(mulai)', $bulan);
                 $this->db->where('YEAR(mulai)', $tahun);
                 $permohonan = $this->db->get('permohonan')->result();
+                // echo '<pre>';
                 // var_dump($permohonan);
+                // echo '</pre>';
             }
         }
         // $permohonan =
@@ -417,22 +475,51 @@ class Laporan extends Admin_controller
         );
         $this->load->view('laporan/cetak_perusahaan', $data);
     }
-    public function cetak_terminal($perusahaan, $bulan, $tahun)
+    public function cetak_terminal($perusahaan, $permohonan, $status, $bulan, $tahun)
     {
         $perusahaan = $perusahaan ?? null;
+        $permohonan = $permohonan ?? null;
+        $status     = $status ?? null;
         $bulan      = $bulan == 'undefined' || !is_numeric($bulan) ? idate("m") : $bulan;
         $tahun      = $tahun == 'undefined' || !is_numeric($tahun) ? idate("Y") : $tahun;
 
         // if (is_null($bulan) || is_null($tahun)) {
         // echo $month = idate("yyyy");
         // }
-        $permohonan = '';
+        // $permohonan = '';
         if ($perusahaan) {
             $this->db->where('perusahaan', $perusahaan);
             $get_operasional = $this->db->get('operasional')->result();
             if ($get_operasional) {
                 foreach ($get_operasional as $operasional_item) {
                     $this->db->where('operasional', $operasional_item->id);
+                }
+                if ($permohonan == 1) {
+                    $this->db->where_in('permohonan_jenis', array(1, 2));
+                }
+                if ($permohonan == 2) {
+                    $this->db->where('permohonan_jenis', 3);
+                }
+                if ($permohonan == 3) {
+                    $this->db->where('permohonan_jenis', 4);
+                }
+                if ($status != null) {
+                    if ($status == 1) {
+                        // baru
+                        $this->db->where('status', 1);
+                    }
+                    if ($status == 2) {
+                        //perpanjang
+                        $this->db->where('status', 2);
+                    }
+                    if ($status == 3) {
+                        // revisi
+                        $this->db->where('status', 3);
+                    }
+                    if ($status == 4) {
+                        //batal
+                        $this->db->where('status', 4);
+                    }
                 }
                 $this->db->where('MONTH(mulai)', $bulan);
                 $this->db->where('YEAR(mulai)', $tahun);

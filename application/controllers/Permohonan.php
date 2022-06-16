@@ -62,9 +62,8 @@ class Permohonan extends Admin_controller
                 'tempat_muat'      => $row->tempat_muat,
                 'barang'           => $row->barang,
                 'tempat_bongkar'   => $row->tempat_bongkar,
-                'jumlah_muatan'    => $row->jumlah_muatan,
                 'jumlah_asli'      => $row->jumlah_asli,
-                'jumlah_bongkar'   => $row->jumlah_bongkar,
+                'jumlah_kira'      => $row->jumlah_kira,
                 'asal_barang'      => $row->asal_barang,
                 'perusahaan'       => $row->perusahaan,
                 'status'           => $row->status,
@@ -91,9 +90,8 @@ class Permohonan extends Admin_controller
                 'tempat_muat'      => $row->tempat_muat,
                 'barang'           => $row->barang,
                 'tempat_bongkar'   => $row->tempat_bongkar,
-                'jumlah_muatan'    => $row->jumlah_muatan,
                 'jumlah_asli'      => $row->jumlah_asli,
-                'jumlah_bongkar'   => $row->jumlah_bongkar,
+                'jumlah_kira'      => $row->jumlah_kira,
                 'permohonan_ke'    => $row->permohonan_ke,
                 'payment'          => $row->payment,
                 'status'           => $row->status,
@@ -119,9 +117,8 @@ class Permohonan extends Admin_controller
             'tempat_muat'      => set_value('tempat_muat'),
             'barang'           => set_value('barang'),
             'tempat_bongkar'   => set_value('tempat_bongkar'),
-            'jumlah_muatan'    => set_value('jumlah_muatan'),
             'jumlah_asli'      => set_value('jumlah_asli'),
-            'jumlah_bongkar'   => set_value('jumlah_bongkar'),
+            'jumlah_kira'      => set_value('jumlah_kira'),
             'asal_barang'      => set_value('asal_barang'),
             'perusahaan'       => set_value('perusahaan'),
             'status'           => set_value('status'),
@@ -147,9 +144,8 @@ class Permohonan extends Admin_controller
                 'tempat_muat'      => $this->input->post('tempat_muat', true),
                 'barang'           => $this->input->post('barang', true),
                 'tempat_bongkar'   => $this->input->post('tempat_bongkar', true),
-                'jumlah_muatan'    => $this->input->post('jumlah_muatan', true),
                 'jumlah_asli'      => $this->input->post('jumlah_asli', true),
-                'jumlah_bongkar'   => $this->input->post('jumlah_bongkar', true),
+                'jumlah_kira'      => $this->input->post('jumlah_kira', true),
                 'status'           => $this->input->post('status', true),
                 'permohonan_ke'    => $this->input->post('permohonan_ke', true),
                 'permohonan_jenis' => $this->input->post('permohonan_jenis', true),
@@ -178,9 +174,8 @@ class Permohonan extends Admin_controller
                 'tempat_muat'      => set_value('tempat_muat', $row->tempat_muat),
                 'barang'           => set_value('barang', $row->barang),
                 'tempat_bongkar'   => set_value('tempat_bongkar', $row->tempat_bongkar),
-                'jumlah_muatan'    => set_value('jumlah_muatan', $row->jumlah_muatan),
                 'jumlah_asli'      => set_value('jumlah_asli', $row->jumlah_asli),
-                'jumlah_bongkar'   => set_value('jumlah_bongkar', $row->jumlah_bongkar),
+                'jumlah_kira'      => set_value('jumlah_kira', $row->jumlah_kira),
                 'status'           => set_value('status', $row->status),
                 'permohonan_ke'    => set_value('permohonan_ke', $row->permohonan_ke),
                 'permohonan_jenis' => set_value('permohonan_jenis', $row->permohonan_jenis),
@@ -209,12 +204,9 @@ class Permohonan extends Admin_controller
                 'tempat_muat'      => $this->input->post('tempat_muat', true),
                 'barang'           => $this->input->post('barang', true),
                 'tempat_bongkar'   => $this->input->post('tempat_bongkar', true),
-                'jumlah_muatan'    => $this->input->post('jumlah_muatan', true),
                 'jumlah_asli'      => $this->input->post('jumlah_asli', true),
-                'jumlah_bongkar'   => $this->input->post('jumlah_bongkar', true),
-                // 'asal_barang' => $this->input->post('asal_barang', true),
-                 // 'perusahaan' => $this->input->post('perusahaan', true),
-                 'status'           => $this->input->post('status', true),
+                'jumlah_kira'      => $this->input->post('jumlah_kira', true),
+                'status'           => $this->input->post('status', true),
                 'permohonan_ke'    => $this->input->post('permohonan_ke', true),
                 'permohonan_jenis' => $this->input->post('permohonan_jenis', true),
             );
@@ -256,9 +248,8 @@ class Permohonan extends Admin_controller
         $this->form_validation->set_rules('tempat_muat', 'tempat muat', 'trim|required|numeric');
         $this->form_validation->set_rules('barang', 'barang', 'trim|required|numeric');
         $this->form_validation->set_rules('tempat_bongkar', 'tempat bongkar', 'trim|required');
-        $this->form_validation->set_rules('jumlah_muatan', 'jumlah muatan', 'trim|required|numeric');
         $this->form_validation->set_rules('jumlah_asli', 'jumlah asli', 'trim|required|numeric');
-        $this->form_validation->set_rules('jumlah_bongkar', 'jumlah bongkar', 'trim|required|numeric');
+        $this->form_validation->set_rules('jumlah_kira', 'jumlah kira', 'trim|required|numeric');
         // $this->form_validation->set_rules('asal_barang', 'asal barang', 'trim|required|numeric');
         // $this->form_validation->set_rules('perusahaan', 'perusahaan', 'trim|required|numeric');
         $this->form_validation->set_rules('status', 'status', 'trim|required|numeric');

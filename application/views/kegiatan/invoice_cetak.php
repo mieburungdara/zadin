@@ -33,48 +33,50 @@ $this->db->where('id', $id);
 $db_permohonan = $this->db->get('operasional')->row();
 
 $this->db->where('id', $barang_asal);
-$asal_barang = $this->db->get('barang_asal')->row();
+$asal_barang      = $this->db->get('barang_asal')->row();
 $asal_barang_nama = $asal_barang->nama;
 
 $this->db->where('id', $barang_pemilik);
 $barang_pemiliks = $this->db->get('barang_pemilik')->row();
-$barang_pemilik = $barang_pemiliks->nama;
-$alamat_pemilik = $barang_pemiliks->alamat;
+$barang_pemilik  = $barang_pemiliks->nama;
+$alamat_pemilik  = $barang_pemiliks->alamat;
 
-function penyebut($nilai) {
+function penyebut($nilai)
+{
     $nilai = abs($nilai);
     $huruf = array("", "Satu", "Dua", "Tiga", "Empat", "Lima", "enam", "Tujuh", "Delapan", "Sembilan", "Sepuluh", "Sebelas");
-    $temp = "";
+    $temp  = "";
     if ($nilai < 12) {
-        $temp = " ". $huruf[$nilai];
-    } else if ($nilai <20) {
-        $temp = penyebut($nilai - 10). " Belas";
-    } else if ($nilai < 100) {
-        $temp = penyebut($nilai/10)." Puluh". penyebut($nilai % 10);
-    } else if ($nilai < 200) {
+        $temp = " " . $huruf[$nilai];
+    } elseif ($nilai < 20) {
+        $temp = penyebut($nilai - 10) . " Belas";
+    } elseif ($nilai < 100) {
+        $temp = penyebut($nilai / 10) . " Puluh" . penyebut($nilai % 10);
+    } elseif ($nilai < 200) {
         $temp = " Seratus" . penyebut($nilai - 100);
-    } else if ($nilai < 1000) {
-        $temp = penyebut($nilai/100) . " Ratus" . penyebut($nilai % 100);
-    } else if ($nilai < 2000) {
+    } elseif ($nilai < 1000) {
+        $temp = penyebut($nilai / 100) . " Ratus" . penyebut($nilai % 100);
+    } elseif ($nilai < 2000) {
         $temp = " Seribu" . penyebut($nilai - 1000);
-    } else if ($nilai < 1000000) {
-        $temp = penyebut($nilai/1000) . " Ribu" . penyebut($nilai % 1000);
-    } else if ($nilai < 1000000000) {
-        $temp = penyebut($nilai/1000000) . " Juta" . penyebut($nilai % 1000000);
-    } else if ($nilai < 1000000000000) {
-        $temp = penyebut($nilai/1000000000) . " Miliar" . penyebut(fmod($nilai,1000000000));
-    } else if ($nilai < 1000000000000000) {
-        $temp = penyebut($nilai/1000000000000) . " Trilyun" . penyebut(fmod($nilai,1000000000000));
-    }     
+    } elseif ($nilai < 1000000) {
+        $temp = penyebut($nilai / 1000) . " Ribu" . penyebut($nilai % 1000);
+    } elseif ($nilai < 1000000000) {
+        $temp = penyebut($nilai / 1000000) . " Juta" . penyebut($nilai % 1000000);
+    } elseif ($nilai < 1000000000000) {
+        $temp = penyebut($nilai / 1000000000) . " Miliar" . penyebut(fmod($nilai, 1000000000));
+    } elseif ($nilai < 1000000000000000) {
+        $temp = penyebut($nilai / 1000000000000) . " Trilyun" . penyebut(fmod($nilai, 1000000000000));
+    }
     return $temp;
 }
 
-function terbilang($nilai) {
-    if($nilai<0) {
-        $hasil = "minus ". trim(penyebut($nilai));
+function terbilang($nilai)
+{
+    if ($nilai < 0) {
+        $hasil = "minus " . trim(penyebut($nilai));
     } else {
         $hasil = trim(penyebut($nilai));
-    }     		
+    }
     return $hasil;
 }
 
@@ -172,10 +174,10 @@ function terbilang($nilai) {
                     <small class="p-3 ">Permohonan &amp; Invoice</small>
                 </li>
                 <li class="list-group-item p-0 border-0">
-                    <a href="<?= base_url('kegiatan/permohonan/'.$id) ?>" class="list-group-item-action p-3 d-block "><i class="mdi mdi-format-list-bulleted"></i> Permohonan <span class="todo-badge badge badge-info float-right"></span></a>
+                    <a href="<?=base_url('kegiatan/permohonan/' . $id); ?>" class="list-group-item-action p-3 d-block "><i class="mdi mdi-format-list-bulleted"></i> Permohonan <span class="todo-badge badge badge-info float-right"></span></a>
                 </li>
                 <li class="list-group-item p-0 border-0">
-                    <a href="<?= base_url('kegiatan/invoice/'.$id) ?>" class="list-group-item-action p-3 d-block"> <i class="mdi mdi-book"></i> Invoice <span class="todo-badge badge badge-warning float-right"></span></a>
+                    <a href="<?=base_url('kegiatan/invoice/' . $id); ?>" class="list-group-item-action p-3 d-block"> <i class="mdi mdi-book"></i> Invoice <span class="todo-badge badge badge-warning float-right"></span></a>
                 </li>
             </ul>
             <div class="ps-scrollbar-x-rail" style="left: 0px; bottom: 0px;">
@@ -202,18 +204,18 @@ function terbilang($nilai) {
                                 <div class="col-12 mb-3">
                                     <div class="text-center">
                                         <h4 class="mb-0" style="font-weight: 1000 !important;color:black;">INVOICE</h4>
-                                        <h5 style="color:black;" class="mb-0 font-weight-bold">NO 0<?= $id?>/IBP/ZMA-SMD/I/2022</h5>
+                                        <h5 style="color:black;" class="mb-0 font-weight-bold">NO 0<?=$id; ?>/IBP/ZMA-SMD/I/2022</h5>
                                     </div>
                                 </div>
                                 <div class="d-flex col-12">
                                     <span class="pr-4">Kepada </span>
                                     <span class="pr-1">:</span>
-                                    <span class=""><?= $asal_barang_nama ?><br>Up <?= $barang_pemilik ?></span>
+                                    <span class=""><?=$asal_barang_nama; ?><br>Up <?=$barang_pemilik; ?></span>
                                 </div>
                                 <div class="d-flex col-12 pt-2">
                                     <span class="pr-4">Alamat </span>
                                     <span class="pr-1">:</span>
-                                    <span class=""><?= $alamat_pemilik ?></span>
+                                    <span class=""><?=$alamat_pemilik; ?></span>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="table-responsive mt-3" style="clear: both;">
@@ -230,56 +232,59 @@ function terbilang($nilai) {
 $this->db->where('cetak', 1);
 $this->db->where('operasional', $db_permohonan->id);
 $permohonan = $this->db->get('permohonan')->result();
-$naik = 1;
-$sub_total = 0;
-foreach ($permohonan as $permohonan){
+$naik       = 1;
+$sub_total  = 0;
+foreach ($permohonan as $permohonan) {
 // echo '<pre>';
-$status = $permohonan->status;
+    $status = $permohonan->status;
 
-if($status == 1){
-    $status = 'Baru';
-    $tarif = '&ensp;x &ensp;'.$asal_barang->tarif_baru;
-    $tarif_saja = $asal_barang->tarif_baru;
-}
-if($status == 2){
-    $status = 'Perpanjang';
-    $tarif = '&ensp;x &ensp;'.$asal_barang->tarif_perpanjang;
-    $tarif_saja = $asal_barang->tarif_perpanjang;
-}
-if($status == 3){
-    $status = 'Revisi';
-    $tarif = '&ensp;x &ensp;'.$asal_barang->tarif_revisi;
-    $tarif_saja = $asal_barang->tarif_revisi;
-}
-$this->db->where('id', $permohonan->kapal);
-$nama_kapal = $this->db->get('kapal')->row()->nama;
+    if ($status == 1) {
+        $status     = 'Baru';
+        $tarif      = '&ensp;x &ensp;' . $asal_barang->tarif_baru;
+        $tarif_saja = $asal_barang->tarif_baru;
+    }
+    if ($status == 2) {
+        $status     = 'Perpanjang';
+        $tarif      = '&ensp;x &ensp;' . $asal_barang->tarif_perpanjang;
+        $tarif_saja = $asal_barang->tarif_perpanjang;
+    }
+    if ($status == 3) {
+        $status     = 'Revisi';
+        $tarif      = '&ensp;x &ensp;' . $asal_barang->tarif_revisi;
+        $tarif_saja = $asal_barang->tarif_revisi;
+    }
+    $this->db->where('id', $permohonan->kapal);
+    $nama_kapal = $this->db->get('kapal')->row()->nama;
 
 // var_dump($permohonan->id);
-// // var_dump($operasional->parent);
-// print'</pre>';
-// echo $tarif;
-$sub_total += (int)str_replace('000','',$permohonan->jumlah_asli) * (int)$tarif_saja;
-?>
+    // // var_dump($operasional->parent);
+    // print'</pre>';
+    // echo $tarif;
+    $sub_total += (int)str_replace('000', '', $permohonan->jumlah_asli) * (int)$tarif_saja;
+    $no_rkbm = explode('.', $permohonan->no_rkbm);
+    var_dump($no_rkbm);
+    // $no_rkbm = ltrim(explode('.', $no_rkbm[2]), 0); ?>
 
                                                 <tr>
-                                                    <th scope="row" style="text-align: center;vertical-align: middle;"><?= $naik++ ?></th>
-                                                    <td colspan="9">Jasa PBM (RKBM <?= $status?>)<br>No RKBM : <?= $permohonan->no_rkbm?><br>Tanggal : <?= tgl_in($permohonan->mulai) ?><br>Nama Kapal : <?= $nama_kapal?><br>Muatan : <?=number_format(str_replace('000','',$permohonan->jumlah_asli), 0, ',', '.'); ?>&ensp;&ensp;&ensp;MT <?= $tarif ?></td>
+                                                    <th scope="row" style="text-align: center;vertical-align: middle;"><?=$naik++; ?></th>
+                                                    <td colspan="9">Jasa PBM (RKBM <?=$status; ?>)<br>No RKBM : <?=$no_rkbm; ?><br>Tanggal : <?=tgl_in($permohonan->mulai); ?><br>Nama Kapal : <?=$nama_kapal; ?><br>Muatan : <?=number_format(str_replace('000', '', $permohonan->jumlah_asli), 0, ',', '.'); ?>&ensp;&ensp;&ensp;MT <?=$tarif; ?></td>
                                                     <td style="text-align: left;vertical-align: middle;border-right: white;">Rp</td>
-                                                    <td style="text-align: right;vertical-align: middle;border-left: white;"><?=  number_format((int)str_replace('000','',$permohonan->jumlah_asli) * (int)$tarif_saja, 0, ',', '.'); ?></td>
+                                                    <td style="text-align: right;vertical-align: middle;border-left: white;"><?=number_format((int)str_replace('000', '', $permohonan->jumlah_asli) * (int)$tarif_saja, 0, ',', '.'); ?></td>
                                                 </tr>
-                                                <?php 
+                                                <?php
+
 }
 
-                                        ?>
+?>
                                                 <tr>
-                                                    <td colspan="10" style="text-align: right;">Sub Total<br><?= $asal_barang->total_pph > 0 ? 'PPh('.$asal_barang->total_pph.'%)': ''?><br><b style="font-weight: bold;">Total Tagihan</b></td>
+                                                    <td colspan="10" style="text-align: right;">Sub Total<br><?=$asal_barang->total_pph > 0 ? 'PPh(' . $asal_barang->total_pph . '%)' : ''; ?><br><b style="font-weight: bold;">Total Tagihan</b></td>
                                                     <td style="width: 1%;text-align: left;border-right: white;"><span class="pull-left">Rp</span><br><span class="pull-left">Rp</span><br><span class="pull-left">Rp</span></td>
-                                                    <td style="width: 25%;text-align: right;border-left: white;" class=""><span class="pull-right"><?= number_format($sub_total, 0, ',', '.');?></span><br><span class="pull-right"><?= number_format(($sub_total * 2) / 100, 0, ',', '.');?></span><br><span class="pull-right"><?= number_format($sub_total - (($sub_total * 2) / 100), 0, ',', '.');?></span></td>
+                                                    <td style="width: 25%;text-align: right;border-left: white;" class=""><span class="pull-right"><?=number_format($sub_total, 0, ',', '.'); ?></span><br><span class="pull-right"><?=number_format(($sub_total * 2) / 100, 0, ',', '.'); ?></span><br><span class="pull-right"><?=number_format($sub_total - (($sub_total * 2) / 100), 0, ',', '.'); ?></span></td>
                                                 </tr>
                                             </tbody>
                                             <tfoot>
                                                 <tr>
-                                                    <td colspan="12">Terbilang : <i style="font-weight: bold;"><?= terbilang($sub_total - (($sub_total * 2) / 100))?> Rupiah</i></td>
+                                                    <td colspan="12">Terbilang : <i style="font-weight: bold;"><?=terbilang($sub_total - (($sub_total * 2) / 100)); ?> Rupiah</i></td>
                                                 </tr>
                                             </tfoot>
                                         </table>
@@ -302,7 +307,7 @@ $sub_total += (int)str_replace('000','',$permohonan->jumlah_asli) * (int)$tarif_
                                 <div class="clearfix"></div>
                                 <hr>
                                 <div class="text-right">
-                                    <a class="btn btn-default print-page notprintable" href="<?= base_url('kegiatan/invoice_cetak/'. $id)?>"> <span><i class="fa fa-print"></i> Print</span> </a>
+                                    <a class="btn btn-default print-page notprintable" href="<?=base_url('kegiatan/invoice_cetak/' . $id); ?>"> <span><i class="fa fa-print"></i> Print</span> </a>
                                     <!-- <button class="btn btn-default print-page notprintable" type="button"> <span><i class="fa fa-print"></i> Print</span> </button> -->
                                 </div>
                             </div>

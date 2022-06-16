@@ -43,13 +43,13 @@ class Operasional extends Admin_controller
             $this->db->where('id', $pal['created_by']);
             $created_by = $this->db->get('users')->row()->username;
             if ($pal['operasional_status'] == 1) {
-                $ngaray['status'] = '<span class="badge badge-info" data-toggle="tooltip" data-placement="right" title="" data-original-title="Dibuat oleh ' . $created_by . '">Active <i class="fas fa-cog fa-spin"></i></span>';
+                $ngaray['status'] = '<span class="badge badge-danger" data-toggle="tooltip" data-placement="right" title="" data-original-title="Dibuat oleh ' . $created_by . '"><i class="fa fa-warning text-white faa-flash faa-fast animated"></i> Proses</span>';
             }
             if ($pal['operasional_status'] == 2) {
-                $ngaray['status'] = '<span class="badge badge-success faa-parent animated-hover" data-toggle="tooltip" data-placement="right" title="" data-original-title="Dibuat oleh ' . $created_by . '">Selesai <i class="fa fa-check faa-vertical faa-fast"></i></span>';
+                $ngaray['status'] = '<span class="badge badge-success faa-parent animated-hover" data-toggle="tooltip" data-placement="right" title="" data-original-title="Dibuat oleh ' . $created_by . '"><i class="fa fa-cog fa-spin"></i> Proses</span>';
             }
             if ($pal['operasional_status'] == 3) {
-                $ngaray['status'] = '<span class="badge badge-danger" data-toggle="tooltip" data-placement="right" title="" data-original-title="Dibuat oleh ' . $created_by . '">Arsip</span>';
+                $ngaray['status'] = '<span class="badge badge-info" data-toggle="tooltip" data-placement="right" title="" data-original-title="Dibuat oleh ' . $created_by . '">Selesai</span>';
             }
             $this->db->where('operasional', $pal['id']);
             $this->db->where('status', 1);
@@ -159,9 +159,8 @@ class Operasional extends Admin_controller
                 'tempat_muat'      => set_value('tempat_muat', $row->tempat_muat),
                 'barang'           => set_value('barang', $row->barang),
                 'tempat_bongkar'   => set_value('tempat_bongkar', $row->tempat_bongkar),
-                'jumlah_muatan'    => set_value('jumlah_muatan', $row->jumlah_muatan),
+                'jumlah_kira'      => set_value('jumlah_kira', $row->jumlah_kira),
                 'jumlah_asli'      => set_value('jumlah_asli', $row->jumlah_asli),
-                'jumlah_bongkar'   => set_value('jumlah_bongkar', $row->jumlah_bongkar),
                 'status'           => set_value('status', $row->status),
                 'permohonan_jenis' => set_value('permohonan_jenis', $row->permohonan_jenis),
             );
@@ -205,7 +204,7 @@ class Operasional extends Admin_controller
             // if ($tanggal_mulai == '0000-00-00') {
             //     echo 'Tanggal mulai salah';
             // }
-            $ngaray['detail'] = $this->tgl_in($tanggal_mulai);
+            $ngaray['detail'] = '<span class="badge btn-sm btn-info">' . $this->tgl_in($tanggal_mulai) . '</span><br>';
             $romawi           = $this->integerToRoman(date("m", strtotime($tanggal_mulai)));
             $taon             = date("Y", strtotime($tanggal_mulai));
             $this->db->where('id', $id);
@@ -220,31 +219,36 @@ class Operasional extends Admin_controller
             $perke           = $pal['permohonan_ke'] == 0 ? '' : $pal['permohonan_ke'];
 
             if ($pal['status'] == 1) {
-                $ngaray['detail'] .= '<span class="badge ml-2 mr-1 badge-success">BARU</span>';
+                $ngaray['detail'] .= '<span class="badge mr-1 badge-success">BARU</span>';
                 $stasur = 'B';
             }
             if ($pal['status'] == 2) {
-                $ngaray['detail'] .= '<span class="badge ml-2 mr-1 badge-success">PERPANJANG</span>';
+                $ngaray['detail'] .= '<span class="badge mr-1 badge-success">PERPANJANG</span>';
                 $stasur = 'P';
             }
             if ($pal['status'] == 3) {
-                $ngaray['detail'] .= '<span class="badge ml-2 mr-1 badge-success">REVISI</span>';
+                $ngaray['detail'] .= '<span class="badge mr-1 badge-success">REVISI</span>';
                 $stasur = 'PR';
             }
             if ($pal['status'] == 4) {
-                $ngaray['detail'] .= '<span class="badge ml-2 mr-1 badge-success">BATAL</span>';
+                $ngaray['detail'] .= '<span class="badge mr-1 badge-success">BATAL</span>';
                 $stasur = 'X';
             }
+            $ngaray['detail'] .= '<br>';
             if ($pal['permohonan_jenis'] == 1) {
-                $ngaray['detail'] .= '<span class="badge mr-1 badge-danger">MUAT</span>';
+                $ngaray['detail'] .= '<span class="badge mr-1 badge-danger">MUAT JETTY</span>';
                 $jesur = 'M';
             }
             if ($pal['permohonan_jenis'] == 2) {
-                $ngaray['detail'] .= '<span class="badge mr-1 badge-danger">BONGKAR</span>';
+                $ngaray['detail'] .= '<span class="badge mr-1 badge-danger">BONGKAR JETTY</span>';
                 $jesur = 'B';
             }
             if ($pal['permohonan_jenis'] == 3) {
-                $ngaray['detail'] .= '<span class="badge mr-1 badge-danger">MUAT & BONGKAR</span>';
+                $ngaray['detail'] .= '<span class="badge mr-1 badge-danger">BONGKAR STS</span>';
+                $jesur = 'MB';
+            }
+            if ($pal['permohonan_jenis'] == 4) {
+                $ngaray['detail'] .= '<span class="badge mr-1 badge-danger">BATAL</span>';
                 $jesur = 'MB';
             }
             if ($pal['no_rkbm']) {
@@ -252,17 +256,6 @@ class Operasional extends Admin_controller
             } else {
                 $erkabem = '<i class="fa fa-warning text-danger faa-flash faa-fast animated"></i> <code>belum ada</code>';
             }
-            $ngaray['detail'] .= '
-                            <div class="row mb-2">
-                                <div class="col-auto border-right align-self-center">
-                                    <div class="d-flex">
-                                        <code>No Surat :<br> 0' . $pal['no_surat'] . '/' . $jesur . '/' . $stasur . $perke . '/RKBM-' . $get_perusahaan->inisial . "/SMD/" . $romawi . '/' . $taon . '</code>
-                                    </div>
-                                </div>
-                                <div class="col-auto" data-toggle="modal" data-target="#modal-norkbm" data-nosurat="' . $pal['id'] . '"><code>No RKBM :<br>
-                                ' . $erkabem . '
-                                </div>
-                            </div>';
 
             $this->db->where('id', $pal['kapal']);
             $permohonan_kapal = $this->db->get('kapal')->row();
@@ -272,18 +265,20 @@ class Operasional extends Admin_controller
             $jenis_tempat_muat = $this->Reza_model->get_ref_val($this->db->database, 'terminal', 'jenis', $this->Reza_model->get_ref_val($this->db->database, 'permohonan', 'tempat_muat', $pal['tempat_muat'])->jenis)->nama;
 
             $ngaray['deskripsi'] = '';
-            $ngaray['deskripsi'] .= '
-            <span class="ml-n2 text-left badge btn-outline-secondary">
-            <span class="badge badge-light" data-toggle="tooltip" data-placement="top" title="' . strtoupper($agen_kapal) . '">Kapal</span> ' . $permohonan_kapal->nama . '<br>
-            <span class="badge badge-light" data-toggle="tooltip" data-placement="top" title="' . strtoupper($jenis_tempat_muat) . '">Terminal Muat</span> ' . $tempat_muat . '<br>
-            <span class="badge badge-light">Terminal Bongkar</span> ' . $pal['tempat_bongkar'] . '</span>';
+            $ngaray['deskripsi'] .= '<code class="" >No Surat : <br>0' . $pal['no_surat'] . '/' . $jesur . '/' . $stasur . $perke . '/RKBM-' . $get_perusahaan->inisial . "/SMD/" . $romawi . '/' . $taon . '</code>
+                                <div class="" data-toggle="modal" data-target="#modal-norkbm" data-nosurat="' . $pal['id'] . '"><code>No RKBM :
+                                ' . $erkabem . '</code>
+                                </div>';
 
             $ngaray['keterangan'] = '';
             $ngaray['keterangan'] .= '
             <span class="ml-n2 text-left badge btn-outline-secondary">
-            <span class="badge badge-light">Muat Perkiraan</span> ' . number_format($pal['jumlah_muatan'], 0, ',', '.') . '<br>
-            <span class="badge badge-light">Muat Asli</span> ' . number_format($pal['jumlah_asli'], 0, ',', '.') . '<br>
-            <span class="badge badge-light">Bongkar</span> ' . number_format($pal['jumlah_bongkar'], 0, ',', '.') . '<br></span>';
+            <span class="badge badge-light" data-toggle="tooltip" data-placement="top" title="' . strtoupper($agen_kapal) . '">Kapal</span> ' . $permohonan_kapal->nama . '<br>
+            <span class="badge badge-light" data-toggle="tooltip" data-placement="top" title="' . strtoupper($jenis_tempat_muat) . '">Terminal Muat</span> ' . $tempat_muat . '<br>
+            <span class="badge badge-light">Terminal Bongkar</span> ' . $pal['tempat_bongkar'] . '</span>
+            <span class="ml-n2 text-left badge btn-outline-secondary">
+            <span class="badge badge-light">Jumlah Perkiraan</span> ' . number_format($pal['jumlah_kira'], 0, ',', '.') . '<br>
+            <span class="badge badge-light">Jumlah Asli</span> ' . number_format($pal['jumlah_asli'], 0, ',', '.') . '<br></span>';
 
             $ngaray['aksi'] = '';
 

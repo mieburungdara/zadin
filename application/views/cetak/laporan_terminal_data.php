@@ -54,7 +54,7 @@ function tgl_in($date)
                 bottom: 0;
                 height: 50px;
                 width: 100%;
-                position: sticky;
+                /* position: sticky; */
 
             }
 
@@ -131,7 +131,7 @@ $bulan = date('F', strtotime("2000-$bulan-01"));
                         </tbody>
                     </table>
 
-                    <table id="datatables" class="table table-bordered" width="100%" style="font-size: 11px; margin-top: 20px">
+                    <table class="table table-bordered" width="100%" style="font-size: 11px; margin-top: 20px">
                         <thead>
                             <tr>
 
@@ -160,11 +160,12 @@ $bulan = date('F', strtotime("2000-$bulan-01"));
                         </thead>
                         <tbody>
                             <?php
-$no            = 1;
-$total_bongkar = 0;
-$total_muat    = 0;
-$total_asli    = 0;
-$total_inc     = 0;
+$no                 = 1;
+$total_muat_asli    = 0;
+$total_bongkar_asli = 0;
+$total_muat         = 0;
+$total_asli         = 0;
+$total_inc          = 0;
 foreach ($datalist as $datas) {
     // var_dump($datas);
     $this->db->where('id', $datas['id']);
@@ -196,7 +197,28 @@ foreach ($datalist as $datas) {
     $this->db->where('id', $get_permohonan->barang);
     $get_barang_jenis = $this->db->get('barang_jenis')->row();
 
-    // echo $get_permohonan->id;
+    if ($get_permohonan->permohonan_jenis == 1) {
+        $total_muat        = ($total_muat + $get_permohonan->jumlah_kira);
+        $jumlah_muatnya    = $get_permohonan->jumlah_asli;
+        $jumlah_bongkarnya = 0;
+    }
+    if ($get_permohonan->permohonan_jenis == 2) {
+        $total_muat        = ($total_muat + $get_permohonan->jumlah_kira);
+        $jumlah_muatnya    = $get_permohonan->jumlah_asli;
+        $jumlah_bongkarnya = 0;
+    }
+    if ($get_permohonan->permohonan_jenis == 3) {
+        $total_bongkar     = ($total_bongkar + $get_permohonan->jumlah_kira);
+        $jumlah_bongkarnya = $get_permohonan->jumlah_asli;
+        $jumlah_muatnya    = 0;
+    }
+    if ($get_permohonan->permohonan_jenis == 4) {
+        $total_bongkar     = ($total_bongkar + $get_permohonan->jumlah_kira);
+        $jumlah_bongkarnya = $get_permohonan->jumlah_asli;
+        $jumlah_muatnya    = 0;
+    }
+
+    // echo $get_permohonan->permohonan_jenis;
     echo '<tr>';
     echo '<td>' . $no++ . '</td>';
     echo '<td>' . $get_kapal->nama . '</td>';
@@ -204,10 +226,10 @@ foreach ($datalist as $datas) {
     echo "<td>" . $get_kapal->ukuran . "</td>";
     echo "<td>" . $get_agen_kapal->nama . "</td>";
 
-    echo "<td>" . number_format($get_permohonan->jumlah_bongkar, 0, ',', '.') . "</td>";
-    echo "<td>" . number_format($get_permohonan->jumlah_muatan, 0, ',', '.') . "</td>";
-    $total_bongkar = ($total_bongkar + $get_permohonan->jumlah_bongkar);
-    $total_muat    = ($total_muat + $get_permohonan->jumlah_muatan);
+    echo "<td>" . number_format($jumlah_bongkarnya, 0, ',', '.') . "</td>";
+    echo "<td>" . number_format($jumlah_muatnya, 0, ',', '.') . "</td>";
+    $total_bongkar_asli = ($total_bongkar_asli + $jumlah_bongkarnya);
+    $total_muat_asli    = ($total_muat_asli + $jumlah_muatnya);
     echo "<td>" . $tanggal_mulai . "</td>";
     echo "<td>" . $tanggal_selesai . "</td>";
 
@@ -216,8 +238,8 @@ foreach ($datalist as $datas) {
     echo "<td>" . strtoupper($get_barang_jenis->nama) . "</td>";
     echo "<td>" . ($get_perusahaan->nama) . "</td>";
     echo '<td style="white-space:pre-wrap; word-break:break-word">' . ($datas['no_rkbm']) . "</td>";
-    echo "<td>" . number_format($datas['jumlah_asli'], 0, ',', '.') . "</td>";
-    $total_asli = ($total_asli + $datas['jumlah_asli']);
+    echo "<td>" . number_format($datas['jumlah_kira'], 0, ',', '.') . "</td>";
+    $total_asli = ($total_asli + $datas['jumlah_kira']);
     $total_inc  = ($total_inc + $datas['inc']);
 
     echo '</tr>';
@@ -231,8 +253,8 @@ foreach ($datalist as $datas) {
                                 <td><strong></strong></td>
                                 <td><strong></strong></td>
                                 <td><strong>Total: </strong></td>
-                                <td><strong><?=number_format($total_bongkar, 0, ',', '.'); ?></strong></td>
-                                <td><strong><?=number_format($total_muat, 0, ',', '.'); ?></strong></td>
+                                <td><strong><?=number_format($total_bongkar_asli, 0, ',', '.'); ?></strong></td>
+                                <td><strong><?=number_format($total_muat_asli, 0, ',', '.'); ?></strong></td>
                                 <td><strong></strong></td>
                                 <td><strong></strong></td>
                                 <td><strong></strong></td>

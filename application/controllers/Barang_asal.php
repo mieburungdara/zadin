@@ -61,6 +61,9 @@ class Barang_asal extends Admin_controller
             $ngaray['nama'] = '';
             $ngaray['nama'] .= $pal->nama;
 
+            $ngaray['lokasi'] = '';
+            $ngaray['lokasi'] .= $pal->lokasi;
+
             $ngaray['inisial'] = '';
             $ngaray['inisial'] .= $pal->inisial;
 
@@ -112,6 +115,9 @@ class Barang_asal extends Admin_controller
             $data = array(
                 'id'               => $row->id,
                 'nama'             => $row->nama,
+                'inisial'          => $row->inisial,
+                'lokasi'           => $row->lokasi,
+                'nama'             => $row->nama,
                 'alamat'           => $row->alamat,
                 'sk_brg'           => $row->sk_brg,
                 'npwp'             => $row->npwp,
@@ -140,6 +146,8 @@ class Barang_asal extends Admin_controller
             'action'           => site_url('barang_asal/create_action'),
             'id'               => set_value('id'),
             'nama'             => set_value('nama'),
+            'lokasi'           => set_value('lokasi'),
+            'inisial'          => set_value('inisial'),
             'alamat'           => set_value('alamat'),
             'sk_brg'           => set_value('sk_brg'),
             'npwp'             => set_value('npwp'),
@@ -167,6 +175,7 @@ class Barang_asal extends Admin_controller
             $data = array(
                 'nama'             => $this->input->post('nama', true),
                 'inisial'          => $this->input->post('inisial', true),
+                'lokasi'           => $this->input->post('lokasi', true),
                 'alamat'           => $this->input->post('alamat', true),
                 'sk_brg'           => $this->input->post('sk_brg', true),
                 'npwp'             => $this->input->post('npwp', true),
@@ -199,6 +208,7 @@ class Barang_asal extends Admin_controller
                 'id'               => set_value('id', $row->id),
                 'nama'             => set_value('nama', $row->nama),
                 'inisial'          => set_value('inisial', $row->inisial),
+                'lokasi'           => set_value('lokasi', $row->lokasi),
                 'alamat'           => set_value('alamat', $row->alamat),
                 'sk_brg'           => set_value('sk_brg', $row->sk_brg),
                 'npwp'             => set_value('npwp', $row->npwp),
@@ -232,6 +242,7 @@ class Barang_asal extends Admin_controller
                 'alamat'           => $this->input->post('alamat', true),
                 'sk_brg'           => $this->input->post('sk_brg', true),
                 'npwp'             => $this->input->post('npwp', true),
+                'lokasi'           => $this->input->post('lokasi', true),
                 // 'jenis'            => $this->input->post('jenis', true),
                  'pph'              => $this->input->post('pph', true),
                 'total_pph'        => $this->input->post('total_pph', true),

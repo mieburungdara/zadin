@@ -25,6 +25,7 @@
                         <tr>
                             <th>Inisial</th>
                             <th>Nama</th>
+                            <th>Lokasi</th>
                             <th>Alamat</th>
                             <th>SK Barang</th>
                             <th>NPWP</th>
@@ -87,6 +88,9 @@ $(function() {
             },
             {
                 data: "nama",
+            },
+            {
+                data: "lokasi",
             },
             {
                 data: "alamat",

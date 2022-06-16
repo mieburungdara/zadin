@@ -36,7 +36,7 @@
                 bottom: 0;
                 height: 50px;
                 width: 100%;
-                position: sticky;
+                /* position: sticky; */
 
             }
 

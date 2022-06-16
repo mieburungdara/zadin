@@ -45,7 +45,7 @@ $alamat_pemilik  = $barang_pemiliks->alamat;
 function penyebut($nilai)
 {
     $nilai = abs($nilai);
-    $huruf = array("", "Satu", "Dua", "Tiga", "Empat", "Lima", "enam", "Tujuh", "Delapan", "Sembilan", "Sepuluh", "Sebelas");
+    $huruf = array("", "Satu", "Dua", "Tiga", "Empat", "Lima", "Enam", "Tujuh", "Delapan", "Sembilan", "Sepuluh", "Sebelas");
     $temp  = "";
     if ($nilai < 12) {
         $temp = " " . $huruf[$nilai];
@@ -173,20 +173,21 @@ $this->db->where('operasional', $db_permohonan->id);
 $permohonans = $this->db->get('permohonan')->result();
 $naik        = 1;
 $sub_total   = 0;
+
 foreach ($permohonans as $permohonan) {
 // echo '<pre>';
     $peje = $permohonan->permohonan_jenis;
     if ($peje == 1) {
-        $jusli      = $permohonan->jumlah_asli;
+        $jusli      = $permohonan->jumlah_kira;
         $text_jusli = "Muat";
     }
     if ($peje == 2) {
-        $jusli      = $permohonan->jumlah_bongkar;
+        $jusli      = $permohonan->jumlah_kira;
         $text_jusli = "Bongkar";
     }
     if ($peje == 3) {
-        $jusli      = $permohonan->jumlah_asli;
-        $text_jusli = "Muat & Bongkar";
+        $jusli      = $permohonan->jumlah_kira;
+        $text_jusli = "Bongkar";
     }
     $status  = $permohonan->status;
     $payment = (int)$permohonan->payment;
@@ -211,9 +212,12 @@ foreach ($permohonans as $permohonan) {
             $tarif_saja = '';
             $total      = $payment;
         } else {
-            $tarif      = '&ensp;x &ensp;Rp.' . $asal_barang->tarif_baru;
+            $tarifnya = explode(" ", $asal_barang->tarif_baru);
+            $tarif    = '&ensp;x &ensp;';
+            $tarif .= $peje == 3 ? $tarifnya[1] : $tarifnya[0];
             $tarif_saja = $asal_barang->tarif_baru;
-            $total      = (int)str_replace('000', '', $jusli) * $tarif_saja;
+            $total      = substr($jusli, 0, -3) * $tarif_saja;
+            // $total      = (int)str_replace('000', '', $jusli) * $tarif_saja;
         }
     }
     if ($status == 2) {
@@ -223,9 +227,12 @@ foreach ($permohonans as $permohonan) {
             $tarif_saja = $payment;
             $total      = $payment;
         } else {
-            $tarif      = '&ensp;x &ensp;Rp.' . $asal_barang->tarif_perpanjang;
+            $tarifnya = explode(" ", $asal_barang->tarif_perpanjang);
+            $tarif    = '&ensp;x &ensp;';
+            $tarif .= $peje == 3 ? $tarifnya[1] : $tarifnya[0];
             $tarif_saja = $asal_barang->tarif_perpanjang;
-            $total      = (int)str_replace('000', '', $jusli) * $tarif_saja;
+            $total      = substr($jusli, 0, -3) * $tarif_saja;
+            // $total      = (int)str_replace('000', '', $jusli) * $tarif_saja;
         }
     }
     if ($status == 3) {
@@ -235,9 +242,12 @@ foreach ($permohonans as $permohonan) {
             $tarif_saja = $payment;
             $total      = $payment;
         } else {
-            $tarif      = '&ensp;x &ensp;Rp.' . $asal_barang->tarif_revisi;
+            $tarifnya = explode(" ", $asal_barang->tarif_revisi);
+            $tarif    = '&ensp;x &ensp;';
+            $tarif .= $peje == 3 ? $tarifnya[1] : $tarifnya[0];
             $tarif_saja = $asal_barang->tarif_revisi;
-            $total      = (int)str_replace('000', '', $jusli) * $tarif_saja;
+            $total      = substr($jusli, 0, -3) * $tarif_saja;
+            // $total      = (int)str_replace('000', '', $jusli) * $tarif_saja;
         }
     }
     if ($status == 4) {
@@ -247,9 +257,12 @@ foreach ($permohonans as $permohonan) {
             $tarif_saja = $payment;
             $total      = $payment;
         } else {
-            $tarif      = '&ensp;x &ensp;Rp.' . $asal_barang->tarif_revisi;
+            $tarifnya = explode(" ", $asal_barang->tarif_revisi);
+            $tarif    = '&ensp;x &ensp;';
+            $tarif .= $peje == 3 ? $tarifnya[1] : $tarifnya[0];
             $tarif_saja = $asal_barang->tarif_revisi;
-            $total      = (int)str_replace('000', '', $jusli) * $tarif_saja;
+            $total      = substr($jusli, 0, -3) * $tarif_saja;
+            // $total      = (int)str_replace('000', '', $jusli) * $tarif_saja;
         }
     }
     $this->db->where('id', $permohonan->kapal);
@@ -261,15 +274,24 @@ foreach ($permohonans as $permohonan) {
     // echo $tarif;
     // $sub_total += (int)str_replace('000', '', $jusli) * (int)$total;
     $sub_total += (int)$total;
-    // $sub_total += '1'; ?>
+
+    if ($permohonan->no_rkbm) {
+        $no_rkbm = explode('.', $permohonan->no_rkbm);
+        // var_dump(ltrim($no_rkbm[3], '0'));
+        $no_rkbm = ltrim($no_rkbm[3], '0');
+    } else {
+        $no_rkbm = "<code>NOMOR RKBM BELUM TERISI</code>";
+    }
+    ; // $sub_total += '1'; ?>
 
                                                     <tr>
                                                         <th scope="row" style="text-align: center;vertical-align: middle;!important"><?=$naik++; ?></th>
                                                         <td colspan="1">
-                                                            Jasa PBM <?=$text_jusli; ?> (RKBM <?=$status; ?>)<br>
-                                                            No RKBM : <?=$permohonan->no_rkbm; ?><br>
+                                                            Jasa PBM (RKBM <?=$status; ?>)<br>
+                                                            <!-- Jasa PBM <?=$text_jusli; ?> (RKBM <?=$status; ?>)<br> -->
+                                                            No RKBM : <?=$no_rkbm; ?><br>
                                                             Tanggal : <?=tgl_in($permohonan->mulai); ?><br>Nama Kapal : <?=$nama_kapal; ?><br>
-                                                            Muatan : <?=number_format(str_replace('000', '', $jusli), 0, ',', '.'); ?>
+                                                            Muatan : <?=number_format(substr($jusli, 0, -3), 0, ',', '.'); ?>
                                                             &ensp;&ensp;&ensp;MT <?=$tarif; ?>
                                                         </td>
                                                         <td class="doks" style="text-align: left;vertical-align: middle;!important">
@@ -290,7 +312,7 @@ foreach ($permohonans as $permohonan) {
                                                             <div class="d-flex">
                                                                 <div class="">Rp<br>Rp<br>Rp</span>
                                                                 </div>
-                                                                <div class="ml-auto"><?=number_format($sub_total, 0, ',', '.'); ?><br><?=number_format(($sub_total * 2) / 100, 0, ',', '.'); ?><br><?=number_format($sub_total - (($sub_total * 2) / 100), 0, ',', '.'); ?></span>
+                                                                <div class="ml-auto text-right"><?=number_format($sub_total, 0, ',', '.'); ?><br><?=number_format(($sub_total * $asal_barang->total_pph) / 100, 0, ',', '.'); ?><br><?=number_format($sub_total - (($sub_total * $asal_barang->total_pph) / 100), 0, ',', '.'); ?></span>
                                                                 </div>
                                                             </div>
                                                         </td>
@@ -299,7 +321,7 @@ foreach ($permohonans as $permohonan) {
                                                 </tbody>
                                                 <tfoot>
                                                     <tr>
-                                                        <td colspan="12">Terbilang : <i style="font-weight: bold;!important"><?=terbilang($sub_total - (($sub_total * 2) / 100)); ?> Rupiah</i></td>
+                                                        <td colspan="12">Terbilang : <i style="font-weight: bold;!important"><?=terbilang($sub_total - (($sub_total * $asal_barang->total_pph) / 100)); ?> Rupiah</i></td>
                                                     </tr>
                                                 </tfoot>
                                             </table>
@@ -315,7 +337,13 @@ foreach ($permohonans as $permohonan) {
                                     </div>
                                     <div class="col-6">
                                         <h5 style="font-weight: bold;color: black;" class="mb-5 mt-5">Hormat Kami,</h5>
-                                        <h4 style="font-weight: bold;color: black;" class="mb-5"><u>Juspri Ardianus</u></h4>
+                                        <?php
+$this->db->where('id', $created_by);
+$oleh      = $this->db->get('users')->row();
+$firstname = $oleh->firstname;
+$lastname  = $oleh->lastname;
+?>
+                                        <h4 style="font-weight: bold;color: black;" class="mb-5"><u><?=$firstname . ' ' . $lastname; ?></u></h4>
                                     </div>
                                 </div>
                             </div> <!-- ./(1) -->

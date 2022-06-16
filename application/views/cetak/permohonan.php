@@ -189,163 +189,6 @@ if ($status == 4) {
     <body>
 
 
-        <!--div class="container">
-
-<div class="row mx-3 fonts">
-    <div class="col-12">
-        <img src="https://yuvenil.my.id/kop-zadin.png" class="card-img-top img-fluid">
-    </div>
-    <div class="col-12 my-3">
-    </div>
-
-
-
-    <div class="row p-3">
-        <div class="col-12" style="">
-            <div class="col-6"></div>
-            <div class="col-6 float-right">
-                <span style="font-weight: normal;">Samarinda, <?=tgl_in(date('Y-m-d')); ?></span>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <p></p>
-            <table class="table table-borderless table-responsive table-sm table-white" style="">
-                <thead>
-                    <tr> </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><b>Nomor</b></td>
-                        <td><b>:</b></td>
-                        <td>0<?=$id; ?>/ZMA/SMD/III/<?=date('Y'); ?></td>
-                    </tr>
-                    <tr>
-                        <td><b>Lampiran</b></td>
-                        <td><b>:</b></td>
-                        <td>-</td>
-                    </tr>
-                    <tr>
-                        <td><b>Perihal</b></td>
-                        <td><b>:</b></td>
-                        <td><b>Pemberitahuan Rencana
-                                Kegiatan Bongkar Muat
-                                (RKBM) - <?=strtoupper($permohonan_jenis); ?>
-                            </b></td>
-                    </tr>
-                </tbody>
-            </table>
-
-
-
-
-
-        </div>
-
-        <div class="col-md-6">
-            <p></p>
-            <div class="mb-1" style="text-align: left; line-height: 2rem;">Kepada
-            </div>
-            <div><b>Yth. Kepala Kantor Kesyahbandaran dan
-                    Otoritas Pelabuhan Kelas II Samarinda&nbsp;</b>
-                <div>di -<div>&nbsp; &nbsp; &nbsp; &nbsp; Tempat</div>
-                </div>
-            </div>
-
-
-
-        </div>
-        <div class="row" style=""></div>
-        <div class="container" style="">
-            <div class="mb-4 mt-3">Dengan Hormat,&nbsp;<div>
-                    Bersama dengan ini, Mohon kiranya bapak berkenan memberi sesuai perihal diatas untuk kapal kami
-                    tersebut dibawah:
-                </div>
-            </div>
-
-            <table class="table table-borderless table-responsive table-sm table-white" style="">
-                <tbody>
-                    <tr>
-                        <th class="pl-0">Nama Kapal</th>
-                        <th>:</th>
-                        <td><?=strtoupper($permohonan_kapal->nama); ?></td>
-                    </tr>
-                    <tr>
-                        <th class="pl-0">Isi Kotor (GTR)</th>
-                        <th>:</th>
-                        <td><?=strtoupper($permohonan_kapal->ukuran); ?></td>
-                    </tr>
-                    <tr>
-                        <th class="pl-0">Bendera</th>
-                        <th>:</th>
-                        <td><?=strtoupper($permohonan_kapal->bendera); ?></td>
-                    </tr>
-                    <tr>
-                        <th class="pl-0">Rencana Muat</th>
-                        <th>:</th>
-                        <td><?=tgl_in($mulai); ?></td>
-                    </tr>
-                    <tr>
-                        <th class="pl-0">Tempat Muat</th>
-                        <th>:</th>
-                        <td><?=strtoupper($tempat_muat); ?></td>
-                    </tr>
-                    <tr>
-                        <th class="pl-0">Tempat Bongkar</th>
-                        <th>:</th>
-                        <td><?=strtoupper($tempat_bongkar); ?></td>
-                    </tr>
-                    <tr>
-                        <th class="pl-0">Jenis Barang</th>
-                        <th>:</th>
-                        <td><?=strtoupper($jenis_barang); ?></td>
-                    </tr>
-                    <tr>
-                        <th class="pl-0">Qty</th>
-                        <th>:</th>
-                        <td><?=strtoupper($jumlah_muatan); ?></td>
-                    </tr>
-                    <tr>
-                        <th class="pl-0">Agen</th>
-                        <th>:</th>
-                        <td><?=strtoupper($agen_kapal); ?></td>
-                    </tr>
-                    <tr>
-                        <th class="pl-0">Asal Barang</th>
-                        <th>:</th>
-                        <td><?=strtoupper($asal_barang); ?></td>
-                    </tr>
-                    <tr>
-                        <th class="pl-0">SIUPAL PBM</th>
-                        <th>:</th>
-                        <td>NO. 503/315/SIUPBM-HUB/DPMPTSP/III/2019</td>
-                    </tr>
-                </tbody>
-            </table>
-
-
-            <div class="mb-4 mt-4">
-                Demikian Permohonan ini Kami Buat, atas perhatian dan kerjasamanya kami ucapkan terima kasih.
-            </div>
-
-
-            <div class="row text-center">
-                <div class="col-6">
-                </div>
-                <div class="col-6">
-                    <h6 class="mb-5 mt-5">Hormat Kami,</h6>
-                    <h4 class="mb-5">Juspri Ardianus</h4>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-</div>
-
-</div -->
-
-
-
 
         <div class="container">
             <div class="row fonts" style="margin-top; 5px; padding: 5px 5px 5px 5px;">
@@ -359,7 +202,7 @@ if ($status == 4) {
                                     <tr>
                                         <th>Nomor </th>
                                         <td style="padding-left: 10px"> : </td>
-                                        <td style="padding-left: 10px">0<?=$id; ?>/<?=$ketsur; ?><?=$perke; ?>/<?=$perusahaan->inisial; ?>/SMD/<?=romawi(date("m")); ?>/<?=date('Y'); ?></span></td>
+                                        <td style="padding-left: 10px">0<?=$no_surat; ?>/<?=$ketsur; ?><?=$perke; ?>/<?=$perusahaan->inisial; ?>/SMD/<?=romawi(date("m")); ?>/<?=date('Y'); ?></span></td>
                                     </tr>
                                     <tr>
                                         <th>Lampiran</th>
@@ -438,7 +281,7 @@ if ($status == 4) {
                                     <tr>
                                         <th>Qty</th>
                                         <td style="padding-left: 50px"> : </td>
-                                        <td style="padding-left: 20px"> <?=number_format(str_replace('00000', '00', $jumlah_muatan)); ?> MT</td>
+                                        <td style="padding-left: 20px"> <?=number_format(str_replace('00000', '00', $jumlah_kira)); ?> MT</td>
                                     </tr>
                                     <tr>
                                         <th>Agen</th>
@@ -469,7 +312,13 @@ if ($status == 4) {
                         <div class="col-xs-5" style="text-align: center">
                             Hormat Kami,
                             <div style="margin-top: 50px; text-align: center">
-                                <strong><u>Juspri Ardianus</u></strong>
+                                <?php
+$this->db->where('id', $created_by);
+$oleh      = $this->db->get('users')->row();
+$firstname = $oleh->firstname;
+$lastname  = $oleh->lastname;
+?>
+                                <strong><u><?=$firstname . ' ' . $lastname; ?></u></strong>
                             </div>
                         </div>
                     </div>

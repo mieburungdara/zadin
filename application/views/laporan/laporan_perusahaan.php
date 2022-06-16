@@ -77,6 +77,24 @@ foreach ($perusahaan as $palu) {
                             <label class="mr-sm-2" for="filter_tahun">Tahun</label>
                             <input type="text" class="form-control ngambitahun" id="filter_tahun" name="filter_tahun">
                         </div>
+                        <div class="col-auto form-group mb-4">
+                            <label class="mr-sm-2" for="filter_jenis_permohonan">Jenis Permohonan</label>
+                            <select class="custom-select mr-sm-2" id="filter_jenis_permohonan" name="filter_jenis_permohonan">
+                                <option selected value="">Semua</option>
+                                <option value="1">Muat</option>
+                                <option value="2">Bongkar</option>
+                            </select>
+                        </div>
+                        <div class="col-auto form-group mb-4">
+                            <label class="mr-sm-2" for="filter_status_permohonan">Status Permohonan</label>
+                            <select class="custom-select mr-sm-2" id="filter_status_permohonan" name="filter_status_permohonan">
+                                <option selected value="">Semua</option>
+                                <option value="1">Baru</option>
+                                <option value="2">Perpanjang</option>
+                                <option value="3">Revisi</option>
+                                <option value="4">Batal</option>
+                            </select>
+                        </div>
 
                     </div>
                 </div>
@@ -104,6 +122,7 @@ foreach ($perusahaan as $palu) {
                         <thead>
                             <tr role="row">
                                 <th rowspan="1" colspan="1" style="width: 18px;" aria-label="No">No</th>
+                                <th tabindex="0" rowspan="1" colspan="1" aria-label="Admin: activate to sort column ascending">Status</th>
                                 <th tabindex="0" rowspan="1" colspan="1" aria-label="No. RKBM: activate to sort column ascending">No. RKBM</th>
                                 <th tabindex="0" rowspan="1" colspan="1" aria-label="Nama Kapal: activate to sort column ascending">Nama Kapal</th>
                                 <th tabindex="0" rowspan="1" colspan="1" aria-label="Bendera: activate to sort column ascending">Bendera</th>
@@ -123,7 +142,6 @@ foreach ($perusahaan as $palu) {
                                 <th tabindex="0" rowspan="1" colspan="1" aria-label="Perusahaan: activate to sort column ascending">Perusahaan</th>
                                 <th tabindex="0" rowspan="1" colspan="1" aria-label="Tanggal Dibuat: activate to sort column ascending">Tanggal Dibuat</th>
                                 <th tabindex="0" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">Admin</th>
-                                <th tabindex="0" rowspan="1" colspan="1" aria-label="Admin: activate to sort column ascending">Status</th>
                                 <!-- <th rowspan="1" colspan="1" aria-label="Action">Action</th> -->
                             </tr>
                         </thead>
@@ -199,7 +217,8 @@ $(function() {
                 d.bulan = $('input[name=filter_bulan]').val();
                 d.tahun = $('input[name=filter_tahun]').val();
                 d.perusahaan = $('select[name=filter_perusahaan]').val();
-                // d.status = $('select[name=filter_status]').val();
+                d.status_permohonan = $('select[name=filter_status_permohonan]').val();
+                d.jenis_permohonan = $('select[name=filter_jenis_permohonan]').val();
                 // d.kapal = $('select[name=filter_kapal]').val();
                 // d.tempat_muat = $('select[name=filter_tempat_muat]').val();
                 // d.barang = $('select[name=filter_barang]').val();
@@ -211,6 +230,9 @@ $(function() {
         // ],
         "columns": [{
                 data: "no",
+            },
+            {
+                data: "status",
             },
             {
                 data: "no_rkbm",
@@ -269,16 +291,13 @@ $(function() {
             {
                 data: "admin",
             },
-            {
-                data: "status",
-            },
             // {
             //     data: "aksi",
             // },
         ]
     });
 
-    var cetaklaporan, cetaksurat, ngebulan, ngetahun, ngeper;
+    var cetaklaporan, cetaksurat, ngebulan, ngetahun, ngeper, ngejen, ngest;
 
     $('#filter_bulan').on('change', function(e) {
         t.draw();
@@ -300,12 +319,24 @@ $(function() {
         ngeper = $('#filter_perusahaan').val() ? $('#filter_perusahaan').val() : undefined;
         // console.log(ngeper);
     });
+    $('#filter_status_permohonan').on('change', function(e) {
+        t.draw();
+        e.preventDefault();
+        ngejen = $('#filter_status_permohonan').val() ? $('#filter_status_permohonan').val() : undefined;
+        // console.log(ngeper);
+    });
+    $('#filter_jenis_permohonan').on('change', function(e) {
+        t.draw();
+        e.preventDefault();
+        ngest = $('#filter_jenis_permohonan').val() ? $('#filter_jenis_permohonan').val() : undefined;
+        // console.log(ngeper);
+    });
     t.on('xhr', function(e, settings, json) {
-        if (ngeper != undefined) {
+        if (ngeper != undefined && ngetahun != undefined && ngebulan != undefined) {
             $(".cetaklaporan").prop("disabled", false);
             $(".cetaksurat").prop("disabled", false);
-            cetaklaporan = "<?=base_url(); ?>laporan/cetak_perusahaan/" + ngeper + "/" + ngebulan + "/" + ngetahun;
-            cetaksurat = "<?=base_url(); ?>laporan/cetak_terminal/" + ngeper + "/" + ngebulan + "/" + ngetahun;
+            cetaklaporan = "<?=base_url(); ?>laporan/cetak_perusahaan/" + ngeper + "/" + ngest + "/" + ngejen + "/" + ngebulan + "/" + ngetahun;
+            cetaksurat = "<?=base_url(); ?>laporan/cetak_terminal/" + ngeper + "/" + ngest + "/" + ngejen + "/" + ngebulan + "/" + ngetahun;
             $(".cetaklaporan").attr('data-link', cetaklaporan);
             $(".cetaksurat").attr('data-link', cetaksurat);
             // console.log(ngeling);

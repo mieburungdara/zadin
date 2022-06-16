@@ -1,5 +1,7 @@
 <?php
+setlocale(LC_ALL, 'id_ID');
 
+date_default_timezone_set('Asia/Makassar');
 function tgl_in($date)
 {
     $Bulan = array("Januari", "Februari", "Maret", "April", "Mei", "Juni",
@@ -10,6 +12,43 @@ function tgl_in($date)
     $bulan  = substr($date, 5, 2);
     $tgl    = substr($date, 8, 2);
     $result = $tgl . " " . $Bulan[(int)$bulan - 1] . " " . $tahun;
+    return $result;
+}
+function bulandathun($date)
+{
+    $Bulan = array("Januari", "Februari", "Maret", "April", "Mei", "Juni",
+        "Juli", "Agustus", "September", "Oktober", "November", "Desember");
+
+    // pemisahan tahun, bulan, hari, dan waktu
+    $tahun  = substr($date, 0, 4);
+    $bulan  = substr($date, 5, 2);
+    $tgl    = substr($date, 8, 2);
+    $result = $Bulan[(int)$bulan - 1] . " " . $tahun;
+    return $result;
+}
+
+function integerToRoman($integer)
+{
+    $integer = intval($integer);
+    $result  = '';
+    $lookup  = array('M' => 1000,
+        'CM'                 => 900,
+        'D'                  => 500,
+        'CD'                 => 400,
+        'C'                  => 100,
+        'XC'                 => 90,
+        'L'                  => 50,
+        'XL'                 => 40,
+        'X'                  => 10,
+        'IX'                 => 9,
+        'V'                  => 5,
+        'IV'                 => 4,
+        'I'                  => 1);
+    foreach ($lookup as $roman => $value) {
+        $matches = intval($integer / $value);
+        $result .= str_repeat($roman, $matches);
+        $integer = $integer % $value;
+    }
     return $result;
 }
 
@@ -109,7 +148,7 @@ function tgl_in($date)
                     <img class="img-responsive" src="https://zadin.co.id/upload/kop/zma.jpg">
 
                     <div style="margin-top: 20px">
-                        <span class="pull-right"> Samarinda, 01 Juni 2022</span>
+                        <span class="pull-right"> Samarinda, <?=tgl_in(date("Y-m-d")); ?></span>
 
                         <br><br>
                         <table>
@@ -118,7 +157,7 @@ function tgl_in($date)
                                     <th>Nomor</th>
                                     <td style="padding-left: 10px"> :</td>
 
-                                    <td style="padding-left: 10px"> 0030/Lap-PBM/ZMA/VI/2022</td>
+                                    <td style="padding-left: 10px"> Lap-PBM/ZMA/<?=integerToRoman($bulan); ?>/2022</td>
                                 </tr>
                                 <tr>
                                     <th>Lampiran</th>
@@ -143,7 +182,8 @@ function tgl_in($date)
                             <div style="text-align: justify; text-justify: inter-word;">
                                 Dengan Hormat,<br><br>
                                 Bersama dengan ini, kami sampaikan laporan kegiatan operasional perusahaan bongkar muat
-                                PT. Zadin Mitra Abadi untuk bulan Januari 2022,
+                                <!-- PT. Zadin Mitra Abadi untuk bulan <?=date("F Y", strtotime("$tahun-$bulan-07")); ?>, -->
+                                PT. Zadin Mitra Abadi untuk bulan <?=bulandathun("$tahun-$bulan-07"); ?>,
                                 dengan rekapitulasi sebagai berikut:<br><br>
                                 <table class="table table-bordered table-striped">
                                     <thead>
@@ -236,43 +276,11 @@ foreach ($permohonan as $perm) {
         $terminal_jenis = $get_terminal->jenis;
         $tempat_muatnya = $get_terminal->nama;
 
-        $total_bongkar = ($total_bongkar + $perm->jumlah_bongkar);
-        $total_muat    = ($total_muat + $perm->jumlah_muatan);
+        $total_bongkar = ($total_bongkar + $perm->jumlah_kira);
+        $total_muat    = ($total_muat + $perm->jumlah_kira);
         $total_asli    = ($total_asli + $perm->jumlah_asli);
-
-        // if ($terminal_jenis == $dung) {
-        // echo '<tr>';
-        // }
-
-        // echo "<td>" . $nomor_ke++ . "</td>";
-        // echo "<td>" . $get_kapal->nama . "</td>";
-        // echo "<td>" . strtoupper($get_kapal->bendera) . "</td>";
-        // echo "<td>" . $get_kapal->ukuran . "</td>";
-        // echo "<td>" . $get_agen_kapal->nama . "</td>";
-        // echo "<td>" . number_format($perm->jumlah_bongkar, 0, ',', '.') . "</td>";
-        // echo "<td>" . number_format($perm->jumlah_muatan, 0, ',', '.') . "</td>";
-        // echo "<td>" . $tanggal_mulai . "</td>";
-        // echo "<td>" . $tanggal_selesai . "</td>";
-        // echo "<td>" . $get_barang_asal->nama . "</td>";
-        // echo "<td>" . $perm->tempat_bongkar . "</td>";
-        // echo "<td>" . strtoupper($get_barang_jenis->nama) . "</td>";
-        // echo "<td>" . strtoupper($tempat_muatnya) . "</td>";
-        // echo "<td>" . implode(',', $dung) . "</td>";
-        // echo "<td>" . number_format($perm->jumlah_asli, 0, ',', '.') . "</td>";
-        // echo '</tr>';
-
     }
 }
-; // var_dump($parai); ?>
-
-                                        <!-- <tr>
-                                            <td>1</td>
-                                            <td>JETTY Raja Kutai Baru Makmur</td>
-                                            <td style=" text-align: center">3</td>
-                                            <td>18,200.00 MT</td>
-                                        </tr> -->
-
-                                        <?php
 
 function object_to_array($data)
 {

@@ -103,8 +103,13 @@ $jumlah_baru             = count($this->db->query("SELECT id FROM permohonan whe
 $jumlah_perpanjang       = count($this->db->query("SELECT id FROM permohonan where status = '2' and operasional = '$id'")->result());
 $jumlah_revisi           = count($this->db->query("SELECT id FROM permohonan where status = '3' and operasional = '$id'")->result());
 $jumlah_batal            = count($this->db->query("SELECT id FROM permohonan where status = '4' and operasional = '$id'")->result());
-$jumlah_muat             = count($this->db->query("SELECT id FROM permohonan where permohonan_jenis = '1' and operasional = '$id'")->result());
-$jumlah_bongkar          = count($this->db->query("SELECT id FROM permohonan where permohonan_jenis = '2' and operasional = '$id'")->result());
+$jumlah_muat_jetty       = count($this->db->query("SELECT id FROM permohonan where permohonan_jenis = '1' and operasional = '$id'")->result());
+$jumlah_muat_bongkar     = count($this->db->query("SELECT id FROM permohonan where permohonan_jenis = '2' and operasional = '$id'")->result());
+$jumlah_muat             = count($this->db->query("SELECT id FROM `permohonan` WHERE `operasional` = $id AND `permohonan_jenis` IN (1,2)")->result());
+$jumlah_bongkar_jetty    = count($this->db->query("SELECT id FROM permohonan where permohonan_jenis = '3' and operasional = '$id'")->result());
+$jumlah_bongkar_sts      = count($this->db->query("SELECT id FROM permohonan where permohonan_jenis = '4' and operasional = '$id'")->result());
+$jumlah_bongkar          = count($this->db->query("SELECT id FROM `permohonan` WHERE `operasional` = $id AND `permohonan_jenis` IN (3,4)")->result());
+
 // $jumlah_muat_bongkar     = count($this->db->query("SELECT id FROM permohonan where permohonan_jenis = '3' and operasional = '$id'")->result()); ?>
 
             <div class="col-12 mt-3">
@@ -533,25 +538,18 @@ foreach ($agen_kapals as $palu) {
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-sm-4 col-md-4">
+                                    <div class="col-sm-6 col-md-6">
                                         <div class="form-group">
-                                            <label for="jumlah_muatan" data-toggle="tooltip" data-placement="top" title="" data-original-title="Muatan yang direncanakan">Muatan Perkiraan</label>
-                                            <input class="form-control hapus masinput" type="text" id="jumlah_muatan" name="jumlah_muatan">
+                                            <label for="jumlah_kira" data-toggle="tooltip" data-placement="top" title="" data-original-title="Muatan yang direncanakan">Jumlah Perkiraan</label>
+                                            <input class="form-control hapus masinput" type="text" id="jumlah_kira" name="jumlah_kira">
                                         </div>
                                     </div>
-                                    <div class="col-sm-4 col-md-4">
+                                    <div class="col-sm-6 col-md-6">
                                         <div class="form-group">
-                                            <label for="jumlah_asli" data-toggle="tooltip" data-placement="top" title="" data-original-title="Muatan yang sebenarnya">Muatan Sebenarnya</label>
+                                            <label for="jumlah_asli" data-toggle="tooltip" data-placement="top" title="" data-original-title="Muatan yang sebenarnya">Jumlah Asli</label>
                                             <input class="form-control hapus masinput" type="text" id="jumlah_asli" name="jumlah_asli">
                                         </div>
                                     </div>
-                                    <div class="col-sm-4 col-md-4">
-                                        <div class="form-group">
-                                            <label for="jumlah_bongkar" data-toggle="tooltip" data-placement="top" title="" data-original-title="Muatan bongkar">Bongkaran Akhir</label>
-                                            <input class="form-control hapus masinput" type="text" id="jumlah_bongkar" name="jumlah_bongkar">
-                                        </div>
-                                    </div>
-
                                     <div class="col-sm-12 col-md-6">
                                         <div class="form-group">
                                             <label for="payment" data-toggle="tooltip" data-placement="top" title="" data-original-title="Masukkan jumlah biaya manual">Penagihan</label>
@@ -563,8 +561,12 @@ foreach ($agen_kapals as $palu) {
                                         <div class="form-group">
                                             <label for="permohonan_jenis" class="text-danger" data-toggle="tooltip" data-placement="top" title="" data-original-title="Muat Atau Bongkar?">Jenis Permohonan</label>
                                             <select class="custom-select mr-sm-2" name="permohonan_jenis" id="permohonan_jenis" placeholder="Muat Atau Bongkar?">
-                                                <option value="1">Muat</option>
-                                                <option value="2">Bongkar</option>
+                                                <?php
+$palu = $this->db->get('permohonan_jenis')->result();
+foreach ($palu as $key) {
+    echo "<option value='" . $key->id . "'>" . $key->nama . "</option>";
+}
+?>
                                             </select>
                                         </div>
                                     </div>
@@ -587,22 +589,25 @@ foreach ($agen_kapals as $palu) {
             </div><!-- /.modal-dialog -->
         </div>
 
-<style>
-    .blink {
- animation: blinkMe 0.5s linear infinite;
-}
-@keyframes blinkMe {
- 0% {
-  opacity: 0;
- }
- 50% {
-  opacity: 1;
- }
- 100% {
-  opacity: 0;
- }
-}
-</style>
+        <style>
+        .blink {
+            animation: blinkMe 0.5s linear infinite;
+        }
+
+        @keyframes blinkMe {
+            0% {
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }
+        </style>
 
 
 
@@ -728,22 +733,16 @@ foreach ($agen_kapals as $palu) {
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-sm-4 col-md-4">
+                                    <div class="col-sm-6 col-md-6">
                                         <div class="form-group">
-                                            <label for="update_jumlah_muatan" data-toggle="tooltip" data-placement="top" title="" data-original-title="Muatan yang direncanakan">Muatan Perkiraan</label>
-                                            <input class="form-control hapus masinput" type="text" id="update_jumlah_muatan" name="jumlah_muatan">
+                                            <label for="update_jumlah_kira" data-toggle="tooltip" data-placement="top" title="" data-original-title="Muatan yang direncanakan">Muatan Perkiraan</label>
+                                            <input class="form-control hapus masinput" type="text" id="update_jumlah_kira" name="jumlah_kira">
                                         </div>
                                     </div>
-                                    <div class="col-sm-4 col-md-4">
+                                    <div class="col-sm-6 col-md-6">
                                         <div class="form-group">
-                                            <label for="update_jumlah_asli" data-toggle="tooltip" data-placement="top" title="" data-original-title="Muatan yang sebenarnya">Muatan Sebenarnya</label>
+                                            <label for="update_jumlah_asli" data-toggle="tooltip" data-placement="top" title="" data-original-title="Muatan yang sebenarnya">Muatan Asli</label>
                                             <input class="form-control hapus masinput" type="text" id="update_jumlah_asli" name="jumlah_asli">
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-4 col-md-4">
-                                        <div class="form-group">
-                                            <label for="update_jumlah_bongkar" data-toggle="tooltip" data-placement="top" title="" data-original-title="Muatan bongkar">Bongkaran Akhir</label>
-                                            <input class="form-control hapus masinput" type="text" id="update_jumlah_bongkar" name="jumlah_bongkar">
                                         </div>
                                     </div>
 
@@ -758,8 +757,12 @@ foreach ($agen_kapals as $palu) {
                                         <div class="form-group">
                                             <label for="update_permohonan_jenis" class="text-danger" data-toggle="tooltip" data-placement="top" title="" data-original-title="Muat Atau Bongkar?">Jenis Permohonan</label>
                                             <select class="custom-select mr-sm-2" name="permohonan_jenis" id="update_permohonan_jenis" placeholder="Muat Atau Bongkar?">
-                                                <option value="1">Muat</option>
-                                                <option value="2">Bongkar</option>
+                                                <?php
+$palu = $this->db->get('permohonan_jenis')->result();
+foreach ($palu as $key) {
+    echo "<option value='" . $key->id . "'>" . $key->nama . "</option>";
+}
+?>
                                             </select>
                                         </div>
                                     </div>
@@ -789,7 +792,7 @@ foreach ($agen_kapals as $palu) {
 
 
     <div class="modal fade" id="modal-norkbm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h6 class="modal-title" id="mySmallModalLabel">Small modal</h6>
@@ -798,7 +801,7 @@ foreach ($agen_kapals as $palu) {
                 <div class="modal-body">
                     <form action="<?=base_url(); ?>kegiatan/update_norkbm" id="form-rkbm" class="nyot">
                         <div class="input-group">
-                            <input type="number" name="no_rkbm" class="form-control norkbm" value="">
+                            <input type="text" name="no_rkbm" class="form-control norkbm" value="">
                             <input type="number" name="id_rkbm" hidden class="form-control idrkbm" value="">
                             <div class="input-group-append">
                                 <button class="btn btn-info simpanrkbm" type="submit">Simpan</button>
@@ -1058,20 +1061,15 @@ $red = json_encode($dull);
                         $('#tempat_muat').val(data.tempat_muat).change();
                     }
                 })
-                if (data.jumlah_muatan == '0' || data.jumlah_muatan == 0 || data.jumlah_muatan == '' || data.jumlah_muatan == null || data.jumlah_muatan == undefined) {
+                if (data.jumlah_kira == '0' || data.jumlah_kira == 0 || data.jumlah_kira == '' || data.jumlah_kira == null || data.jumlah_kira == undefined) {
                     memuat = '';
                 } else {
-                    memuat = getNumberWithCommas(data.jumlah_muatan);
+                    memuat = getNumberWithCommas(data.jumlah_kira);
                 }
                 if (data.jumlah_asli == '' || data.jumlah_asli == 0 || data.jumlah_asli == '0' || data.jumlah_asli == null || data.jumlah_asli == undefined) {
                     aseli = '';
                 } else {
                     aseli = getNumberWithCommas(data.jumlah_asli);
-                }
-                if (data.jumlah_bongkar == 0 || data.jumlah_bongkar == '0' || data.jumlah_bongkar == '' || data.jumlah_bongkar == null || data.jumlah_bongkar == undefined) {
-                    bungkar = '';
-                } else {
-                    bungkar = getNumberWithCommas(data.jumlah_bongkar);
                 }
                 if (data.payment == 0 || data.payment == '0' || data.payment == '' || data.payment == null || data.payment == undefined) {
                     pemen = '';
@@ -1084,9 +1082,8 @@ $red = json_encode($dull);
                 $('#barang').val(data.barang);
                 $('#permohonan_jenis').val(data.permohonan_jenis);
                 $('#payment').val(pemen);
-                $('#jumlah_muatan').val(memuat);
+                $('#jumlah_kira').val(memuat);
                 $('#jumlah_asli').val(aseli);
-                $('#jumlah_bongkar').val(bungkar);
                 // $('#asal_barang').val(data.asal_barang);
                 // $('#perusahaan').val(data.perusahaan);
             });
@@ -1132,20 +1129,15 @@ $red = json_encode($dull);
                         $('#update_tempat_muat').val(data.tempat_muat).change();
                     }
                 })
-                if (data.jumlah_muatan == '0' || data.jumlah_muatan == 0 || data.jumlah_muatan == '' || data.jumlah_muatan == null || data.jumlah_muatan == undefined) {
+                if (data.jumlah_kira == '0' || data.jumlah_kira == 0 || data.jumlah_kira == '' || data.jumlah_kira == null || data.jumlah_kira == undefined) {
                     memuat = '';
                 } else {
-                    memuat = getNumberWithCommas(data.jumlah_muatan);
+                    memuat = getNumberWithCommas(data.jumlah_kira);
                 }
                 if (data.jumlah_asli == '' || data.jumlah_asli == 0 || data.jumlah_asli == '0' || data.jumlah_asli == null || data.jumlah_asli == undefined) {
                     aseli = '';
                 } else {
                     aseli = getNumberWithCommas(data.jumlah_asli);
-                }
-                if (data.jumlah_bongkar == 0 || data.jumlah_bongkar == '0' || data.jumlah_bongkar == '' || data.jumlah_bongkar == null || data.jumlah_bongkar == undefined) {
-                    bungkar = '';
-                } else {
-                    bungkar = getNumberWithCommas(data.jumlah_bongkar);
                 }
                 if (data.payment == 0 || data.payment == '0' || data.payment == '' || data.payment == null || data.payment == undefined) {
                     pemen = '';
@@ -1159,9 +1151,8 @@ $red = json_encode($dull);
                 $('#update_permohonan_ke').val(data.permohonan_ke ? ++data.permohonan_ke : 1);
                 $('#update_permohonan_jenis').val(data.permohonan_jenis);
                 $('#update_payment').val(pemen);
-                $('#update_jumlah_muatan').val(memuat);
+                $('#update_jumlah_kira').val(memuat);
                 $('#update_jumlah_asli').val(aseli);
-                $('#update_jumlah_bongkar').val(bungkar);
             });
         }
     })

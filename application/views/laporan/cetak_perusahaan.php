@@ -43,6 +43,7 @@ function tgl_in($date)
         }
 
         @page {
+            /* size: F4 landscape; */
             size: A4 landscape;
             margin: 5%;
         }
@@ -53,7 +54,7 @@ function tgl_in($date)
                 bottom: 0;
                 height: 50px;
                 width: 100%;
-                position: sticky;
+                /* position: sticky; */
 
             }
 
@@ -125,25 +126,25 @@ $bulan = date('F', strtotime($bulan));
                     <table id="datatables" class="table table-bordered table-striped" width="100%" style="font-size: 11px; margin-top: 20px">
                         <thead>
                             <tr>
-                                <th rowspan="2" style="vertical-align: middle;" width="5%">No</th>
-                                <th rowspan="2" style="vertical-align: middle;" width="20%">Nama Kapal</th>
-                                <th rowspan="2" style="vertical-align: middle;" width="5%">Bendera</th>
-                                <th rowspan="2" style="vertical-align: middle;" width="10%">Ukuran</th>
-                                <th rowspan="2" style="vertical-align: middle;" width="20%">Nama Agen</th>
-                                <th style="text-align: center" colspan="2" width="5%">Jumlah</th>
-                                <th rowspan="2" style="vertical-align: middle;" width="10%">Mulai</th>
-                                <th rowspan="2" style="vertical-align: middle;" width="10%">Selesai</th>
-                                <th rowspan="2" style="vertical-align: middle;" width="10%">Asal Barang</th>
-                                <th rowspan="2" style="vertical-align: middle;" width="20%">Tujuan</th>
-                                <th rowspan="2" style="vertical-align: middle;" width="20%">Jenis</th>
-                                <th rowspan="2" style="vertical-align: middle;" width="20%">Penunjukan PBM (Shipper)</th>
+                                <th rowspan="2" style="vertical-align: middle;">No</th>
+                                <th rowspan="2" style="vertical-align: middle;">Nama Kapal</th>
+                                <!-- <th rowspan="2" style="vertical-align: middle;" width="5%">Bendera</th> -->
+                                <th rowspan="2" style="vertical-align: middle;">Ukuran</th>
+                                <th rowspan="2" style="vertical-align: middle;">Nama Agen</th>
+                                <th style="text-align: center" colspan="2">Jumlah</th>
+                                <th rowspan="2" style="vertical-align: middle;">Mulai</th>
+                                <th rowspan="2" style="vertical-align: middle;">Selesai</th>
+                                <th rowspan="2" style="vertical-align: middle;text-align: center">Asal Barang</th>
+                                <th rowspan="2" style="vertical-align: middle;text-align: center">Tujuan</th>
+                                <th rowspan="2" style="vertical-align: middle;">Jenis</th>
+                                <th rowspan="2" style="vertical-align: middle;text-align: center">Tempat Muat</th>
                                 <th style="text-align: center" colspan="2">Keterangan</th>
                             </tr>
                             <tr>
-                                <th width="10%">Bongkar</th>
-                                <th width="10%">Muat</th>
-                                <th width="10%">RKBM</th>
-                                <th rowspan="10" width="10%">MT</th>
+                                <th>Bongkar</th>
+                                <th>Muat</th>
+                                <th>RKBM</th>
+                                <th rowspan="10">MT</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -201,7 +202,7 @@ function rekursip($id, $datanya)
 $total_permohoan = 0;
 
 foreach ($permohonan as $perm) {
-    $total_permohoan++;
+    // $total_permohoan++;
 
     if (in_array($perm->id, $array)) {
 
@@ -213,10 +214,13 @@ foreach ($permohonan as $perm) {
             $this->db->where('id', $dt);
             $ngerow = $this->db->get('permohonan')->row();
             // $dung .= $ngerow->no_rkbm;
-            array_push($dung, $ngerow->no_rkbm);
+            $eksplut = explode('.', $ngerow->no_rkbm);
+            array_push($dung, ltrim($eksplut[3], 0));
         }
-        array_push($dung, $perm->no_rkbm);
-        // var_dump($dung);
+        $expl = explode('.', $perm->no_rkbm);
+        array_push($dung, ltrim($expl[3], 0));
+        $total_permohoan = count($dung);
+        // var_dump(count($dung));
         $this->db->where('id', $perm->kapal);
         $get_kapal = $this->db->get('kapal')->row();
 
@@ -242,27 +246,66 @@ foreach ($permohonan as $perm) {
         $get_terminal   = $this->db->get('terminal')->row();
         $terminal_jenis = $get_terminal->jenis;
         $tempat_muatnya = $get_terminal->nama;
+        if ($perm->permohonan_jenis == 1) {
+            // if ($perm->status == 4) {
+            //     $total_muat        = 0;
+            //     $jumlah_muatnya    = 0;
+            //     $jumlah_bongkarnya = 0;
+            // } else {
+            $total_muat        = ($total_muat + $perm->jumlah_asli);
+            $jumlah_muatnya    = $perm->jumlah_asli;
+            $jumlah_bongkarnya = 0;
+            // }
+        }
+        if ($perm->permohonan_jenis == 2) {
+            // if ($perm->status == 4) {
+            //     $total_muat        = 0;
+            //     $jumlah_muatnya    = 0;
+            //     $jumlah_bongkarnya = 0;
+            // } else {
+            $total_bongkar     = ($total_bongkar + $perm->jumlah_asli);
+            $jumlah_bongkarnya = $perm->jumlah_asli;
+            $jumlah_muatnya    = 0;
+            // }
+        }
+        if ($perm->permohonan_jenis == 3) {
+            // if ($perm->status == 4) {
+            //     $total_bongkar     = 0;
+            //     $jumlah_bongkarnya = 0;
+            //     $jumlah_muatnya    = 0;
+            // } else {
+            $total_bongkar     = ($total_bongkar + $perm->jumlah_asli);
+            $jumlah_bongkarnya = $perm->jumlah_asli;
+            $jumlah_muatnya    = 0;
+            // }
+        }
+        if ($perm->status == 4) {
+            $total_bongkar     = 0;
+            $jumlah_bongkarnya = 0;
+            $total_muat        = 0;
+            $jumlah_muatnya    = 0;
+        }
 
-        $total_bongkar = ($total_bongkar + $perm->jumlah_bongkar);
-        $total_muat    = ($total_muat + $perm->jumlah_muatan);
-        $total_asli    = ($total_asli + $perm->jumlah_asli);
+        // $total_bongkar = ($total_bongkar + $perm->jumlah_bongkar);
+        // $total_muat    = ($total_muat + $perm->jumlah_muatan);
+        $total_asli = ($total_asli + $perm->jumlah_kira);
 
         echo '<tr>';
         echo "<td>" . $nomor_ke++ . "</td>";
         echo "<td>" . $get_kapal->nama . "</td>";
-        echo "<td>" . strtoupper($get_kapal->bendera) . "</td>";
+        // echo "<td>" . strtoupper($get_kapal->bendera) . "</td>";
         echo "<td>" . $get_kapal->ukuran . "</td>";
         echo "<td>" . $get_agen_kapal->nama . "</td>";
-        echo "<td>" . number_format($perm->jumlah_bongkar, 0, ',', '.') . "</td>";
-        echo "<td>" . number_format($perm->jumlah_muatan, 0, ',', '.') . "</td>";
+        echo "<td>" . number_format($jumlah_bongkarnya, 0, ',', '.') . "</td>";
+        echo "<td>" . number_format($jumlah_muatnya, 0, ',', '.') . "</td>";
         echo "<td>" . $tanggal_mulai . "</td>";
         echo "<td>" . $tanggal_selesai . "</td>";
         echo "<td>" . $get_barang_asal->nama . "</td>";
         echo "<td>" . $perm->tempat_bongkar . "</td>";
         echo "<td>" . strtoupper($get_barang_jenis->nama) . "</td>";
         echo "<td>" . strtoupper($tempat_muatnya) . "</td>";
-        echo "<td>" . implode(',', $dung) . "</td>";
-        echo "<td>" . number_format($perm->jumlah_asli, 0, ',', '.') . "</td>";
+        echo "<td>" . implode(', ', $dung) . "</td>";
+        echo "<td>" . number_format($perm->jumlah_kira, 0, ',', '.') . "</td>";
         echo '</tr>';
     }
 
@@ -273,7 +316,7 @@ foreach ($permohonan as $perm) {
                             <tr>
                                 <td><strong></strong></td>
                                 <td><strong></strong></td>
-                                <td><strong></strong></td>
+                                <!-- <td><strong></strong></td> -->
                                 <td><strong></strong></td>
                                 <td><strong>Total: </strong></td>
                                 <td><strong><?=number_format($total_bongkar, 0, ',', '.'); ?></strong></td>
