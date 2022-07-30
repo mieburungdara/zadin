@@ -20,7 +20,7 @@ class Operasional_model extends CI_Model
     public function get_all()
     {
         $this->db->order_by($this->id, $this->order);
-        return $this->db->get($this->table)->result();
+        return $this->db->get($this->table)->result_array();
     }
 
     // get data by id
@@ -74,6 +74,30 @@ class Operasional_model extends CI_Model
             $this->db->or_like('keterangan', $q);
         }
         $this->db->limit($limit, $start);
+        return $this->db->get($this->table)->result_array();
+    }
+    // get data search
+    public function get_total_data_array($q = null, $perusahaan = null, $bulan = null, $tahun = null, $status = null)
+    {
+        $this->db->order_by($this->id, $this->order);
+        if ($perusahaan != null) {
+            $this->db->where('perusahaan', $perusahaan);
+        }
+        if ($bulan != null) {
+            $this->db->where('MONTH(updated_at)', $bulan);
+        }
+        if ($tahun != null) {
+            $this->db->where('YEAR(updated_at)', $tahun);
+        }
+        if ($status != null) {
+            $this->db->where('operasional_status', $status);
+        }
+        if ($q != null) {
+            $this->db->like('id', $q);
+            $this->db->or_like('nama', $q);
+            $this->db->or_like('keterangan', $q);
+        }
+        // $this->db->limit($limit, $start);
         return $this->db->get($this->table)->result_array();
     }
 

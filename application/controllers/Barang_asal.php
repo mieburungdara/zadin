@@ -231,6 +231,7 @@ class Barang_asal extends Admin_controller
 
     public function update_action()
     {
+        // echo $this->input->post('tarif_baru', true);
         $this->rules();
 
         if ($this->form_validation->run() == false) {
@@ -256,10 +257,12 @@ class Barang_asal extends Admin_controller
             );
 
             $res = $this->Barang_asal_model->update($this->input->post('id', true), $data);
+            // var_dump($data);
             if ($res) {
                 $error = $this->db->error();
                 var_dump($error);
             } else {
+                // exit();
                 $this->session->set_flashdata('message', 'Update Record Success');
                 redirect(site_url('barang_asal'));
             }

@@ -129,6 +129,33 @@ $jumlah_bongkar          = count($this->db->query("SELECT id FROM `permohonan` W
                 <a class="btn waves-effect waves-light btn-sm btn-info collapsed mr-3" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                     Filter Permohonan
                 </a>
+                <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#uploadrkbmmodal">Upload RKBM</button>
+                <?php if ($this->session->flashdata('success')) { ?>
+                <br>
+                <br>
+                <br>
+                <div class="alert alert-success alert-dismissible bg-success text-white border-0 fade show" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <strong>Success - </strong> <?=$this->session->flashdata('success'); ?>
+                </div>
+                <?php
+}
+?>
+                <?php if ($this->session->flashdata('error')) { ?>
+                <br>
+                <br>
+                <br>
+                <div class="alert alert-danger alert-dismissible bg-danger text-white border-0 fade show" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <strong>Error - </strong> <?=$this->session->flashdata('danger'); ?>
+                </div>
+                <?php
+}
+?>
             </div>
 
 
@@ -322,6 +349,10 @@ foreach ($cruiut as $crui) {
                         $('[data-toggle="tooltip"]').tooltip({
                             container: 'body'
                         });
+
+                        if (document.querySelector(".nowraptd")) {
+                            document.querySelector(".nowraptd").parentElement.style.whiteSpace = "nowrap";
+                        }
                     },
                     processing: true,
                     "language": {
@@ -414,6 +445,350 @@ foreach ($cruiut as $crui) {
 
         </div>
 
+
+        <div id="uploadrkbmmodal" class="modal fade" tabindex="-1" data-backdrop="static" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="mySmallModalLabel">RKBM</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- <div class="text-center mt-2 mb-4">
+                            <h4 class="jenismodal">Upload RKBM</h4>
+                        </div> -->
+
+                        <div class="card-body">
+                            <!-- <h4 class="card-title">Custom File Upload with Button Right</h4> -->
+                            <!-- <h6 class="card-subtitle">To use add <code>.input-group-append</code> class to the div</h6> -->
+                            <form class="mt-4" action="<?=base_url(); ?>upload/pdfupload" method="post" id="form-permohonan_upload" enctype='multipart/form-data'>
+                                <div class="input-group">
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="pdffile" name="pdffile">
+                                        <label class="custom-file-label" for="pdffile">Upload RKBM..</label>
+                                    </div>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" type="submit">Upload</button>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <canvas id="pdfViewer"></canvas>
+
+
+                            <div id="tombolnekprep" style="display:none;">
+                                <button id="prev">Previous</button>
+                                <button id="next">Next</button>
+                                &nbsp; &nbsp;
+                                <span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
+                            </div>
+
+                            <canvas id="the-canvas"></canvas>
+
+                            <!-- <canvas id="the-canvas"></canvas> -->
+
+                            <!-- <div class="progress">
+                                <div class="bar"></div>
+                                <div class="percent">0%</div>
+                            </div> -->
+
+                            <div id="status"></div>
+
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
+        <script src="https://malsup.github.io/jquery.form.js"></script>
+        <script>
+        $(document).ready(function() {
+            $('#form-permohonan_upload').submit(function() {
+                var bar = $('.bar');
+                var percent = $('.percent');
+                var status = $('#status');
+                $(this).ajaxForm({
+                    beforeSend: function() {
+                        status.html();
+                        var percentVal = '0%';
+                        bar.width(percentVal)
+                        percent.html(percentVal);
+                    },
+                    uploadProgress: function(event, position, total, percentComplete) {
+                        var percentVal = percentComplete + '%';
+                        bar.width(percentVal)
+                        percent.html(percentVal);
+                    },
+                    complete: function(xhr) {
+                        status.html(xhr.responseText);
+                    }
+                });
+            });
+        });
+
+
+        // Loaded via <script> tag, create shortcut to access PDF.js exports.
+        var pdfjsLib = window['pdfjs-dist/build/pdf'];
+        // The workerSrc property shall be specified.
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://mozilla.github.io/pdf.js/build/pdf.worker.js';
+
+        <?php
+if (file_exists(base_url() . 'file/rkbm/rkbm_' . $id . '.pdf')) {
+} else {
+    ?>
+        var pdfurl = '<?=base_url() . 'file/rkbm/rkbm_' . $id . '.pdf'; ?>';
+        // var loadingTask = pdfjsLib.getDocument(pdfurl);
+
+        $('#tombolnekprep').show();
+        pdfjsLib.getDocument(pdfurl).promise.then(function(pdfDoc_) {
+            pdfDoc = pdfDoc_;
+            document.getElementById('page_count').textContent = pdfDoc.numPages;
+
+            // Initial/first page rendering
+            renderPage(pageNum);
+        });
+        // loadingTask.promise.then(function(pdf) {
+        //     console.log('PDF loaded');
+
+        //     // Fetch the first page
+        //     var pageNumber = 1;
+        //     // pdf.getPage(pageNumber).then(function(page) {
+        //     console.log('Page loaded');
+
+        //     var scale = 0.8;
+        //     var viewport = page.getViewport({
+        //         scale: scale
+        //     });
+
+        //     // Prepare canvas using PDF page dimensions
+        //     var canvas = document.getElementById('the-canvas');
+        //     var context = canvas.getContext('2d');
+        //     canvas.height = viewport.height;
+        //     canvas.width = viewport.width;
+
+        //     // Render PDF page into canvas context
+        //     var renderContext = {
+        //         canvasContext: context,
+        //         viewport: viewport
+        //     };
+        //     var renderTask = page.render(renderContext);
+        //     renderTask.promise.then(function() {
+        //         console.log('Page rendered');
+        //     });
+        //     // });
+        // }, function(reason) {
+        //     // PDF loading error
+        //     console.error(reason);
+        // });
+        <?php
+} ?>
+
+        $('#uploadrkbmmodal').on('show.bs.modal', function(e) {
+            // do something...
+            console.log(pdfurl);
+        })
+
+
+        var pdfDoc = null,
+            pageNum = 1,
+            pageRendering = false,
+            pageNumPending = null,
+            scale = 1.2,
+            canvas = document.getElementById('the-canvas'),
+            ctx = canvas.getContext('2d');
+
+        /**
+         * Get page info from document, resize canvas accordingly, and render page.
+         * @param num Page number.
+         */
+        function renderPage(num) {
+            pageRendering = true;
+            // Using promise to fetch the page
+            pdfDoc.getPage(num).then(function(page) {
+                var viewport = page.getViewport({
+                    scale: scale
+                });
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+
+                // Render PDF page into canvas context
+                var renderContext = {
+                    canvasContext: ctx,
+                    viewport: viewport
+                };
+                var renderTask = page.render(renderContext);
+
+                // Wait for rendering to finish
+                renderTask.promise.then(function() {
+                    pageRendering = false;
+                    if (pageNumPending !== null) {
+                        // New page rendering is pending
+                        renderPage(pageNumPending);
+                        pageNumPending = null;
+                    }
+                });
+            });
+
+            // Update page counters
+            document.getElementById('page_num').textContent = num;
+        }
+
+        /**
+         * If another page rendering in progress, waits until the rendering is
+         * finised. Otherwise, executes rendering immediately.
+         */
+        function queueRenderPage(num) {
+            if (pageRendering) {
+                pageNumPending = num;
+            } else {
+                renderPage(num);
+            }
+        }
+
+        /**
+         * Displays previous page.
+         */
+        function onPrevPage() {
+            if (pageNum <= 1) {
+                return;
+            }
+            pageNum--;
+            queueRenderPage(pageNum);
+        }
+        document.getElementById('prev').addEventListener('click', onPrevPage);
+
+        /**
+         * Displays next page.
+         */
+        function onNextPage() {
+            if (pageNum >= pdfDoc.numPages) {
+                return;
+            }
+            pageNum++;
+            queueRenderPage(pageNum);
+        }
+
+
+
+        document.getElementById('next').addEventListener('click', onNextPage);
+
+        /**
+         * Asynchronously downloads PDF.
+         */
+        // pdfjsLib.getDocument(url).promise.then(function(pdfDoc_) {
+        //     pdfDoc = pdfDoc_;
+        //     document.getElementById('page_count').textContent = pdfDoc.numPages;
+
+        //     // Initial/first page rendering
+        //     renderPage(pageNum);
+        // });
+
+
+        $("#pdffile").on("change", function(e) {
+            var file = e.target.files[0]
+            if (file.type == "application/pdf") {
+                var fileReader = new FileReader();
+                fileReader.onload = function() {
+                    var pdfData = new Uint8Array(this.result);
+
+
+
+                    /**
+                     * Asynchronously downloads PDF.
+                     */
+                    $('#tombolnekprep').show();
+                    pdfjsLib.getDocument(pdfData).promise.then(function(pdfDoc_) {
+                        pdfDoc = pdfDoc_;
+                        document.getElementById('page_count').textContent = pdfDoc.numPages;
+
+                        // Initial/first page rendering
+                        renderPage(pageNum);
+                    });
+
+
+                    // Using DocumentInitParameters object to load binary data.
+                    // var loadingTask = pdfjsLib.getDocument({
+                    //     data: pdfData
+                    // });
+                    // loadingTask.promise.then(function(pdf) {
+                    //     console.log('PDF loaded');
+
+                    //     // Fetch the first page
+                    //     var pageNumber = 1;
+                    //     pdf.getPage(pageNumber).then(function(page) {
+                    //         console.log('Page loaded');
+
+                    //         var scale = 0.9;
+                    //         var viewport = page.getViewport({
+                    //             scale: scale
+                    //         });
+
+                    //         // Prepare canvas using PDF page dimensions
+                    //         var canvas = $("#pdfViewer")[0];
+                    //         var context = canvas.getContext('2d');
+                    //         canvas.height = viewport.height;
+                    //         canvas.width = viewport.width;
+
+                    //         // Render PDF page into canvas context
+                    //         var renderContext = {
+                    //             canvasContext: context,
+                    //             viewport: viewport
+                    //         };
+                    //         var renderTask = page.render(renderContext);
+                    //         renderTask.promise.then(function() {
+                    //             console.log('Page rendered');
+                    //         });
+                    //     });
+                    // }, function(reason) {
+                    //     // PDF loading error
+                    //     console.error(reason);
+                    // });
+                };
+                fileReader.readAsArrayBuffer(file);
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        $('#uploadrkbmmodal').on('shown.bs.modal', function(event) {
+            var memuat = '';
+            var aseli = '';
+            var bungkar = '';
+            var button = $(event.relatedTarget)
+            var modal = $(this)
+            var idpermohonan = button.data('idpermohonan');
+            console.log(idpermohonan);
+
+        })
+        </script>
 
         <div id="permohonanmodal" class="modal fade" tabindex="-1" data-backdrop="static" role="dialog" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
@@ -791,6 +1166,107 @@ foreach ($palu as $key) {
     </div>
 
 
+
+    <div class="modal fade" id="modal-biaya_operasional" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title text-center" id="mySmallModalLabel">Biaya</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <div class="modal-body">
+                    <form action="<?=base_url(); ?>operasional/biaya_operasional" method="post" id="form-biaya_operasional">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="bo">Operasional</label>
+                                    <input class="form-control masinput" type="text" id="bo" name="bo" placeholder="Biaya Operasional">
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="biaya_honor">Honor</label>
+                                    <input class="form-control masinput" type="text" id="biaya_honor" name="biaya_honor" placeholder="Honor Foreman">
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="biaya_konsumsi">Konsumsi</label>
+                                    <input class="form-control masinput" type="text" id="biaya_konsumsi" name="biaya_konsumsi" placeholder="Konsumsi Foreman">
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="biaya_kapal">Kapal</label>
+                                    <input class="form-control masinput" type="text" id="biaya_kapal" name="biaya_kapal" placeholder="Biaya Kapal">
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="biaya_dozer">Dozer</label>
+                                    <input class="form-control masinput" type="text" id="biaya_dozer" name="biaya_dozer" placeholder="Biaya Dozer">
+                                </div>
+                            </div>
+
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="biaya_antar">Speedboat Antar</label>
+                                    <input class="form-control masinput" type="text" id="biaya_antar" name="biaya_antar" placeholder="Biaya mengantar">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="biaya_jemput">Speedboat Jemput</label>
+                                    <input class="form-control masinput" type="text" id="biaya_jemput" name="biaya_jemput" placeholder="Biaya Menjemput">
+                                </div>
+                            </div>
+
+                            <div class="ml-auto mr-5">
+                                <div class="form-group text-center">
+                                    <input type="hidden" name="operasional" value="<?php echo $id; ?>" />
+                                    <input type="hidden" id="id_biaya_operasional" name="id_biaya_operasional" value="">
+                                    <button class="btn btn-info" type="submit">Simapn</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    $('#modal-biaya_operasional').on('show.bs.modal', function(event) {
+        var button = $(event.relatedTarget)
+        var recipient = button.data('id')
+        var modal = $(this)
+        $("#id_biaya_operasional").val(recipient);
+        $.get("<?=base_url(); ?>/operasional/get_biaya_operasional/" + recipient, function(data, status) {
+            var json_parse = JSON.parse(data);
+            document.getElementById("form-biaya_operasional").reset();
+            // modal.reset();
+            modal.find('#bo').val(json_parse.biaya_operasional != 0 ? json_parse.biaya_operasional.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".") : '')
+            modal.find('#biaya_honor').val(json_parse.biaya_honor != 0 ? json_parse.biaya_honor.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".") : '')
+            modal.find('#biaya_konsumsi').val(json_parse.biaya_konsumsi != 0 ? json_parse.biaya_konsumsi.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".") : '')
+            modal.find('#biaya_kapal').val(json_parse.biaya_kapal != 0 ? json_parse.biaya_kapal.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".") : '')
+            modal.find('#biaya_dozer').val(json_parse.biaya_dozer != 0 ? json_parse.biaya_dozer.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".") : '')
+            modal.find('#biaya_antar').val(json_parse.biaya_speedboat_antar != 0 ? json_parse.biaya_speedboat_antar.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".") : '')
+            modal.find('#biaya_jemput').val(json_parse.biaya_speedboat_jemput != 0 ? json_parse.biaya_speedboat_jemput.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".") : '')
+            // console.log(json_parse.biaya_honor)
+            // console.log(data.id);
+            //     modal.find('.idrkbm').val(recipient)
+            //     modal.find('.norkbm').val(data.trim())
+        });
+    })
+    </script>
+
+
+
     <div class="modal fade" id="modal-norkbm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -814,8 +1290,8 @@ foreach ($palu as $key) {
     </div>
 
     <?php
-$this->db->select('tujuan');
-$hasil = $this->db->get('rkbm')->result();
+$this->db->select('tempat_bongkar');
+$hasil = $this->db->get('permohonan')->result();
 $ds    = array();
 foreach ($hasil as $key => $value) {
     if (!in_array($value, $ds)) {
@@ -823,7 +1299,7 @@ foreach ($hasil as $key => $value) {
     }
 }
 foreach ($ds as $item) {
-    $dull[] = $item->tujuan;
+    $dull[] = $item->tempat_bongkar;
 }
 $red = json_encode($dull);
 ?>
@@ -1027,15 +1503,17 @@ $red = json_encode($dull);
         var bungkar = '';
         var button = $(event.relatedTarget)
         var modal = $(this)
-        var idpermohonan = button.data('idpermohonan')
+        var idpermohonan = button.data('idpermohonan');
+        console.log(idpermohonan);
         $('#form-permohonan').trigger("reset");
         document.getElementById("nama_kapal").options.length = 0;
         $('#nama_kapal').prop('disabled', 'disabled');
         document.getElementById("tempat_muat").options.length = 0;
         $('#tempat_muat').prop('disabled', 'disabled');
-        if (!idpermohonan) {
+        if (idpermohonan == null) {
             $('#form-permohonan').attr('action', '<?=base_url(); ?>kegiatan/permohonan_buat');
             document.getElementById("ket").innerHTML = '';
+            modal.find('.jenismodal').text('Buat Permohonan');
         } else {
             document.getElementById("ket").innerHTML = '';
             var permohonan = button.data('permohonan')

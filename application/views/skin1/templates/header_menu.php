@@ -61,18 +61,16 @@
                                     <div class="u-text ml-2">
                                         <h4 class="mb-0">Steave Jobs</h4>
                                         <p class="text-muted mb-1 font-14">admin@gmail.com</p>
-                                        <a href="pages-profile.html" class="btn btn-rounded btn-danger btn-sm text-white d-inline-block">View
-                                            Profile</a>
                                     </div>
                                 </div>
                             </li>
                             <li role="separator" class="dropdown-divider"></li>
                             <li class="user-list"><a class="px-3 py-2" href="#"><i class="ti-user"></i> My Profile</a></li>
-                            <li class="user-list"><a class="px-3 py-2" href="#"><i class="ti-email"></i> Inbox</a></li>
+                            <!-- <li class="user-list"><a class="px-3 py-2" href="#"><i class="ti-email"></i> Inbox</a></li> -->
                             <li role="separator" class="dropdown-divider"></li>
                             <li class="user-list"><a class="px-3 py-2" href="#"><i class="ti-settings"></i> Account Setting</a></li>
                             <li role="separator" class="dropdown-divider"></li>
-                            <li class="user-list"><a class="px-3 py-2" href="#"><i class="fa fa-power-off"></i> Logout</a></li>
+                            <li class="user-list"><a class="px-3 py-2" href="<?=base_url(); ?>auth/logout"><i class="ti-fa fa-power-off"></i> Logout</a></li>
                         </ul>
                     </div>
                 </li>

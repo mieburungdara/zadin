@@ -27,77 +27,97 @@ class Operasional extends Admin_controller
 
     public function load_data()
     {
-        $start                    = urldecode($this->input->post('start', true));
-        $length                   = urldecode($this->input->post('length', true));
-        $search                   = urldecode($this->input->post('search[value]', true));
-        $bulan                    = urldecode($this->input->post('bulan', true)) ?? null;
-        $tahun                    = urldecode($this->input->post('tahun', true)) ?? null;
-        $perusahaan               = urldecode($this->input->post('perusahaan', true)) ?? null;
-        $status                   = urldecode($this->input->post('status', true)) ?? null;
-        $operasional              = $this->Operasional_model->get_limit_data_array($length, $start, $search, $perusahaan, $bulan, $tahun, $status);
-        $get_all_data_operasional = $this->Operasional_model->get_all();
-        $count_all_results        = count($operasional);
-        $count_all_data           = count($get_all_data_operasional);
+        $start             = urldecode($this->input->post('start', true));
+        $length            = urldecode($this->input->post('length', true));
+        $search            = urldecode($this->input->post('search[value]', true));
+        $bulan             = urldecode($this->input->post('bulan', true)) ?? null;
+        $tahun             = urldecode($this->input->post('tahun', true)) ?? null;
+        $perusahaan        = urldecode($this->input->post('perusahaan', true)) ?? null;
+        $status            = urldecode($this->input->post('status', true)) ?? null;
+        $operasional       = $this->Operasional_model->get_limit_data_array($length, $start, $search, $perusahaan, $bulan, $tahun, $status);
+        $operasional_total = $this->Operasional_model->get_total_data_array($search, $perusahaan, $bulan, $tahun, $status);
+        $recordsTotal      = count($operasional);
+        $recordsFiltered   = count($operasional_total);
 
-        foreach ($operasional as $pal) {
-            $this->db->where('id', $pal['created_by']);
-            $created_by = $this->db->get('users')->row()->username;
-            if ($pal['operasional_status'] == 1) {
-                $ngaray['status'] = '<span class="badge badge-danger" data-toggle="tooltip" data-placement="right" title="" data-original-title="Dibuat oleh ' . $created_by . '"><i class="fa fa-warning text-white faa-flash faa-fast animated"></i> Proses</span>';
+        if ($operasional) {
+            foreach ($operasional as $pal) {
+                $this->db->where('id', $pal['created_by']);
+                $created_by = $this->db->get('users')->row()->username;
+                if ($pal['operasional_status'] == 1) {
+                    $ngaray['status'] = '<span class="badge badge-danger" data-toggle="tooltip" data-placement="right" title="" data-original-title="Dibuat oleh ' . $created_by . '"><i class="fa fa-warning text-white faa-flash faa-fast animated"></i> Proses</span>';
+                }
+                if ($pal['operasional_status'] == 2) {
+                    $ngaray['status'] = '<span class="badge badge-success faa-parent animated-hover" data-toggle="tooltip" data-placement="right" title="" data-original-title="Dibuat oleh ' . $created_by . '"><i class="fa fa-cog fa-spin"></i> Proses</span>';
+                }
+                if ($pal['operasional_status'] == 3) {
+                    $ngaray['status'] = '<span class="badge badge-info" data-toggle="tooltip" data-placement="right" title="" data-original-title="Dibuat oleh ' . $created_by . '">Selesai</span>';
+                }
+                $this->db->where('operasional', $pal['id']);
+                $this->db->where('status', 1);
+                $count_new = $this->db->get('permohonan')->result();
+                $count_new = count($count_new) ?? 0;
+
+                $this->db->where('operasional', $pal['id']);
+                $this->db->where('status', 2);
+                $count_pan = $this->db->get('permohonan')->result();
+                $count_pan = count($count_pan) ?? 0;
+
+                $this->db->where('operasional', $pal['id']);
+                $this->db->where('status', 3);
+                $count_rev = $this->db->get('permohonan')->result();
+                $count_rev = count($count_rev) ?? 0;
+
+                $this->db->where('operasional', $pal['id']);
+                $this->db->where('status', 4);
+                $count_can = $this->db->get('permohonan')->result();
+                $count_can = count($count_can) ?? 0;
+
+                $this->db->where('operasional', $pal['id']);
+                $count_all = $this->db->get('permohonan')->result();
+                $count_all = count($count_all) ?? 0;
+
+                $ngaray['status'] .= '<br>';
+                $ngaray['status'] .= '<span class="ml-n2 text-left badge btn-outline-secondary"><span class="badge badge-light">' . $count_new . '</span> Baru<br>';
+                $ngaray['status'] .= '<span class="badge badge-light">' . $count_pan . '</span> Perpanjang<br>';
+                $ngaray['status'] .= '<span class="badge badge-light">' . $count_rev . '</span> Revisi<br>';
+                $ngaray['status'] .= '<span class="badge badge-light">' . $count_can . '</span> Batal</span>';
+                $ngaray['id']          = $pal['id'];
+                $ngaray['operasional'] = '<code>' . date('h:i:s') . ' ' . $this->Reza_model->tanggal_indo(date('Y-m-d', strtotime($pal['updated_at'])), true) . '</code><h5 class="card-title mt-2"><a href="' . base_url() . 'operasional/no/' . $pal['id'] . '" class="link">' . $pal['nama'] . '</a></h5><h6 class="card-subtitle">' . $pal['keterangan'] . '</h6>';
+
+                $this->db->where('id', $pal['barang_asal']);
+                $barang_asal = $this->db->get('barang_asal')->row();
+                if ($pal['barang_pemilik']) {
+                    $this->db->where('id', $pal['barang_pemilik']);
+                    $barang_pemilik      = $this->db->get('barang_pemilik')->row();
+                    $barang_pemilik_nama = $barang_pemilik->nama;
+                } else {
+                    $barang_pemilik_nama = '<code>KOSONG</code>';
+                }
+
+                $this->db->where('id', $pal['perusahaan']);
+                $perusahaan = $this->db->get('perusahaan')->row();
+
+                $ngaray['deskripsi']  = '<b>Asal barang :</b> ' . $barang_asal->nama . '<br>' . '<b>Pemilik Barang :</b> ' . $barang_pemilik_nama . '<br>' . '<b>Perusahaan :</b> ' . $perusahaan->nama . '<br>';
+                $ngaray['keterangan'] = '';
+                if ($count_all > 0) {
+                    $ngaray['keterangan'] .= '<a href="' . base_url() . 'kegiatan/invoice_cetak/' . $pal['id'] . '" class="badge badge-success">Cetak</a>';
+                }
+                $ngaray['keterangan'] .= '<a href="' . base_url() . 'operasional/no/' . $pal['id'] . '" class="ml-1 badge badge-info">Lihat</a>';
+                $ngaray['keterangan'] .= '<a href="' . base_url() . 'operasional/update/' . $pal['id'] . '" class="ml-1 badge badge-warning">Edit</a>';
+                $ngaray['keterangan'] .= '<a href="' . base_url() . 'operasional/delete/' . $pal['id'] . '" class="ml-1 badge badge-danger" onclick="return confirm(' . "'Apa kamu yakin ingin menghapus opersional ini?'" . ');">Hapus</a>';
+
+                $bum[] = $ngaray;
+
             }
-            if ($pal['operasional_status'] == 2) {
-                $ngaray['status'] = '<span class="badge badge-success faa-parent animated-hover" data-toggle="tooltip" data-placement="right" title="" data-original-title="Dibuat oleh ' . $created_by . '"><i class="fa fa-cog fa-spin"></i> Proses</span>';
-            }
-            if ($pal['operasional_status'] == 3) {
-                $ngaray['status'] = '<span class="badge badge-info" data-toggle="tooltip" data-placement="right" title="" data-original-title="Dibuat oleh ' . $created_by . '">Selesai</span>';
-            }
-            $this->db->where('operasional', $pal['id']);
-            $this->db->where('status', 1);
-            $count_new = $this->db->get('permohonan')->result();
-            $count_new = count($count_new) ?? 0;
-
-            $this->db->where('operasional', $pal['id']);
-            $this->db->where('status', 2);
-            $count_pan = $this->db->get('permohonan')->result();
-            $count_pan = count($count_pan) ?? 0;
-
-            $this->db->where('operasional', $pal['id']);
-            $this->db->where('status', 3);
-            $count_rev = $this->db->get('permohonan')->result();
-            $count_rev = count($count_rev) ?? 0;
-
-            $this->db->where('operasional', $pal['id']);
-            $this->db->where('status', 4);
-            $count_can = $this->db->get('permohonan')->result();
-            $count_can = count($count_can) ?? 0;
-
-            $ngaray['status'] .= '<br>';
-            $ngaray['status'] .= '<span class="ml-n2 text-left badge btn-outline-secondary"><span class="badge badge-light">' . $count_new . '</span> Baru<br>';
-            $ngaray['status'] .= '<span class="badge badge-light">' . $count_pan . '</span> Perpanjang<br>';
-            $ngaray['status'] .= '<span class="badge badge-light">' . $count_rev . '</span> Revisi<br>';
-            $ngaray['status'] .= '<span class="badge badge-light">' . $count_can . '</span> Batal</span>';
-            $ngaray['id']          = $pal['id'];
-            $ngaray['operasional'] = '<code>' . date('h:i:s') . ' ' . $this->Reza_model->tanggal_indo(date('Y-m-d', strtotime($pal['updated_at'])), true) . '</code><h5 class="card-title mt-2"><a href="' . base_url() . 'kegiatan/permohonan/' . $pal['id'] . '" class="link">' . $pal['nama'] . '</a></h5><h6 class="card-subtitle">' . $pal['keterangan'] . '</h6>';
-
-            $this->db->where('id', $pal['barang_asal']);
-            $barang_asal = $this->db->get('barang_asal')->row();
-            $this->db->where('id', $pal['barang_pemilik']);
-            $barang_pemilik = $this->db->get('barang_pemilik')->row();
-            $this->db->where('id', $pal['perusahaan']);
-            $perusahaan = $this->db->get('perusahaan')->row();
-
-            $ngaray['deskripsi']  = '<b>Asal barang :</b> ' . $barang_asal->nama . '<br>' . '<b>Pemilik Barang :</b> ' . $barang_pemilik->nama . '<br>' . '<b>Perusahaan :</b> ' . $perusahaan->nama . '<br>';
-            $ngaray['keterangan'] = '<a href="' . base_url() . 'operasional/no/' . $pal['id'] . '" class="badge badge-info">Lihat</a>';
-            $ngaray['keterangan'] .= '<a href="' . base_url() . 'operasional/update/' . $pal['id'] . '" class="ml-1 badge badge-warning">Edit</a>';
-            $ngaray['keterangan'] .= '<a href="' . base_url() . 'operasional/delete/' . $pal['id'] . '" class="ml-1 badge badge-danger" onclick="return confirm(' . "'Apa kamu yakin ingin menghapus opersional ini?'" . ');">Hapus</a>';
-
-            $bum[] = $ngaray;
+        } else {
+            $recordsFiltered = 0;
         }
+
         $bum    = $bum ?? null;
         $output = array(
             "draw"            => $_POST['draw'],
-            "recordsTotal"    => $count_all_data,
-            "recordsFiltered" => $count_all_results,
+            "recordsTotal"    => $recordsTotal,
+            "recordsFiltered" => $recordsFiltered,
             "data"            => $bum,
         );
 
@@ -290,6 +310,14 @@ class Operasional extends Admin_controller
 
             $permohonan_jenis = $this->Reza_model->get_ref_val($this->db->database, 'permohonan', 'permohonan_jenis', $pal['permohonan_jenis'])->nama;
 
+            $this->db->where('no_permohonan', $pal['id']);
+            $get_biaya_operasional = $this->db->get('biaya_operasional')->row();
+            if ($get_biaya_operasional) {
+                $creak = 'info';
+            } else {
+                $creak = 'danger';
+            }
+            $ngaray['aksi'] .= '<span class="mr-1 nowraptd btn-sm btn waves-effect waves-light btn-' . $creak . '" data-target="#modal-biaya_operasional" data-toggle="modal" data-id="' . intval($pal['id']) . '"> <i class="fa fa-dollar mr-2"></i>Biaya</span>';
             $ngaray['aksi'] .= '<span class="mr-1 btn-sm btn waves-effect btn-' . $warna . ' inpoice invoice' . $pal['id'] . '" data-id="' . $pal['id'] . '"> <i class="fa voice' . $pal['id'] . ' fa-' . $fa . ' mr-2"></i>Invoice</span>';
             $ngaray['aksi'] .= '<div class="ml-auto mt-1">
                                     <div class="category-selector btn-group">
@@ -372,6 +400,86 @@ class Operasional extends Admin_controller
         }
     }
 
+    public function biaya_operasional()
+    {
+
+        $this->db->where('no_permohonan', $this->input->post('id_biaya_operasional', true));
+        $get = $this->db->get('biaya_operasional')->row();
+        if ($get) {
+            if (empty($this->input->post('bo', true)) && empty($this->input->post('biaya_honor', true)) && empty($this->input->post('biaya_konsumsi')) && empty($this->input->post('biaya_kapal')) && empty($this->input->post('biaya_dozer'))
+                && empty($this->input->post('biaya_antar')) && empty($this->input->post('biaya_jemput'))) {
+                $this->db->where('no_permohonan', $this->input->post('id_biaya_operasional', true));
+                $insert = $this->db->delete('biaya_operasional');
+            } else {
+                $data = array(
+                    'biaya_operasional'      => str_replace(".", "", $this->input->post('bo', true)),
+                    'biaya_honor'            => str_replace(".", "", $this->input->post('biaya_honor', true)),
+                    'biaya_konsumsi'         => str_replace(".", "", $this->input->post('biaya_konsumsi', true)),
+                    'biaya_kapal'            => str_replace(".", "", $this->input->post('biaya_kapal', true)),
+                    'biaya_dozer'            => str_replace(".", "", $this->input->post('biaya_dozer', true)),
+                    'biaya_speedboat_antar'  => str_replace(".", "", $this->input->post('biaya_antar', true)),
+                    'biaya_speedboat_jemput' => str_replace(".", "", $this->input->post('biaya_jemput', true)),
+                    'created_by'             => $this->session->userdata('id'),
+                );
+                $this->db->where('no_permohonan', $this->input->post('id_biaya_operasional', true));
+                $insert = $this->db->update('biaya_operasional', $data);
+            }
+        } else {
+            $data = array(
+                'no_permohonan'          => $this->input->post('id_biaya_operasional', true),
+                'no_operasional'         => $this->input->post('operasional', true),
+                'biaya_operasional'      => str_replace(".", "", $this->input->post('bo', true)),
+                'biaya_honor'            => str_replace(".", "", $this->input->post('biaya_honor', true)),
+                'biaya_konsumsi'         => str_replace(".", "", $this->input->post('biaya_konsumsi', true)),
+                'biaya_kapal'            => str_replace(".", "", $this->input->post('biaya_kapal', true)),
+                'biaya_dozer'            => str_replace(".", "", $this->input->post('biaya_dozer', true)),
+                'biaya_speedboat_antar'  => str_replace(".", "", $this->input->post('biaya_antar', true)),
+                'biaya_speedboat_jemput' => str_replace(".", "", $this->input->post('biaya_jemput', true)),
+                'created_by'             => $this->session->userdata('id'),
+            );
+            $insert = $this->db->insert('biaya_operasional', $data);
+        }
+        if ($insert) {
+            redirect(site_url('operasional/no/' . $this->input->post('operasional', true)));
+        } else {
+            var_dump($this->db->error());
+        }
+        // echo json_encode($data);
+        // $this->Operasional_model->insert($data);
+        // echo json_encode(array('status' => 'success', 'data' => 'Berhasil..'));
+
+        // }
+    }
+
+    public function get_biaya_operasional($id)
+    {
+        // $data = array(
+        //     'no_permohonan'          => $this->input->post('id_biaya_operasional', true),
+        //     'no_operasional'         => $this->input->post('operasional', true),
+        //     'biaya_operasional'      => str_replace(".", "", $this->input->post('bo', true)),
+        //     'biaya_honor'            => str_replace(".", "", $this->input->post('biaya_honor', true)),
+        //     'biaya_konsumsi'         => str_replace(".", "", $this->input->post('biaya_konsumsi', true)),
+        //     'biaya_kapal'            => str_replace(".", "", $this->input->post('biaya_kapal', true)),
+        //     'biaya_dozer'            => str_replace(".", "", $this->input->post('biaya_dozer', true)),
+        //     'biaya_speedboat_antar'  => str_replace(".", "", $this->input->post('biaya_antar', true)),
+        //     'biaya_speedboat_jemput' => str_replace(".", "", $this->input->post('biaya_jemput', true)),
+        //     'created_by'             => $this->session->userdata('id'),
+        // );
+        // $insert = $this->db->insert('biaya_operasional', $data);
+        // if ($insert) {
+        //     redirect(site_url('operasional/no/' . $this->input->post('operasional', true)));
+        // } else {
+        //     var_dump($this->db->error());
+        // }
+        $this->db->where('no_permohonan', $id);
+        $get = $this->db->get('biaya_operasional')->row();
+        echo json_encode($get);
+        // $this->Operasional_model->insert($data);
+        // echo json_encode(array('status' => 'success', 'data' => 'Berhasil..'));
+
+        // }
+    }
+
     public function update($id)
     {
         $row = $this->Operasional_model->get_by_id($id);
@@ -406,11 +514,12 @@ class Operasional extends Admin_controller
                 'nama'               => $this->input->post('nama', true),
                 'keterangan'         => $this->input->post('keterangan', true),
                 'barang_asal'        => $this->input->post('asal_barang', true),
-                'barang_pemilik'     => $this->input->post('pemilik_barang', true),
+                'barang_pemilik'     => $this->input->post('pemilik_barang', true) == 0 ? null : $this->input->post('pemilik_barang', true),
                 'perusahaan'         => $this->input->post('perusahaan', true),
                 'operasional_status' => $this->input->post('operasional_status', true),
             );
-
+            // var_dump($data);
+            // exit;
             $this->Operasional_model->update($this->input->post('id', true), $data);
             $this->session->set_flashdata('message', 'Update Record Success');
             redirect(site_url('operasional'));
@@ -436,7 +545,7 @@ class Operasional extends Admin_controller
         $this->form_validation->set_rules('nama', 'Judul Operasional', 'trim|required', array('required' => '%s tidak boleh kosong.'));
         $this->form_validation->set_rules('keterangan', 'keterangan', 'trim');
         $this->form_validation->set_rules('asal_barang', 'Asal Barang', 'trim|required', array('required' => '%s tidak boleh kosong.'));
-        $this->form_validation->set_rules('pemilik_barang', 'Pemilik Barang', 'trim|required', array('required' => '%s tidak boleh kosong.'));
+        // $this->form_validation->set_rules('pemilik_barang', 'Pemilik Barang', 'trim|required', array('required' => '%s tidak boleh kosong.'));
         $this->form_validation->set_rules('perusahaan', 'Perusahaan', 'trim|required', array('required' => '%s tidak boleh kosong.'));
 
         $this->form_validation->set_rules('id', 'id', 'trim');

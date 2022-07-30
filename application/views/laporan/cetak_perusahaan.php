@@ -116,9 +116,9 @@ $get_perusahaan = $this->db->get('perusahaan')->row();
                                 <th>Laporan Bulan</th>
                                 <td style="padding-left: 10px"> : </td>
                                 <?php
-$bulan = date('F', strtotime($bulan));
+$bulan_text = date('F', strtotime("01-$bulan-2000"));
 ?>
-                                <td style="padding-left: 10px"><?=$bulan; ?> <?=$tahun; ?></td>
+                                <td style="padding-left: 10px"><?=$bulan_text; ?> <?=$tahun; ?></td>
                             </tr>
                         </tbody>
                     </table>
@@ -219,8 +219,11 @@ foreach ($permohonan as $perm) {
         }
         $expl = explode('.', $perm->no_rkbm);
         array_push($dung, ltrim($expl[3], 0));
-        $total_permohoan = count($dung);
-        // var_dump(count($dung));
+        $total_permohoan = $total_permohoan + count($dung);
+        // echo '<pre>';
+        // var_dump($total_permohoan);
+        // echo '</pre>';
+
         $this->db->where('id', $perm->kapal);
         $get_kapal = $this->db->get('kapal')->row();
 

@@ -35,12 +35,17 @@ $db_permohonan = $this->db->get('operasional')->row();
 $this->db->where('id', $barang_asal);
 $asal_barang      = $this->db->get('barang_asal')->row();
 $asal_barang_nama = $asal_barang->nama;
+$alamat_pemilik   = $asal_barang->alamat;
 $inisial          = $asal_barang->inisial;
 
-$this->db->where('id', $barang_pemilik);
-$barang_pemiliks = $this->db->get('barang_pemilik')->row();
-$barang_pemilik  = $barang_pemiliks->nama;
-$alamat_pemilik  = $barang_pemiliks->alamat;
+if ($barang_pemilik) {
+    $this->db->where('id', $barang_pemilik);
+    $barang_pemiliks = $this->db->get('barang_pemilik')->row();
+    $barang_pemilik  = 'Up ' . $barang_pemiliks->nama;
+} else {
+    $barang_pemilik = '';
+}
+// $alamat_pemilik  = $barang_pemiliks->alamat;
 
 function penyebut($nilai)
 {
@@ -147,7 +152,7 @@ function terbilang($nilai)
                                     <div class="d-flex col-12">
                                         <span class="pr-4">Kepada </span>
                                         <span class="pr-1">:</span>
-                                        <span class=""><?=$asal_barang_nama; ?><br>Up <?=$barang_pemilik; ?></span>
+                                        <span class=""><?=$asal_barang_nama; ?><br><?=$barang_pemilik; ?></span>
                                     </div>
                                     <div class="d-flex col-12 pt-2">
                                         <span class="pr-4">Alamat </span>
@@ -187,7 +192,7 @@ foreach ($permohonans as $permohonan) {
     }
     if ($peje == 3) {
         $jusli      = $permohonan->jumlah_kira;
-        $text_jusli = "Bongkar";
+        $text_jusli = "Bongkars";
     }
     $status  = $permohonan->status;
     $payment = (int)$permohonan->payment;
@@ -205,6 +210,7 @@ foreach ($permohonans as $permohonan) {
     // }
     // var_dump($peje);
     // var_dump($jusli);
+    // var_dump($text_jusli);
     if ($status == 1) {
         $status = 'Baru';
         if ($payment) {
@@ -214,9 +220,25 @@ foreach ($permohonans as $permohonan) {
         } else {
             $tarifnya = explode(" ", $asal_barang->tarif_baru);
             $tarif    = '&ensp;x &ensp;';
-            $tarif .= $peje == 3 ? $tarifnya[1] : $tarifnya[0];
-            $tarif_saja = $asal_barang->tarif_baru;
-            $total      = substr($jusli, 0, -3) * $tarif_saja;
+            if ($peje == 3) {
+                if (!empty($tarifnya[1])) {
+                    $tarif .= $tarifnya[1];
+                    $tarif_saja = $tarifnya[1];
+                } else {
+                    $tarif .= $tarifnya[0];
+                    $tarif_saja = $tarifnya[0];
+                }
+            } else {
+                $tarif .= $tarifnya[0];
+                $tarif_saja = $tarifnya[0];
+            }
+            // var_dump($asal_barang->tarif_baru);
+            // $tarif_saja = $asal_barang->tarif_baru;
+            if ($asal_barang->tarif_baru) {
+                $total = substr($jusli, 0, -3) * $tarif_saja;
+            } else {
+                $total = 0;
+            }
             // $total      = (int)str_replace('000', '', $jusli) * $tarif_saja;
         }
     }
@@ -229,9 +251,20 @@ foreach ($permohonans as $permohonan) {
         } else {
             $tarifnya = explode(" ", $asal_barang->tarif_perpanjang);
             $tarif    = '&ensp;x &ensp;';
-            $tarif .= $peje == 3 ? $tarifnya[1] : $tarifnya[0];
-            $tarif_saja = $asal_barang->tarif_perpanjang;
-            $total      = substr($jusli, 0, -3) * $tarif_saja;
+            if ($peje == 3) {
+                if (!empty($tarifnya[1])) {
+                    $tarif .= $tarifnya[1];
+                    $tarif_saja = $tarifnya[1];
+                } else {
+                    $tarif .= $tarifnya[0];
+                    $tarif_saja = $tarifnya[0];
+                }
+            } else {
+                $tarif .= $tarifnya[0];
+                $tarif_saja = $tarifnya[0];
+            }
+            // $tarif_saja = $asal_barang->tarif_perpanjang;
+            $total = substr($jusli, 0, -3) * $tarif_saja;
             // $total      = (int)str_replace('000', '', $jusli) * $tarif_saja;
         }
     }
@@ -244,9 +277,20 @@ foreach ($permohonans as $permohonan) {
         } else {
             $tarifnya = explode(" ", $asal_barang->tarif_revisi);
             $tarif    = '&ensp;x &ensp;';
-            $tarif .= $peje == 3 ? $tarifnya[1] : $tarifnya[0];
-            $tarif_saja = $asal_barang->tarif_revisi;
-            $total      = substr($jusli, 0, -3) * $tarif_saja;
+            if ($peje == 3) {
+                if (!empty($tarifnya[1])) {
+                    $tarif .= $tarifnya[1];
+                    $tarif_saja = $tarifnya[1];
+                } else {
+                    $tarif .= $tarifnya[0];
+                    $tarif_saja = $tarifnya[0];
+                }
+            } else {
+                $tarif .= $tarifnya[0];
+                $tarif_saja = $tarifnya[0];
+            }
+            // $tarif_saja = $asal_barang->tarif_revisi;
+            $total = substr($jusli, 0, -3) * $tarif_saja;
             // $total      = (int)str_replace('000', '', $jusli) * $tarif_saja;
         }
     }
@@ -259,9 +303,20 @@ foreach ($permohonans as $permohonan) {
         } else {
             $tarifnya = explode(" ", $asal_barang->tarif_revisi);
             $tarif    = '&ensp;x &ensp;';
-            $tarif .= $peje == 3 ? $tarifnya[1] : $tarifnya[0];
-            $tarif_saja = $asal_barang->tarif_revisi;
-            $total      = substr($jusli, 0, -3) * $tarif_saja;
+            if ($peje == 3) {
+                if (!empty($tarifnya[1])) {
+                    $tarif .= $tarifnya[1];
+                    $tarif_saja = $tarifnya[1];
+                } else {
+                    $tarif .= $tarifnya[0];
+                    $tarif_saja = $tarifnya[0];
+                }
+            } else {
+                $tarif .= $tarifnya[0];
+                $tarif_saja = $tarifnya[0];
+            }
+            // $tarif_saja = $asal_barang->tarif_revisi;
+            $total = substr($jusli, 0, -3) * $tarif_saja;
             // $total      = (int)str_replace('000', '', $jusli) * $tarif_saja;
         }
     }
@@ -276,9 +331,10 @@ foreach ($permohonans as $permohonan) {
     $sub_total += (int)$total;
 
     if ($permohonan->no_rkbm) {
-        $no_rkbm = explode('.', $permohonan->no_rkbm);
+        $no_rkbm = $permohonan->no_rkbm;
+        // $no_rkbm = explode('.', $permohonan->no_rkbm);
         // var_dump(ltrim($no_rkbm[3], '0'));
-        $no_rkbm = ltrim($no_rkbm[3], '0');
+        // $no_rkbm = ltrim($no_rkbm[3], '0');
     } else {
         $no_rkbm = "<code>NOMOR RKBM BELUM TERISI</code>";
     }

@@ -47,6 +47,7 @@ foreach ($asal as $palu) {
                                     <label for="asal_barang">Pemilik Barang</label>
                                     <select class="custom-select mr-sm-2 wide" name="pemilik_barang" id="pemilik_barang" placeholder="Pemilik Barang">
                                         <?php
+echo "<option value='0'>KOSONG</option>";
 $pemilik = $this->db->get('barang_pemilik')->result();
 foreach ($pemilik as $palu) {
     if ($palu->id == $pemilik_barang) {

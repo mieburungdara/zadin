@@ -105,9 +105,17 @@ foreach ($perusahaan as $palu) {
                                     <select class="custom-select mr-sm-2 wide" name="asal_barang" id="asal_barang" placeholder="Asal Barang">
                                         <option disabled selected="selected">Pilih Asal Barang..</option>
                                         <?php
-$asal = $this->db->get('barang_asal')->result();
+$asal   = $this->db->get('barang_asal')->result();
+$lokasi = '';
 foreach ($asal as $palu) {
-    echo "<option value='" . $palu->id . "'>" . $palu->nama . "</option>";
+$lokasi = '';
+
+    if ($palu->lokasi) {
+        $lokasi = ' (';
+        $lokasi .= $palu->lokasi;
+        $lokasi .= ')';
+    }
+    echo "<option value='" . $palu->id . "'>" . $palu->nama . $lokasi . "</option>";
 }
 ?>
                                     </select>
