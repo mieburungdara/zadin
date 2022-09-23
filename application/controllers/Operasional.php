@@ -18,6 +18,9 @@ class Operasional extends Admin_controller
         $this->load->model('Perusahaan_model');
         $this->load->model('Barang_model');
         $this->load->model('Permohonan_model');
+        if (empty($this->session->userdata('id'))) {
+            redirect('login', 'refresh');
+        }
     }
 
     public function index()
@@ -317,7 +320,7 @@ class Operasional extends Admin_controller
             } else {
                 $creak = 'danger';
             }
-            $ngaray['aksi'] .= '<span class="mr-1 nowraptd btn-sm btn waves-effect waves-light btn-' . $creak . '" data-target="#modal-biaya_operasional" data-toggle="modal" data-id="' . intval($pal['id']) . '"> <i class="fa fa-dollar mr-2"></i>Biaya</span>';
+            $ngaray['aksi'] .= '<span class="mr-1 nowraptd btn-sm btn waves-effect waves-light btn-' . $creak . '" data-target="#modal_biaya_operasional" data-toggle="modal" data-idoperasional="' . intval($pal['id']) . '"> <i class="fa fa-dollar mr-2"></i>Biaya</span>';
             $ngaray['aksi'] .= '<span class="mr-1 btn-sm btn waves-effect btn-' . $warna . ' inpoice invoice' . $pal['id'] . '" data-id="' . $pal['id'] . '"> <i class="fa voice' . $pal['id'] . ' fa-' . $fa . ' mr-2"></i>Invoice</span>';
             $ngaray['aksi'] .= '<div class="ml-auto mt-1">
                                     <div class="category-selector btn-group">
@@ -403,61 +406,16 @@ class Operasional extends Admin_controller
     public function biaya_operasional()
     {
 
-        $this->db->where('no_permohonan', $this->input->post('id_biaya_operasional', true));
-        $get = $this->db->get('biaya_operasional')->row();
-        if ($get) {
-            if (empty($this->input->post('bo', true)) && empty($this->input->post('biaya_honor', true)) && empty($this->input->post('biaya_konsumsi')) && empty($this->input->post('biaya_kapal')) && empty($this->input->post('biaya_dozer'))
-                && empty($this->input->post('biaya_antar')) && empty($this->input->post('biaya_jemput'))) {
-                $this->db->where('no_permohonan', $this->input->post('id_biaya_operasional', true));
-                $insert = $this->db->delete('biaya_operasional');
-            } else {
-                $data = array(
-                    'biaya_operasional'      => str_replace(".", "", $this->input->post('bo', true)),
-                    'biaya_honor'            => str_replace(".", "", $this->input->post('biaya_honor', true)),
-                    'biaya_konsumsi'         => str_replace(".", "", $this->input->post('biaya_konsumsi', true)),
-                    'biaya_kapal'            => str_replace(".", "", $this->input->post('biaya_kapal', true)),
-                    'biaya_dozer'            => str_replace(".", "", $this->input->post('biaya_dozer', true)),
-                    'biaya_speedboat_antar'  => str_replace(".", "", $this->input->post('biaya_antar', true)),
-                    'biaya_speedboat_jemput' => str_replace(".", "", $this->input->post('biaya_jemput', true)),
-                    'created_by'             => $this->session->userdata('id'),
-                );
-                $this->db->where('no_permohonan', $this->input->post('id_biaya_operasional', true));
-                $insert = $this->db->update('biaya_operasional', $data);
-            }
-        } else {
-            $data = array(
-                'no_permohonan'          => $this->input->post('id_biaya_operasional', true),
-                'no_operasional'         => $this->input->post('operasional', true),
-                'biaya_operasional'      => str_replace(".", "", $this->input->post('bo', true)),
-                'biaya_honor'            => str_replace(".", "", $this->input->post('biaya_honor', true)),
-                'biaya_konsumsi'         => str_replace(".", "", $this->input->post('biaya_konsumsi', true)),
-                'biaya_kapal'            => str_replace(".", "", $this->input->post('biaya_kapal', true)),
-                'biaya_dozer'            => str_replace(".", "", $this->input->post('biaya_dozer', true)),
-                'biaya_speedboat_antar'  => str_replace(".", "", $this->input->post('biaya_antar', true)),
-                'biaya_speedboat_jemput' => str_replace(".", "", $this->input->post('biaya_jemput', true)),
-                'created_by'             => $this->session->userdata('id'),
-            );
-            $insert = $this->db->insert('biaya_operasional', $data);
-        }
-        if ($insert) {
-            redirect(site_url('operasional/no/' . $this->input->post('operasional', true)));
-        } else {
-            var_dump($this->db->error());
-        }
-        // echo json_encode($data);
-        // $this->Operasional_model->insert($data);
-        // echo json_encode(array('status' => 'success', 'data' => 'Berhasil..'));
-
-        // }
-    }
-
-    public function get_biaya_operasional($id)
-    {
+        // $this->db->where('no_permohonan', $this->input->post('id_biaya_operasional', true));
+        // $get = $this->db->get('biaya_operasional')->row();
+        // if ($get) {
+        //     if (empty($this->input->post('biaya', true))) {
+        //         $this->db->where('no_permohonan', $this->input->post('id_biaya_operasional', true));
+        //         $insert = $this->db->delete('transaksi');
+        //     } else {
         // $data = array(
-        //     'no_permohonan'          => $this->input->post('id_biaya_operasional', true),
-        //     'no_operasional'         => $this->input->post('operasional', true),
-        //     'biaya_operasional'      => str_replace(".", "", $this->input->post('bo', true)),
-        //     'biaya_honor'            => str_replace(".", "", $this->input->post('biaya_honor', true)),
+        //     'biaya'      => str_replace(".", "", $this->input->post('biaya', true)),
+        //     'created_at'            => str_replace(".", "", $this->input->post('input_tanggal', true)),
         //     'biaya_konsumsi'         => str_replace(".", "", $this->input->post('biaya_konsumsi', true)),
         //     'biaya_kapal'            => str_replace(".", "", $this->input->post('biaya_kapal', true)),
         //     'biaya_dozer'            => str_replace(".", "", $this->input->post('biaya_dozer', true)),
@@ -465,19 +423,128 @@ class Operasional extends Admin_controller
         //     'biaya_speedboat_jemput' => str_replace(".", "", $this->input->post('biaya_jemput', true)),
         //     'created_by'             => $this->session->userdata('id'),
         // );
-        // $insert = $this->db->insert('biaya_operasional', $data);
-        // if ($insert) {
-        //     redirect(site_url('operasional/no/' . $this->input->post('operasional', true)));
+        //         $this->db->where('no_permohonan', $this->input->post('id_biaya_operasional', true));
+        //         $insert = $this->db->update('biaya_operasional', $data);
+        //     }
         // } else {
-        //     var_dump($this->db->error());
+        $data = array(
+            'no_permohonan'  => $this->input->post('id_biaya_operasional', true),
+            'no_operasional' => $this->input->post('operasional', true),
+            'jenis_biaya'    => $this->input->post('jenis_biaya', true),
+            'biaya'          => str_replace(".", "", $this->input->post('biaya', true)),
+            'created_by'     => $this->session->userdata('id'),
+        );
+        $insert = $this->db->insert('biaya_operasional', $data);
+        $aidi   = $this->db->insert_id();
+
         // }
-        $this->db->where('no_permohonan', $id);
-        $get = $this->db->get('biaya_operasional')->row();
-        echo json_encode($get);
+        if ($aidi) {
+            // redirect(site_url('operasional/no/' . $this->input->post('operasional', true)));
+            echo json_encode(array('status' => 'success', 'data' => 'Berhasil..'));
+
+        } else {
+            var_dump($this->db->error());
+        }
+
+        // echo json_encode($data);
         // $this->Operasional_model->insert($data);
         // echo json_encode(array('status' => 'success', 'data' => 'Berhasil..'));
 
         // }
+    }
+
+    // public function get_biaya_operasional($id)
+    // {
+    //     // $data = array(
+    //     //     'no_permohonan'          => $this->input->post('id_biaya_operasional', true),
+    //     //     'no_operasional'         => $this->input->post('operasional', true),
+    //     //     'biaya_operasional'      => str_replace(".", "", $this->input->post('bo', true)),
+    //     //     'biaya_honor'            => str_replace(".", "", $this->input->post('biaya_honor', true)),
+    //     //     'biaya_konsumsi'         => str_replace(".", "", $this->input->post('biaya_konsumsi', true)),
+    //     //     'biaya_kapal'            => str_replace(".", "", $this->input->post('biaya_kapal', true)),
+    //     //     'biaya_dozer'            => str_replace(".", "", $this->input->post('biaya_dozer', true)),
+    //     //     'biaya_speedboat_antar'  => str_replace(".", "", $this->input->post('biaya_antar', true)),
+    //     //     'biaya_speedboat_jemput' => str_replace(".", "", $this->input->post('biaya_jemput', true)),
+    //     //     'created_by'             => $this->session->userdata('id'),
+    //     // );
+    //     // $insert = $this->db->insert('biaya_operasional', $data);
+    //     // if ($insert) {
+    //     //     redirect(site_url('operasional/no/' . $this->input->post('operasional', true)));
+    //     // } else {
+    //     //     var_dump($this->db->error());
+    //     // }
+    //     $this->db->where('no_permohonan', $id);
+    //     $get = $this->db->get('biaya_operasional')->result();
+    //     echo json_encode($get);
+    //     // $this->Operasional_model->insert($data);
+    //     // echo json_encode(array('status' => 'success', 'data' => 'Berhasil..'));
+
+    //     // }
+    // }
+
+//   {"name":"keterangan","title":"Keterangan","breakpoints":"xs sm","type":"number","style":{"width":80,"maxWidth":80}},
+
+    public function get_col()
+    {
+        $kolom = '[
+  {"name":"keterangan","title":"Keterangan","breakpoints":"xs sm","style":{"width":80,"maxWidth":80}},
+  {"name":"operasional","title":"Operasional"},
+  {"name":"biaya","title":"Biaya","breakpoints":"xs sm","style":{"maxWidth":200,"overflow":"hidden","textOverflow":"ellipsis","wordBreak":"keep-all","whiteSpace":"nowrap"}},
+  {"name":"tanggal","title":"Tanggal","type":"date","breakpoints":"xs sm md","formatString":"DD MMM YYYY"}
+        ]';
+        $get = json_decode($kolom);
+        echo json_encode($get);
+    }
+    public function get_rows($id)
+    {
+        $this->db->where('no_permohonan', $id);
+        $get = $this->db->get('biaya_operasional')->result();
+        if ($get) {
+            echo '<table class="table table-bordered table-hover table-sm">';
+            echo '<thead>
+                            <tr>
+                                <th class="text-center" data-breakpoints="xs sm md">No</th>
+                                <th class="text-center" data-breakpoints="xs sm md">ID</th>
+                                <th class="text-center" data-breakpoints="xs sm md">Operasional</th>
+                                <th class="text-right"data-breakpoints="xs sm md">Biaya</th>
+                                <th class="text-center"data-breakpoints="xs sm md">Tanggal</th>
+                                <th class="text-center"data-breakpoints="xs sm md">Aksi</th>
+                            </tr>
+                        </thead>';
+            echo '<tbody>';
+            $hitungjumlah = 1;
+            foreach ($get as $row) {
+                $this->db->where('id', $row->jenis_biaya);
+                $get = $this->db->get('jenis_biaya')->row();
+                echo '<tr>';
+                echo '<td class="text-center">' . $hitungjumlah++ . '</td>';
+                echo '<td class="text-center">' . $get->id . '</td>';
+                echo '<td class="text-center">' . $get->nama . '</td>';
+                echo '<td class="text-right">' . number_format($row->biaya, 0, ',', '.') . '</td>';
+                echo '<td class="text-center">' . date('d F Y', strtotime($row->created_at)) . '</td>';
+                echo '<td class="text-center "> <span class="badge badge-danger hapusoperasional" title="Delete" data-id="' . $row->id . '"> Hapus</span></td>';
+                echo '</tr>';
+            }
+            echo '</tbody>';
+            echo '</table>';
+        } else {
+
+        }
+
+        // header('Content-Type: application/json');
+        // echo json_encode($dunk);
+    }
+    public function hapusbiayaoperasional($id)
+    {
+        $this->db->where('id', $id);
+        $get = $this->db->delete('biaya_operasional');
+        if (!$this->db->affected_rows()) {
+            echo json_encode(array('status' => 'error', 'data' => 'Berhasil..'));
+        } else {
+            echo json_encode(array('status' => 'success', 'data' => 'Berhasil..'));
+        }
+
+        // echo json_encode($dunk);
     }
 
     public function update($id)
@@ -550,5 +617,9 @@ class Operasional extends Admin_controller
 
         $this->form_validation->set_rules('id', 'id', 'trim');
         $this->form_validation->set_error_delimiters('<span class="text-danger">', '</span>');
+    }
+    public function update_operasional($bulan = null, $tahun = null)
+    {
+
     }
 }

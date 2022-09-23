@@ -1,6 +1,6 @@
 <link rel="stylesheet" type="text/css" href="<?=base_url(); ?>assets/libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
-<link rel="stylesheet" type="text/css" href="<?=base_url(); ?>assets/tabulator/css/tabulator.min.css">
-<link rel="stylesheet" type="text/css" href="<?=base_url(); ?>assets/tabulator/css/tabulator_bootstrap4.min.css">
+<!-- <link rel="stylesheet" type="text/css" href="<?=base_url(); ?>assets/tabulator/css/tabulator.min.css">
+<link rel="stylesheet" type="text/css" href="<?=base_url(); ?>assets/tabulator/css/tabulator_bootstrap4.min.css"> -->
 <!-- <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.3/css/bootstrap.min.css"> -->
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
 <script src="<?=base_url(); ?>assets/libs/jquery-kk-message/message.js"></script>
@@ -119,14 +119,6 @@ $(document).ready(function() {
         ]
     });
 });
-// var table = $('#example').DataTable({
-//     ajax: "<?=base_url(); ?>operasional/load_data"
-// });
-
-// table.on('xhr', function() {
-//     var json = table.ajax.json();
-//     // alert(json.length + ' row(s) were loaded');
-// })
 </script>
 
 

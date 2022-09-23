@@ -24,16 +24,16 @@
                 </li>
                 <li class="sidebar-item mr-1"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?php echo base_url('operasional'); ?>" aria-expanded="false"><i class="fa-duotone fa-scroll-old mr-2"></i><span class="hide-menu"> Operasional</span></a>
                 </li>
-                <li class="sidebar-item mr-1"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?php echo base_url('transaksi'); ?>" aria-expanded="false"><i class="fa-duotone fa-scroll-old mr-2"></i><span class="hide-menu"> Transaksi</span></a>
-                </li>
+                <!-- <li class="sidebar-item mr-1"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?php echo base_url('transaksi'); ?>" aria-expanded="false"><i class="fa-duotone fa-scroll-old mr-2"></i><span class="hide-menu"> Transaksi</span></a>
+                </li> -->
 
-                <!-- <li class="sidebar-item mr-1"> <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="fa-duotone fa-scroll-old mr-2"></i><span class="hide-menu">Transaksi</span></a>
+                <li class="sidebar-item mr-1"> <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="fa-duotone fa-scroll-old mr-2"></i><span class="hide-menu">Transaksi</span></a>
                     <ul aria-expanded="false" class="collapse first-level">
-                        <li class="sidebar-item"> <a href="<?php echo base_url('transaksi/invoice'); ?>" class="sidebar-link"><i class="fa-duotone fa-buildings mr-2"></i><span class="hide-menu"> Invoice</span></a></li>
-                        <li class="sidebar-item"> <a href="<?php echo base_url('transaksi/inventori'); ?>" class="sidebar-link"><i class="fa-duotone fa-garage mr-2"></i><span class="hide-menu"> Inventori</span></a></li>
+                        <li class="sidebar-item"> <a href="<?php echo base_url('transaksi/input'); ?>" class="sidebar-link"><i class="fa-duotone fa-buildings mr-2"></i><span class="hide-menu"> Input</span></a></li>
+                        <!-- <li class="sidebar-item"> <a href="<?php echo base_url('transaksi/akun'); ?>" class="sidebar-link"><i class="fa-duotone fa-garage mr-2"></i><span class="hide-menu"> Akun</span></a></li> -->
                         <li class="sidebar-item"> <a href="<?php echo base_url('transaksi/akun'); ?>" class="sidebar-link"><i class="fa-duotone fa-garage mr-2"></i><span class="hide-menu"> Akun</span></a></li>
                     </ul>
-                </li> -->
+                </li>
 
 
                 <!-- <li class="nav-small-cap"><i class="fa-duotone fa-gears mr-2"></i> <span class="hide-menu"></span></li> -->

@@ -93,7 +93,6 @@ $semua_operasional = $this->db->get('operasional')->result();
 foreach ($semua_operasional as $operasional) {
     $permohonan_berjalan_array[] = $operasional->id;
 }
-var_dump($permohonan_berjalan_array);
 if (!empty($permohonan_berjalan_array)) {
     $this->db->where_in('operasional', $permohonan_berjalan_array);
     $semua_permohonan_berjalan = $this->db->get('permohonan')->result();

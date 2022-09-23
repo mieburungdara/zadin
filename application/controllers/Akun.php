@@ -108,6 +108,29 @@ class Akun extends Admin_controller
             }
         }
     }
+    public function kelompok_ubah()
+    {
+        $id       = urldecode($this->input->post('id', true)) ?? null;
+        $name     = urldecode($this->input->post('column', true)) ?? null;
+        $kelompok = urldecode($this->input->post('editval', true)) ?? null;
+        // $kode       = urldecode($this->input->post('edit_kode', true)) ?? null;
+        // $keterangan = urldecode($this->input->post('edit_keterangan', true)) ?? null;
+        if ($id && $name) {
+            $data = array(
+                $name => $kelompok,
+                // 'nama'       => $name,
+                // 'keterangan' => $keterangan,
+                // 'kelompok'   => $kelompok,
+            );
+            $this->db->where('id', $id);
+            $this->db->update('akun_kelompok', $data);
+            if ($this->db->affected_rows() > 0) {
+                echo json_encode(array('status' => 'ok', 'data' => 'Berhasil..'));
+            } else {
+                echo json_encode(array('status' => 'no', 'data' => $this->db->error()));
+            }
+        }
+    }
     public function kelompok_hapus()
     {
         $id = urldecode($this->input->post('id', true)) ?? null;

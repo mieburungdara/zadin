@@ -86,6 +86,22 @@ function terbilang($nilai)
     return $hasil;
 }
 
+function romawi($number)
+{
+    $map         = array('M' => 1000, 'CM' => 900, 'D' => 500, 'CD' => 400, 'C' => 100, 'XC' => 90, 'L' => 50, 'XL' => 40, 'X' => 10, 'IX' => 9, 'V' => 5, 'IV' => 4, 'I' => 1);
+    $returnValue = '';
+    while ($number > 0) {
+        foreach ($map as $roman => $int) {
+            if ($number >= $int) {
+                $number -= $int;
+                $returnValue .= $roman;
+                break;
+            }
+        }
+    }
+    return $returnValue;
+}
+
 ?>
 <!-- <script src="<?=base_url(); ?>assets/dist/js/pages/samplepages/jquery.PrintArea.js"></script>> -->
 
@@ -93,7 +109,7 @@ function terbilang($nilai)
 <html lang="en">
 
     <head>
-        <title>Permohonan RKBM</title>
+        <title>Invoice</title>
         <meta charset="UTF-8">
         <meta name=description content="">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -146,7 +162,7 @@ function terbilang($nilai)
                                     <div class="col-12 mb-3">
                                         <div class="text-center">
                                             <h4 class="mb-0" style="font-weight: 1000 !important;color:black;">INVOICE</h4>
-                                            <h5 style="color:black;" class="mb-0 font-weight-bold">NO 0<?=$id; ?>/<?=$inisial; ?>/ZMA-SMD/I/2022</h5>
+                                            <h5 style="color:black;" class="mb-0 font-weight-bold">NO 0<?=$id; ?>/<?=$inisial; ?>/ZMA-SMD/<?=romawi(date('m', strtotime($created_at))); ?>/<?=date('Y', strtotime($created_at)); ?></h5>
                                         </div>
                                     </div>
                                     <div class="d-flex col-12">
@@ -368,7 +384,7 @@ foreach ($permohonans as $permohonan) {
                                                             <div class="d-flex">
                                                                 <div class="">Rp<br>Rp<br>Rp</span>
                                                                 </div>
-                                                                <div class="ml-auto text-right"><?=number_format($sub_total, 0, ',', '.'); ?><br><?=number_format(($sub_total * $asal_barang->total_pph) / 100, 0, ',', '.'); ?><br><?=number_format($sub_total - (($sub_total * $asal_barang->total_pph) / 100), 0, ',', '.'); ?></span>
+                                                                <div class="ml-auto text-right"><?=number_format($st = $sub_total, 0, ',', '.'); ?><br><?=number_format($pt = ($sub_total * $asal_barang->total_pph) / 100, 0, ',', '.'); ?><br><?=number_format($tt = $sub_total - (($sub_total * $asal_barang->total_pph) / 100), 0, ',', '.'); ?></span>
                                                                 </div>
                                                             </div>
                                                         </td>
@@ -408,7 +424,14 @@ $lastname  = $oleh->lastname;
                 </div>
             </div>
         </div>
+        <?php
+$this->db->set('st', $st, false);
+$this->db->set('pt', $pt, false);
+$this->db->set('tt', $tt, false);
+$this->db->where('id', $id);
+$this->db->update('operasional');
 
+?>
 
 
         <script>

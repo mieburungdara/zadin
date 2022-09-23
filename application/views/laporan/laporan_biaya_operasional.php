@@ -89,24 +89,24 @@ foreach ($perusahaan as $palu) {
                                 <option value="7">Speedboat Jemput</option>
                             </select>
                         </div>
-                        <div class="col-auto form-group mb-4">
+                        <!-- <div class="col-auto form-group mb-4">
                             <label class="mr-sm-2" for="filter_perusahaan">Perusahaan</label>
                             <select class="custom-select mr-sm-2" id="filter_perusahaan" name="filter_perusahaan">
                                 <option selected value="">Semua</option><?php
-$get_operasional = $this->db->get('operasional')->result();
-foreach ($get_operasional as $gop) {
-    $perusahaan_list[] = (int)$gop->perusahaan;
-}
-$perusahaan_list = array_unique($perusahaan_list);
-$this->db->where_in('id', $perusahaan_list);
-$get_perusahaan = $this->db->get('perusahaan')->result();
-// var_dump($get_perusahaan);
-foreach ($get_perusahaan as $gep) {
-    echo '<option value="' . $gep->id . '">' . $gep->nama . '</option>';
-}
-?>
+// $get_operasional = $this->db->get('operasional')->result();
+// foreach ($get_operasional as $gop) {
+//     $perusahaan_list[] = (int)$gop->perusahaan;
+// }
+// $perusahaan_list = array_unique($perusahaan_list);
+// $this->db->where_in('id', $perusahaan_list);
+// $get_perusahaan = $this->db->get('perusahaan')->result();
+// // var_dump($get_perusahaan);
+// foreach ($get_perusahaan as $gep) {
+//     echo '<option value="' . $gep->id . '">' . $gep->nama . '</option>';
+// }
+; ?>
                             </select>
-                        </div>
+                        </div> -->
 
                     </div>
                 </div>
@@ -130,13 +130,13 @@ foreach ($get_perusahaan as $gep) {
                                 <th>Terminal</th>
                                 <th>Kapal</th>
                                 <th>Operasional</th>
-                                <th>Honor Foreman</th>
-                                <th>Konsumsi Foreman</th>
+                                <th>Biaya</th>
+                                <!-- <th>Konsumsi Foreman</th>
                                 <th>Kapal</th>
                                 <th>Dozer</th>
                                 <th>Speedboat Antar</th>
-                                <th>Speedboat Jemput</th>
-                                <th>Admin</th>
+                                <th>Speedboat Jemput</th> -->
+                                <!-- <th>Admin</th> -->
                             </tr>
                         </thead>
                         <!-- <thead>

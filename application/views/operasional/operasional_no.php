@@ -60,9 +60,11 @@ function integerToRoman($integer)
 <script src="<?=base_url(); ?>assets/libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
 <script src="<?=base_url(); ?>assets/libs/bootstrap-datepicker/dist/locales/bootstrap-datepicker.id.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://www.jqueryscript.net/demo/bootstrap-toaster/css/bootstrap-toaster.css">
+<link rel="stylesheet" type="text/css" href="https://fooplugins.github.io/FooTable/compiled/footable.bootstrap.min.css">
 <script src="<?=base_url(); ?>assets/js/bootstrap-add-clear.min.js"></script>
 <script src="<?=base_url(); ?>assets/libs/jquery-kk-message/message.js"></script>
 <script src="<?=base_url(); ?>assets/libs/sweetalert2/dist/sweetalert2.all.min.js" aria-hidden="true"></script>
+<script src="<?=base_url(); ?>assets/easytable/paginathing.js"></script>
 <!-- <script src="<?=base_url(); ?>assets/libs/bootstrap-switch/dist/js/bootstrap-switch.min.js"></script> -->
 <script src="https://www.jqueryscript.net/demo/bootstrap-toaster/js/bootstrap-toaster.min.js"></script>
 <!-- <link rel="stylesheet" type="text/css" href="<?=base_url(); ?>assets/libs/leader-line/leader-line.css"> -->
@@ -71,6 +73,9 @@ function integerToRoman($integer)
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+<!-- <script src="https://fooplugins.github.io/FooTable/compiled/footable.js"></script> -->
+<script src="https://cdnout.com/moment.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-footable/3.1.6/footable.min.js"></script>
 
 
 <div class="container-fluid bg-white overflow-auto mt-3">
@@ -1156,8 +1161,8 @@ foreach ($palu as $key) {
                         </form>
 
                     </div>
-                </div><!-- /.modal-content -->
-            </div><!-- /.modal-dialog -->
+                </div>
+            </div>
         </div>
 
 
@@ -1167,7 +1172,7 @@ foreach ($palu as $key) {
 
 
 
-    <div class="modal fade" id="modal-biaya_operasional" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal fade" id="modal_biaya_operasional" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" style="display: none;" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -1175,57 +1180,54 @@ foreach ($palu as $key) {
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 </div>
                 <div class="modal-body">
-                    <form action="<?=base_url(); ?>operasional/biaya_operasional" method="post" id="form-biaya_operasional">
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <label for="bo">Operasional</label>
-                                    <input class="form-control masinput" type="text" id="bo" name="bo" placeholder="Biaya Operasional">
+                    <div id="content"></div>
+                    <!-- <table id="tabeloperasional" class="table" data-paging="true" data-sorting="true"> -->
+
+                    <!-- <thead>
+                            <tr>
+                                <th data-breakpoints="xs sm md">Keterangan</th>
+                                <th data-breakpoints="xs sm md">Operasional</th>
+                                <th data-breakpoints="xs sm md">Pembayaran</th>
+                                <th data-breakpoints="xs sm md">Biaya</th>
+                                <th data-breakpoints="xs sm md">Tanggal</th>
+                            </tr>
+                        </thead> -->
+
+                    <!-- </table> -->
+                    <form action="<?=base_url(); ?>operasional/biaya_operasional" method="post" id="form_biaya_operasional">
+                        <div class="card-body">
+                            <div class="form-group row align-items-center mb-0">
+                                <label for="biaya" class="col-md-3 text-right control-label col-form-label">Pengeluaran Operasional</label>
+                                <div class="col-md-9 border-left pb-2 pt-2">
+                                    <code class="text-center"><p id="error_biaya">test</p></code>
+                                    <select class="custom-select mr-sm-2 wide" name="jenis_biaya" id="jenis_biaya" placeholder="Biaya" required>
+                                        <option value="" disabled selected>Pilih..</option>
+                                        <option value="1">Biaya Operasional</option>
+                                        <option value="2">Honor Foreman</option>
+                                        <option value="3">Konsumsi Foreman</option>
+                                        <option value="4">Sewa Kapal</option>
+                                        <option value="5">Sewa Dozer</option>
+                                        <option value="6">Speedboat Mengantar</option>
+                                        <option value="7">Speedboat Menjemput</option>
+                                    </select>
                                 </div>
                             </div>
 
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label for="biaya_honor">Honor</label>
-                                    <input class="form-control masinput" type="text" id="biaya_honor" name="biaya_honor" placeholder="Honor Foreman">
+                            <div class="form-group row align-items-center mb-0">
+                                <label for="input_tp" class="col-md-3 text-right control-label col-form-label">Tanggal Pembayaran</label>
+                                <div class="col-md-9 border-left pb-2 pt-2">
+                                    <input type="text" autocomplete="off" required class="mydatepicker form-control" id="tanggal_bayar" name="tanggal_bayar" placeholder="hari/bulan/tahun">
                                 </div>
                             </div>
 
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label for="biaya_konsumsi">Konsumsi</label>
-                                    <input class="form-control masinput" type="text" id="biaya_konsumsi" name="biaya_konsumsi" placeholder="Konsumsi Foreman">
+                            <div class="form-group row align-items-center mb-0">
+                                <label for="biaya" class="col-md-3 text-right control-label col-form-label">Biaya</label>
+                                <div class="col-md-9 border-left pb-2 pt-2">
+                                    <input class="form-control hapus masinput" type="text" id="biaya" required name="biaya" placeholder="Masukkan Jumlah Biaya">
                                 </div>
                             </div>
 
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label for="biaya_kapal">Kapal</label>
-                                    <input class="form-control masinput" type="text" id="biaya_kapal" name="biaya_kapal" placeholder="Biaya Kapal">
-                                </div>
-                            </div>
-
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label for="biaya_dozer">Dozer</label>
-                                    <input class="form-control masinput" type="text" id="biaya_dozer" name="biaya_dozer" placeholder="Biaya Dozer">
-                                </div>
-                            </div>
-
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label for="biaya_antar">Speedboat Antar</label>
-                                    <input class="form-control masinput" type="text" id="biaya_antar" name="biaya_antar" placeholder="Biaya mengantar">
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label for="biaya_jemput">Speedboat Jemput</label>
-                                    <input class="form-control masinput" type="text" id="biaya_jemput" name="biaya_jemput" placeholder="Biaya Menjemput">
-                                </div>
-                            </div>
-
-                            <div class="ml-auto mr-5">
+                            <div class="col-12 ml-auto mr-5 mt-3">
                                 <div class="form-group text-center">
                                     <input type="hidden" name="operasional" value="<?php echo $id; ?>" />
                                     <input type="hidden" id="id_biaya_operasional" name="id_biaya_operasional" value="">
@@ -1241,27 +1243,121 @@ foreach ($palu as $key) {
     </div>
 
     <script>
-    $('#modal-biaya_operasional').on('show.bs.modal', function(event) {
-        var button = $(event.relatedTarget)
-        var recipient = button.data('id')
-        var modal = $(this)
-        $("#id_biaya_operasional").val(recipient);
-        $.get("<?=base_url(); ?>/operasional/get_biaya_operasional/" + recipient, function(data, status) {
-            var json_parse = JSON.parse(data);
-            document.getElementById("form-biaya_operasional").reset();
-            // modal.reset();
-            modal.find('#bo').val(json_parse.biaya_operasional != 0 ? json_parse.biaya_operasional.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".") : '')
-            modal.find('#biaya_honor').val(json_parse.biaya_honor != 0 ? json_parse.biaya_honor.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".") : '')
-            modal.find('#biaya_konsumsi').val(json_parse.biaya_konsumsi != 0 ? json_parse.biaya_konsumsi.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".") : '')
-            modal.find('#biaya_kapal').val(json_parse.biaya_kapal != 0 ? json_parse.biaya_kapal.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".") : '')
-            modal.find('#biaya_dozer').val(json_parse.biaya_dozer != 0 ? json_parse.biaya_dozer.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".") : '')
-            modal.find('#biaya_antar').val(json_parse.biaya_speedboat_antar != 0 ? json_parse.biaya_speedboat_antar.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".") : '')
-            modal.find('#biaya_jemput').val(json_parse.biaya_speedboat_jemput != 0 ? json_parse.biaya_speedboat_jemput.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".") : '')
-            // console.log(json_parse.biaya_honor)
-            // console.log(data.id);
-            //     modal.find('.idrkbm').val(recipient)
-            //     modal.find('.norkbm').val(data.trim())
+    jQuery(function($) {
+        $(document).on('click', '.hapusoperasional', function() {
+
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'mr-2 btn btn-danger'
+                },
+                buttonsStyling: false,
+            })
+
+            var idoper = $(this).attr("data-id");
+            // console.log(idoper);
+
+            $.getJSON("<?=base_url(); ?>operasional/hapusbiayaoperasional/" + idoper, function(data, status) {
+                console.log(data);
+                if (data.status == 'success') {
+                    swalWithBootstrapButtons.fire(
+                        'Telah Dihapus!',
+                        'Biaya berhasil dihapus.',
+                        'success'
+                    );
+                    location.reload();
+                } else {
+                    swalWithBootstrapButtons.fire(
+                        'Gagal..',
+                        'Biaya tidak dapat dihapus..',
+                        'error'
+                    )
+                }
+
+            });
         });
+    });
+
+    // jQuery('#tanggal_bayar').datepicker({
+    //     autoclose: true,
+    //     format: 'dd-mm-yyyy',
+    //     todayHighlight: true
+    // });
+    </script>
+    <script>
+    $("#form_biaya_operasional").submit(function(e) {
+        $("#error_biaya").hide();
+        e.preventDefault(); // avoid to execute the actual submit of the form.
+        var form = $(this);
+        // var biaya = $("select#biaya").val();
+        // var biaya = $('select[name="biaya"]').val();
+        // if (biaya == "") {
+        //     $("#error_biaya").show().text("Kode tidak boleh kosong..");
+        //     $("select#biaya").focus();
+        //     return false;
+        // }
+        var actionUrl = form.attr('action');
+        $.ajax({
+            type: "POST",
+            url: actionUrl,
+            data: form.serialize(), // serializes the form's elements.
+            dataType: "json",
+            success: function(data) {
+                if (data.status == 'success') {
+                    kkMessgae.success(data.data);
+                    window.location.reload();
+                } else {
+                    kkMessgae.error(data.data);
+                }
+            }
+        });
+    });
+    </script>
+    <script>
+    $('#modal_biaya_operasional').on('show.bs.modal', function(event) {
+        $("#error_biaya").hide();
+        if (event.relatedTarget != null) {
+            document.getElementById("form_biaya_operasional").reset();
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            var recipient = button.data('idoperasional')
+            // console.log(recipient);
+            $("#id_biaya_operasional").val(recipient);
+            var modal = $(this)
+            modal.find('#id_biaya_operasional').val(recipient)
+            if (recipient) {
+                $.ajax({
+                    url: '<?=base_url(); ?>operasional/get_rows/' + recipient,
+                    beforeSend: function() {
+                        // $("#content").html('<img src="ajax-icon-from-www.ajaxload.info">');
+                    },
+                    success: function(html) {
+                        $("#content").html(html);
+                    }
+                });
+                // $('#tabeloperasional').footable({
+                //     // "useParentWidth": true,
+                //     "columns": $.get('<?=base_url(); ?>operasional/get_col'),
+                //     "rows": $.get('<?=base_url(); ?>operasional/get_rows/' + recipient)
+                // });
+
+                // $.get("<?=base_url(); ?>/operasional/get_biaya_operasional/" + recipient, function(data, status) {
+                // var json_parse = JSON.parse(data);
+                document.getElementById("form_biaya_operasional").reset();
+                // modal.reset();
+                // modal.find('#jenis_biaya').val(json_parse.jenis_biaya)
+                // modal.find('#biaya').val(json_parse.biaya != 0 ? json_parse.biaya.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".") : '')
+                // modal.find('#biaya_konsumsi').val(json_parse.biaya_konsumsi != 0 ? json_parse.biaya_konsumsi.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".") : '')
+                // modal.find('#biaya_kapal').val(json_parse.biaya_kapal != 0 ? json_parse.biaya_kapal.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".") : '')
+                // modal.find('#biaya_dozer').val(json_parse.biaya_dozer != 0 ? json_parse.biaya_dozer.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".") : '')
+                // modal.find('#biaya_antar').val(json_parse.biaya_speedboat_antar != 0 ? json_parse.biaya_speedboat_antar.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".") : '')
+                // modal.find('#biaya_jemput').val(json_parse.biaya_speedboat_jemput != 0 ? json_parse.biaya_speedboat_jemput.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".") : '')
+                // console.log(json_parse.biaya_honor)
+                // console.log(data.id);
+                //     modal.find('.idrkbm').val(recipient)
+                //     modal.find('.norkbm').val(data.trim())
+                // });
+            }
+        }
     })
     </script>
 
@@ -1344,7 +1440,6 @@ $red = json_encode($dull);
             }
         });
     });
-
     $(document).on('click', '.menghapuspermohonan', function() {
         var idpermohonan = $(this).attr("id");
         const swalWithBootstrapButtons = Swal.mixin({

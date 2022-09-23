@@ -580,52 +580,65 @@ class Laporan extends Admin_controller
     {
         $this->render_view('laporan/laporan_biaya_operasional');
     }
+
+    public function kas()
+    {
+        $this->render_view('laporan/kas');
+    }
+
+    public function bank()
+    {
+        $this->render_view('laporan/bank');
+    }
+
     public function load_biaya_operasional()
     {
-        $jenis      = urldecode($this->input->post('jenis', true)) ?? null;
-        $bulan      = urldecode($this->input->post('bulan', true)) ?? null;
-        $tahun      = urldecode($this->input->post('tahun', true)) ?? null;
-        $perusahaan = urldecode($this->input->post('perusahaan', true)) ?? null;
+        $jenis = urldecode($this->input->post('jenis', true)) ?? null;
+        $bulan = urldecode($this->input->post('bulan', true)) ?? null;
+        $tahun = urldecode($this->input->post('tahun', true)) ?? null;
+        // $perusahaan = urldecode($this->input->post('perusahaan', true)) ?? null;
         if (!empty($bulan)) {
             $this->db->where('MONTH(created_at)', $bulan);
         }
         if (!empty($tahun)) {
             $this->db->where('YEAR(created_at)', $tahun);
         }
-        if (!empty($jenis)) {
-            if ($jenis == 1) {
-                $this->db->where('biaya_operasional != ', 0);
-            }
-            if ($jenis == 2) {
-                $this->db->where('biaya_honor != ', 0);
-            }
-            if ($jenis == 3) {
-                $this->db->where('biaya_konsumsi != ', 0);
-            }
-            if ($jenis == 4) {
-                $this->db->where('biaya_kapal != ', 0);
-            }
-            if ($jenis == 5) {
-                $this->db->where('biaya_dozer != ', 0);
-            }
-            if ($jenis == 6) {
-                $this->db->where('biaya_speedboat_antar != ', 0);
-            }
-            if ($jenis == 7) {
-                $this->db->where('biaya_speedboat_jemput != ', 0);
-            }
-        }
-        if (!empty($perusahaan)) {
-            $this->db->where('perusahaan', $perusahaan);
-            $get_perusahaan_data = $this->db->get('operasional')->result();
-            foreach ($get_perusahaan_data as $gpd) {
-                $gpd_list[] = $gpd->id;
-            }
-            $this->db->where_in('no_operasional', $gpd_list);
-        }
+        // if (!empty($jenis)) {
+        // if ($jenis == 1) {
+        //     $this->db->where('biaya_operasional != ', 0);
+        // }
+        // if ($jenis == 2) {
+        //     $this->db->where('biaya_honor != ', 0);
+        // }
+        // if ($jenis == 3) {
+        //     $this->db->where('biaya_konsumsi != ', 0);
+        // }
+        // if ($jenis == 4) {
+        //     $this->db->where('biaya_kapal != ', 0);
+        // }
+        // if ($jenis == 5) {
+        //     $this->db->where('biaya_dozer != ', 0);
+        // }
+        // if ($jenis == 6) {
+        //     $this->db->where('biaya_speedboat_antar != ', 0);
+        // }
+        // if ($jenis == 7) {
+        //     $this->db->where('biaya_speedboat_jemput != ', 0);
+        // }
+        // }
+        // if (!empty($perusahaan)) {
+        //     $this->db->where('perusahaan', $perusahaan);
+        //     $get_perusahaan_data = $this->db->get('operasional')->result();
+        //     foreach ($get_perusahaan_data as $gpd) {
+        //         $gpd_list[] = $gpd->id;
+        //     }
+        //     $this->db->where_in('no_operasional', $gpd_list);
+        // }
         $get_biaya_operasional = $this->db->get('biaya_operasional')->result();
         $count_all_results     = count($get_biaya_operasional);
-        $nomor_ke              = 0;
+        var_dump($get_biaya_operasional);
+        exit;
+        $nomor_ke = 0;
         if ($get_biaya_operasional) {
             foreach ($get_biaya_operasional as $gogo) {
                 $this->db->where('id', $gogo->no_operasional);
@@ -659,20 +672,20 @@ class Laporan extends Admin_controller
 // var_dump(ltrim($no_rkbm[3], '0'));
                 $no_rkbm = ltrim($no_rkbm[3], '0');
 
-                $ngaray['no_rkbm']                = $no_rkbm;
-                $ngaray['pbm']                    = $get_perusahaan_data->nama;
-                $ngaray['terminal']               = $get_terminal->nama;
-                $ngaray['perusahaan']             = $get_barang_asal_data->nama;
-                $ngaray['kapal']                  = $get_kapal->nama;
-                $ngaray['biaya_operasional']      = number_format($gogo->biaya_operasional, 0, ',', '.');
-                $ngaray['biaya_honor']            = number_format($gogo->biaya_honor, 0, ',', '.');
-                $ngaray['biaya_konsumsi']         = number_format($gogo->biaya_konsumsi, 0, ',', '.');
-                $ngaray['biaya_kapal']            = number_format($gogo->biaya_kapal, 0, ',', '.');
-                $ngaray['biaya_dozer']            = number_format($gogo->biaya_dozer, 0, ',', '.');
-                $ngaray['biaya_speedboat_antar']  = number_format($gogo->biaya_speedboat_antar, 0, ',', '.');
-                $ngaray['biaya_speedboat_jemput'] = number_format($gogo->biaya_speedboat_jemput, 0, ',', '.');
-                $ngaray['admin']                  = $get_users->firstname . ' ' . $get_users->lastname;
-                $bum[]                            = $ngaray;
+                $ngaray['no_rkbm']           = $no_rkbm;
+                $ngaray['pbm']               = $get_perusahaan_data->nama;
+                $ngaray['terminal']          = $get_terminal->nama;
+                $ngaray['perusahaan']        = $get_barang_asal_data->nama;
+                $ngaray['kapal']             = $get_kapal->nama;
+                $ngaray['biaya_operasional'] = number_format($gogo->biaya, 0, ',', '.');
+                // $ngaray['biaya_honor']            = number_format($gogo->biaya_honor, 0, ',', '.');
+                // $ngaray['biaya_konsumsi']         = number_format($gogo->biaya_konsumsi, 0, ',', '.');
+                // $ngaray['biaya_kapal']            = number_format($gogo->biaya_kapal, 0, ',', '.');
+                // $ngaray['biaya_dozer']            = number_format($gogo->biaya_dozer, 0, ',', '.');
+                // $ngaray['biaya_speedboat_antar']  = number_format($gogo->biaya_speedboat_antar, 0, ',', '.');
+                // $ngaray['biaya_speedboat_jemput'] = number_format($gogo->biaya_speedboat_jemput, 0, ',', '.');
+                $ngaray['admin'] = $get_users->firstname . ' ' . $get_users->lastname;
+                $bum[]           = $ngaray;
             }
         } else {
             $count_all_results = 0;
@@ -827,8 +840,8 @@ class Laporan extends Admin_controller
         $start      = urldecode($this->input->post('start', true)) ?? null;
         $jenis      = urldecode($this->input->post('jenis', true)) ?? null;
         $perusahaan = urldecode($this->input->post('perusahaan', true)) ?? null;
-        $bulan = urldecode($this->input->post('bulan', true)) ?? null;
-        $tahun = urldecode($this->input->post('tahun', true)) ?? null;
+        $bulan      = urldecode($this->input->post('bulan', true)) ?? null;
+        $tahun      = urldecode($this->input->post('tahun', true)) ?? null;
         // $bulan      = urldecode($this->input->post('bulan', true)) == 'undefined' || !is_numeric(urldecode($this->input->post('bulan', true))) ? idate("m") : urldecode($this->input->post('bulan', true));
         // $tahun      = urldecode($this->input->post('tahun', true)) == 'undefined' || !is_numeric(urldecode($this->input->post('tahun', true))) ? idate("Y") : urldecode($this->input->post('tahun', true));
         // $jenis      = $jenis == 'undefined' || !is_numeric($jenis) ? null : $jenis;
@@ -863,10 +876,10 @@ class Laporan extends Admin_controller
         $this->db->limit($limit, $start);
         $get_operasional   = $this->db->get('operasional')->result();
         $count_all_results = count($get_operasional_s);
-        $nomor_ke          = 0;  
-              $bruto          = 0;
-              $pphnya          = 0;
-              $neto          = 0;
+        $nomor_ke          = 0;
+        $bruto             = 0;
+        $pphnya            = 0;
+        $neto              = 0;
         $bum               = array();
         if ($get_operasional) {
             foreach ($get_operasional as $gogo) {
@@ -927,14 +940,14 @@ class Laporan extends Admin_controller
                 // var_dump($total_pph);
                 if ($total_pph > 0) {
                     $jumlahnyas = ((int)$total_pph * (int)$jumlahnya) / 100;
-                    $bruto  = $jumlahnya;
-                    $pphnya  = $jumlahnyas;
-                    $neto  = $bruto - $jumlahnyas;
+                    $bruto      = $jumlahnya;
+                    $pphnya     = $jumlahnyas;
+                    $neto       = $bruto - $jumlahnyas;
                 }
                 // $ngaray['biaya'] = $jumlahnya;
                 $ngaray['bruto'] = number_format($bruto, 0, ',', '.');
-                $ngaray['pph'] = number_format($pphnya, 0, ',', '.');
-                $ngaray['neto'] = number_format($neto, 0, ',', '.');
+                $ngaray['pph']   = number_format($pphnya, 0, ',', '.');
+                $ngaray['neto']  = number_format($neto, 0, ',', '.');
                 $bum[]           = $ngaray;
             }
         } else {
@@ -987,7 +1000,7 @@ class Laporan extends Admin_controller
 
         $get_operasional = $this->db->get('operasional')->result();
         $nomor_ke        = 0;
-        
+
         if ($get_operasional) {
             foreach ($get_operasional as $gogo) {
                 $this->db->where('id', $gogo->perusahaan);
@@ -1047,14 +1060,14 @@ class Laporan extends Admin_controller
                 // var_dump($total_pph);
                 if ($total_pph > 0) {
                     $jumlahnyas = ((int)$total_pph * (int)$jumlahnya) / 100;
-                    $bruto  = $jumlahnya;
-                    $pphnya  = $jumlahnyas;
-                    $neto  = $bruto - $jumlahnyas;
+                    $bruto      = $jumlahnya;
+                    $pphnya     = $jumlahnyas;
+                    $neto       = $bruto - $jumlahnyas;
                 }
                 // $ngaray['biaya'] = $jumlahnya;
                 $ngaray['bruto'] = $bruto;
-                $ngaray['pph'] = $pphnya;
-                $ngaray['neto'] = $neto;
+                $ngaray['pph']   = $pphnya;
+                $ngaray['neto']  = $neto;
                 $bum[]           = $ngaray;
             }
 

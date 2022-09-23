@@ -202,7 +202,7 @@ if ($status == 4) {
                                     <tr>
                                         <th>Nomor </th>
                                         <td style="padding-left: 10px"> : </td>
-                                        <td style="padding-left: 10px">0<?=$no_surat; ?>/<?=$ketsur; ?><?=$perke; ?>/<?=$perusahaan->inisial; ?>/SMD/<?=romawi(date("m")); ?>/<?=date('Y'); ?></span></td>
+                                        <td style="padding-left: 10px">0<?=$no_surat; ?>/<?=$ketsur; ?><?=$perke; ?>/<?=$perusahaan->inisial; ?>/SMD/<?=romawi(date('m', strtotime($mulai))); ?>/<?=date('Y', strtotime($mulai)); ?></span></td>
                                     </tr>
                                     <tr>
                                         <th>Lampiran</th>
