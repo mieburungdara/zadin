@@ -20,6 +20,7 @@
                         <li class="sidebar-item"> <a href="<?php echo base_url('laporan/terminal'); ?>" class="sidebar-link"><i class="fa-duotone fa-garage mr-2"></i><span class="hide-menu"> Terminal</span></a></li>
                         <li class="sidebar-item"> <a href="<?php echo base_url('laporan/operasional'); ?>" class="sidebar-link"><i class="fa-duotone fa-garage mr-2"></i><span class="hide-menu"> Operasional</span></a></li>
                         <li class="sidebar-item"> <a href="<?php echo base_url('laporan/invoice'); ?>" class="sidebar-link"><i class="fa-duotone fa-garage mr-2"></i><span class="hide-menu"> Invoice</span></a></li>
+                        <li class="sidebar-item"> <a href="<?php echo base_url('laporan/transaksi'); ?>" class="sidebar-link"><i class="fa-duotone fa-garage mr-2"></i><span class="hide-menu"> Transaksi</span></a></li>
                     </ul>
                 </li>
                 <li class="sidebar-item mr-1"> <a class="sidebar-link waves-effect waves-dark sidebar-link" href="<?php echo base_url('operasional'); ?>" aria-expanded="false"><i class="fa-duotone fa-scroll-old mr-2"></i><span class="hide-menu"> Operasional</span></a>

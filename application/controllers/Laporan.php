@@ -21,6 +21,10 @@ class Laporan extends Admin_controller
     {
         $this->render_view('laporan/laporan_perusahaan');
     }
+    public function transaksi()
+    {
+        $this->render_view('laporan/laporan_transaksi');
+    }
     public function terminal()
     {
         $this->render_view('laporan/laporan_terminal');
