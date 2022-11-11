@@ -23,7 +23,44 @@ class Laporan extends Admin_controller
     }
     public function transaksi()
     {
-        $this->render_view('laporan/laporan_transaksi');
+        // $post_bulan = '09';
+        $data['post_bulan'] = (int)urldecode($this->input->post('post_bulan', true)) ?: date('m');
+        $data['post_tahun'] = (int)urldecode($this->input->post('post_tahun', true)) ?: date('Y');
+
+        if ($this->input->post('filter', true)) {
+            $this->render_view('laporan/laporan_transaksi', $data);
+        } elseif ($this->input->post('cetak', true)) {
+            $this->load->view('cetak/laporan_transaksi', $data);
+        } else {
+            $this->render_view('laporan/laporan_transaksi', $data);
+        }
+
+    }
+    public function neraca()
+    {
+        $data['post_bulan'] = (int)urldecode($this->input->post('post_bulan', true)) ?: date('m');
+        $data['post_tahun'] = (int)urldecode($this->input->post('post_tahun', true)) ?: date('Y');
+
+        if ($this->input->post('filter', true)) {
+            $this->render_view('laporan/laporan_neraca', $data);
+        } elseif ($this->input->post('cetak', true)) {
+            $this->load->view('cetak/laporan_neraca', $data);
+        } else {
+            $this->render_view('laporan/laporan_neraca', $data);
+        }
+    }
+    public function labarugi()
+    {
+        $data['post_bulan'] = (int)urldecode($this->input->post('post_bulan', true)) ?: date('m');
+        $data['post_tahun'] = (int)urldecode($this->input->post('post_tahun', true)) ?: date('Y');
+
+        if ($this->input->post('filter', true)) {
+            $this->render_view('laporan/laporan_labarugi', $data);
+        } elseif ($this->input->post('cetak', true)) {
+            $this->load->view('cetak/laporan_labarugi', $data);
+        } else {
+            $this->render_view('laporan/laporan_labarugi', $data);
+        }
     }
     public function terminal()
     {

@@ -369,12 +369,12 @@ class Transaksi extends Admin_controller
         // }
         // $this->db->or_where_in('akun_kode', $sut);
         // $this->db->where('kas_group', null);
-        $this->db->where('akun_kode', 2);
+        $this->db->where('akun_kode', 101);
         $fre = $this->db->get('transaksi')->result();
         // var_dump($fre);
         $count_all_data = count($fre);
 
-        $this->db->where('akun_kode', 2);
+        $this->db->where('akun_kode', 101);
         $start  = urldecode($this->input->post('start', true));
         $length = urldecode($this->input->post('length', true));
         // $this->db->where('kas_group', null);
@@ -558,7 +558,7 @@ class Transaksi extends Admin_controller
             $data = array(
                 // 'no_kas'          => ,
                  'tanggal'    => date('Y-m-d h:i:s', strtotime($input_tanggal)),
-                'akun_kode'  => 2,
+                'akun_kode'  => 101,
                 'buku'       => $dana,
                 'keterangan' => $input_keterangan,
                 'dk'         => $jenis_transaksi,
@@ -708,6 +708,7 @@ class Transaksi extends Admin_controller
                 foreach ($transaksi as $tran) {
                     $id_transaksi = $tran->id;
                     $akun_kode    = $tran->akun_kode;
+                    $buku         = $tran->buku;
                     $tanggal      = getDate(strtotime($tran->tanggal))['mday'];
                     $bulan        = getDate(strtotime($tran->tanggal))['mon'];
                     $tahun        = getDate(strtotime($tran->tanggal))['year'];
@@ -720,6 +721,7 @@ class Transaksi extends Admin_controller
                         unset($data);
                         $data = array(
                             'akun_kode' => $akun_kode,
+                            'buku'      => $buku,
                             'tanggal'   => $tanggal,
                             'bulan'     => $bulan,
                             'tahun'     => $tahun,
@@ -733,6 +735,7 @@ class Transaksi extends Admin_controller
                         $data = array(
                             'id_transaksi' => $id_transaksi,
                             'akun_kode'    => $akun_kode,
+                            'buku'         => $buku,
                             'tanggal'      => $tanggal,
                             'bulan'        => $bulan,
                             'tahun'        => $tahun,
@@ -744,22 +747,241 @@ class Transaksi extends Admin_controller
                 }
             }
         }
+    }
 
+    public function fix_laporan_transaksi_id()
+    {
+        $this->db->order_by('bulan ASC', 'tahun ASC');
+        // $this->db->order_by('bulan', 'asc');
+        // $this->db->order_by('tahun', 'asc');
+        $laporan_transaksi = $this->db->get('laporan_transaksi')->result();
+        pre($laporan_transaksi);
+        $i = 1;
+        // $i = count($laporan_transaksi);
+        foreach ($laporan_transaksi as $lt) {
+            $this->db->set('id', $i++);
+            $this->db->where('id', $lt->id);
+            // $this->db->where('id_transaksi', $lt->id);
+            $this->db->update('laporan_transaksi');
+        }
+    }
 
+    public function hitung_saldo_awal()
+    {
+        // $this->db->order_by('tahun', 'asc');
+        // $this->db->order_by('bulan', 'asc');
+        $this->db->where_in('akun_kode', array(22, 21));
+        $laporan_transaksi = $this->db->get('laporan_transaksi')->result();
+        // pre($laporan_transaksi);
+        if (empty($laporan_transaksi)) {
+            $this->db->where_in('akun_kode', array(22, 21));
+            $saldo_awal = $this->db->get('transaksi')->result();
+            // pre($saldo_awal);
+            foreach ($saldo_awal as $sa) {
+                $id_transaksi = $sa->id;
+                $akun_kode    = $sa->akun_kode;
+                $buku         = $sa->buku;
+                $tanggal      = getDate(strtotime($sa->tanggal))['mday'];
+                $bulan        = getDate(strtotime($sa->tanggal))['mon'];
+                $tahun        = getDate(strtotime($sa->tanggal))['year'];
+                $dk           = $sa->dk;
+                $saldo        = $sa->terbayar;
+                $data         = array(
+                    'id_transaksi' => $id_transaksi,
+                    'akun_kode'    => $akun_kode,
+                    'buku'         => $buku,
+                    'tanggal'      => $tanggal,
+                    'bulan'        => $bulan,
+                    'tahun'        => $tahun,
+                    'dk'           => $dk,
+                    'saldo'        => $saldo,
+                );
+                $this->db->insert('laporan_transaksi', $data);
+            }
+        } else {
+            echo 'ada';
+        }
 
+        // $this->db->where('month(tanggal)', date('m'));
+        // $this->db->where('year(tanggal)', date('Y'));
+        // $this->db->where('akun_kode', 25);
+        // $result1 = $this->db->get('transaksi')->row();
+        // echo $this->db->last_query();
 
+        // pre($result1);
+        // if(empty($result)){
+        //     $this->db->where('akun_kode', 23);
+        //     $result2 = $this->db->get('transaksi')->row();
+        //     pre($result2);
+        //     if(empty($result2)){
+        //         $this->db->where('akun_kode', 21);
+        //         $result3 = $this->db->get('transaksi')->row();
+        //         pre($result3);
+        //         if(empty($result3)){
+        //             echo 'belum memasukkan saldo awal, mohon masukkan terlebih dahulu';
+        //         }else{
+        //             $this->db->set('akun_kode', 23);
+        //             $this->db->set
 
+        //         }
+        //     }
+        // }
+        // echo date('Y-m');
+        // exit();
+    }
+    public function hitung_saldo_tiap_akhir_bulan()
+    {
+        $this->db->group_by('bulan');
+        $this->db->group_by('tahun');
+        $laporan_transaksi = $this->db->get('laporan_transaksi')->result();
+        // pre($laporan_transaksi);
+        if (empty($laporan_transaksi)) {
+        } else {
+            foreach ($laporan_transaksi as $lt) {
+                $bulan = $lt->bulan;
+                $tahun = $lt->tahun;
+                $this->db->where('bulan', $bulan);
+                $this->db->where('tahun', $tahun);
+                $result = $this->db->get('laporan_transaksi')->result();
+                // pre($result);
+                $saldo_kas  = 0;
+                $saldo_bank = 0;
+                foreach ($result as $res) {
+                    if ($res->buku == 1) {
+                        // pre($res);
+                        if ($res->dk == 1) {
+                            $saldo_kas += $res->saldo;
+                        }
+                        if ($res->dk == 2) {
+                            $saldo_kas -= $res->saldo;
+                        }
+                    }
+                    if ($res->buku == 2) {
+                        // pre($res);
+                        if ($res->dk == 1) {
+                            $saldo_bank += $res->saldo;
+                        }
+                        if ($res->dk == 2) {
+                            $saldo_bank -= $res->saldo;
+                        }
+                    }
+                }
 
+                $this->db->where('bulan', $bulan);
+                $this->db->where('tahun', $tahun);
+                $this->db->where('akun_kode', 23);
+                $result23 = $this->db->get('laporan_transaksi')->row();
+                if ($result23) {
+                    // pre($result23);
+                    $this->db->set('saldo', $saldo_kas);
+                    $this->db->where('id', $result23->id);
+                    $this->db->update('laporan_transaksi');
+                } else {
+                    $this->db->set('bulan', $bulan);
+                    $this->db->set('tahun', $tahun);
+                    $this->db->set('buku', 1);
+                    $this->db->set('akun_kode', 23);
+                    $this->db->set('saldo', $saldo_kas);
+                    $this->db->insert('laporan_transaksi');
+                }
 
+                $this->db->where('bulan', $bulan);
+                $this->db->where('tahun', $tahun);
+                $this->db->where('akun_kode', 24);
+                $result24 = $this->db->get('laporan_transaksi')->row();
+                if ($result24) {
+                    pre($result24);
+                    $this->db->set('saldo', $saldo_bank);
+                    $this->db->where('id', $result24->id);
+                    $this->db->update('laporan_transaksi');
+                } else {
+                    $this->db->set('bulan', $bulan);
+                    $this->db->set('tahun', $tahun);
+                    $this->db->set('buku', 2);
+                    $this->db->set('akun_kode', 24);
+                    $this->db->set('saldo', $saldo_bank);
+                    $this->db->insert('laporan_transaksi');
+                }
+                // pre($saldo_kas);
+                echo '<br>';
+                // pre($saldo_bank);
+                echo '==';
+                echo '<br>';
+            }
 
+        }
+    }
+    public function total_invoice_perbulan()
+    {
+        // $this->db->select('*, MONTH(tanggal) as bulan');
+        // $this->db->select('tanggal, akun_kode, buku,dk');
+        $this->db->where('akun_kode', 101);
+        $this->db->order_by('MONTH(tanggal)', 'asc');
+        $this->db->group_by('MONTH(tanggal)');
+        $result1 = $this->db->get('transaksi')->result();
+        // pre($result1);
+        foreach ($result1 as $row1) {
+            $tanggal = getDate(strtotime($row1->tanggal))['mday'];
+            $bulan   = getDate(strtotime($row1->tanggal))['mon'];
+            $tahun   = getDate(strtotime($row1->tanggal))['year'];
+        }
+        $this->load->library('table');
 
+        $this->table->set_heading('Name', 'Color', 'Size');
+        echo '<style>
+    body{
+        width: 21cm;
+        height: 29.7cm;
+        margin-left: auto;
+        margin-right: auto;
+        /*margin: 30mm 45mm 30mm 45mm;
+         change the margins as you want them to be. */
+   }
+</style>';
+        $this->table->add_row('Fred', 'Blue', 'Small');
+        $this->table->add_row('Mary', 'Red', 'Large');
+        $this->table->add_row('John', 'Green', 'Medium');
+        $this->table->set_caption('Colors');
+        $template = array(
+            'table_open'         => '<table width="100%" border="1" cellpadding="4" cellspacing="0">',
 
+            'thead_open'         => '<thead bgcolor="#0bb31e">',
+            'thead_close'        => '</thead>',
 
+            'heading_row_start'  => '<tr>',
+            'heading_row_end'    => '</tr>',
+            'heading_cell_start' => '<th>',
+            'heading_cell_end'   => '</th>',
 
+            'tbody_open'         => '<tbody>',
+            'tbody_close'        => '</tbody>',
 
+            'row_start'          => '<tr>',
+            'row_end'            => '</tr>',
+            'cell_start'         => '<td>',
+            'cell_end'           => '</td>',
 
-        
+            'row_alt_start'      => '<tr>',
+            'row_alt_end'        => '</tr>',
+            'cell_alt_start'     => '<td>',
+            'cell_alt_end'       => '</td>',
 
+            'table_close'        => '</table>',
+        );
+
+        $this->table->set_template($template);
+        echo $this->table->generate();
+
+    }
+
+    public function hitung()
+    {
+        // $this->hitung_transaksi();
+        // $this->hitung_saldo_awal();
+        // $this->hitung_saldo_tiap_akhir_bulan();
+        // sleep(1);
+        // $this->fix_laporan_transaksi_id();
+        $this->total_invoice_perbulan();
     }
 }
 

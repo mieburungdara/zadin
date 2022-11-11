@@ -1,11 +1,11 @@
-<footer class="footer text-center">
+<footer class="footer text-center noprint">
     Developed by <a class="" href="https://Yuvenil.my.id">Yuvenil.my.id</a>
 </footer>
 </div>
 </div>
 <!-- ============================================================== -->
 
-<aside class="customizer">
+<aside class="customizer noprint">
     <span class="service-panel-toggle"><i class="fa fa-spin fa-cog"></i></span>
     <div class="customizer-body">
         <ul class="nav customizer-tab" role="tablist">

@@ -1,137 +1,84 @@
 <?php defined('BASEPATH') or exit('No direct script access allowed');
-
-// $post_bulan = '09';
-// $post_bulan = urldecode($this->input->post('post_bulan', true)) ?: date('m');
-// $post_tahun = urldecode($this->input->post('post_tahun', true)) ?: date('Y');
-
-// $nomor_kas = $trse->no_kas;
-$this->db->where('kas', 1);
-$result = $this->db->get('akun_kode')->result();
-foreach ($result as $res) {
-
-    $list_akun_dihitung_nomor_kasnya[] = $res->id;
-    // echo '++++++++++++++++++++++';
-
-    # code...
-}
-if ($post_tahun) {
-    $this->db->where('YEAR(tanggal)', $post_tahun);
-}
-// $this->db->order_by('MONTH(tanggal) asc, YEAR(tanggal) asc');
-$this->db->where_in('akun_kode', $list_akun_dihitung_nomor_kasnya);
-$this->db->order_by('tanggal', 'asc');
-$fed    = $this->db->get('transaksi')->result();
-$nobank = 1;
-$nokas  = 1;
-foreach ($fed as $fid) {
-    // pre($fid);
-    if ($fid->buku == 1) {
-        $this->db->set('no_kas', $nokas++);
-    }
-    if ($fid->buku == 2) {
-        $this->db->set('no_kas', $nobank++);
-    }
-    $this->db->where('id', $fid->id);
-    $this->db->update('transaksi');
-    // if($fid->buku == $)
-    # code...
-}
-
 ?>
 
+<link rel="stylesheet" href="<?php echo base_url('assets/css/style.css'); ?>">
+<style>
+body {
+    font-family: sans-serif !important;
+    color: #000000 !important;
+    background: #ffffff !important;
+}
 
+/* .table-bordered td {
+    border: 1px solid #212529;
+}
+
+.table thead th {
+    border-bottom: 2px solid #212529;
+}
+
+.table-bordered th {
+    border: 2px solid #212529;
+} */
+
+/* table, */
+/* thead, */
+th {
+    border: 2px solid #212529 !important;
+}
+
+td {
+    border: 1px solid #212529 !important;
+}
+
+.kuning {
+    background-color: yellow !important;
+}
+
+tee {
+    background-color: yellow !important;
+}
+
+@media print {
+    th {
+        border: 2px solid #212529 !important;
+    }
+
+    td {
+        border: 1px solid #212529 !important;
+    }
+
+    .table-bordered th,
+    .table-bordered td {
+        font-family: sans-serif !important;
+        border: 1px solid #212529 !important;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: sans-serif !important;
+    }
+
+    tee {
+        background-color: yellow !important;
+    }
+
+
+}
+</style>
 <div class="row">
     <!-- end col -->
 
     <div class="px-4 mt-3 col-12">
         <div class="card pb-5 px-3 ">
-            <div class="card-body">
 
-                <h4 class="card-title mb-3 noprint">BUKU BESAR Transaksi</h4>
-
-                <p>
-                    <?php
-
-$this->db->order_by('tanggal', 'asc');
-$transaksi_semua = $this->db->get('transaksi')->result();
-foreach ($transaksi_semua as $trse) {
-    $gtl[] = indonesian_date($trse->tanggal, 'Y');
-}
-$gtl = array_unique($gtl);
-// $tagal = array_count_values($tagal);
-// var_dump($gtl);
-// foreach ($tagal as $tugal => $tugil) {
-// echo '<br>' . $tugal . '  - ' . $tugil;
-// }
-// echo '<br>'; ?>
-                </p>
-                <form action="<?=base_url(); ?>laporan/transaksi" method="post">
-                    <div class="row mb-3  noprint">
-                        <!-- <div class="col-12"> -->
-                        <div class="col-2">
-                            <label class="">Bulan</label>
-                            <div class="">
-                                <select name="post_bulan" class="form-control form-control-line">
-                                    <?php
-// date_default_timezone_set('Asia/Makassar');
-// setlocale(LC_ALL, "id_ID");
-// print '<option value="" disabled selected>Pilih Bulan</option>';
-// echo $post_bulan;
+            <?php
 $bolan = $post_bulan ?: trim(date('m', time()));
-for ($i = 1; $i <= 12; $i++) {
-    if ($bolan == $i) {
-        $selected = 'selected';
-    } else {
-        $selected = '';
-    }
-    print '<option ' . $selected . ' value="' . $i . '">' . indonesian_date("1-$i-10", "F") . '</option>';
-    // print '<option value="' . $i . '">' . date( 'F', strtotime( "$i/12/10" ) ) . '</option>';
-}
 ?>
-                                    <option <?=$bolan == 13 ? 'selected' : ''; ?> value="13">Januari Februari Maret</option>
-                                    <option <?=$bolan == 14 ? 'selected' : ''; ?> value="14">April Mei Juni</option>
-                                    <option <?=$bolan == 15 ? 'selected' : ''; ?> value="15">Juli Agustus September</option>
-                                    <option <?=$bolan == 16 ? 'selected' : ''; ?> value="16">Oktober November Desember</option>
-                                    <option <?=$bolan == 17 ? 'selected' : ''; ?> value="17">Semua</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-2">
-                            <label class="">Tahun</label>
-                            <div class="">
-                                <select name="post_tahun" class="form-control form-control-line">
-                                    <?php
-// $this->db->where('tanggal')
-$taon = $post_tahun ?: trim(date('Y', time()));
-// print '<option value="" disabled selected>Pilih Tahun</option>';
-$this->db->group_by("YEAR(tanggal)");
-// $this->db->limit('',20);
-$tahun = $this->db->get('transaksi')->result();
-// pre($tahun);
-foreach ($tahun as $tah) {
-    if ($taon == date('Y', strtotime("$tah->tanggal"))) {
-        $selected = 'selected';
-    } else {
-        $selected = '';
-    }
-    // echo '<option value="' . $tah->tanggal . '">' . $tah->tanggal . '</option>';
-    print '<option ' . $selected . ' value="' . date('Y', strtotime("$tah->tanggal")) . '">' . date('Y', strtotime("$tah->tanggal")) . '</option>';
-}
-; // var_dump($bulan); ?>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-2">
-                            <button type="submit" name="filter" value="1" class="btn mt-4 btn-sm btn-success waves-effect waves-light mr-2">Filter</button>
-                            <button type="submit" name="cetak" value="1" class="btn mt-4 btn-sm btn-success waves-effect waves-light mr-2">Cetak</button>
-                        </div>
-                    </div>
-                </form>
-                <!-- </div> -->
-            </div>
-
-
-
             <h3 class="pt-3 pb-2 text-center">Laporan
                 <!-- <?=$bolan == 13 ? 'Kuartal 1 (Q1) Januari Februari Maret ' . $post_tahun : ''; ?> -->
                 <?=$bolan == 13 ? 'Kuartal 1 (Q1) ' . $post_tahun : ''; ?>
@@ -144,10 +91,10 @@ foreach ($tahun as $tah) {
                 <?=$bolan == 17 ? 'Tahun ' . $post_tahun : ''; ?>
             </h3>
 
-            <div class="row" id="yak">
-                <div class="table-umum col-6">
+            <div class="row">
+                <div class="col-12">
 
-                    <h4 class="pt-3 pb-2 text-center">BUKU KAS</h4>
+                    <h4 class="pt-3 pb-2 text-center"><b style="background-color: yellow;">BUKU KAS</b></h4>
                     <table class="table table-sm mb-0 table-bordered" id="table-umum">
                         <thead>
                             <tr>
@@ -273,18 +220,21 @@ if (!empty($tagal)) {
         }
         // echo $berapanew . ' - ' . $berapaold . '<br>';
 
+        $this->db->where('id', $trse->akun_kode);
+        $getakunkode = $this->db->get('akun_kode')->row();
+
         echo '<td class="text-center">' . $trse->no_kas ?: "0" . '</td>';
-        echo '<td class="text-left">' . $trse->keterangan . '</td>';
+        echo '<td class="text-left"><b>' . $getakunkode->keterangan . '</b> ' . $trse->keterangan . '</td>';
         echo '<td class="text-center">' . $trse->akun_kode . '</td>';
         if ($trse->dk == 1) {
             $kas_saldo_d = $trse->terbayar + $kas_saldo_d;
-            echo '<td class="text-right">' . number_format($trse->terbayar, 0, ',', '.') . '</td>';
+            echo '<td class="text-right"style="color: limegreen;vertical-align:middle;;">' . number_format($trse->terbayar, 0, ',', '.') . '</td>';
             echo '<td class="text-right">0</td>';
             $kas_saldo_all = $trse->terbayar + $kas_saldo_all;
         } else {
             $kas_saldo_k = $trse->terbayar + $kas_saldo_k;
             echo '<td class="text-right">0</td>';
-            echo '<td class="text-right">' . number_format($trse->terbayar, 0, ',', '.') . '</td>';
+            echo '<td class="text-right"style="color: red;vertical-align:middle;;">' . number_format($trse->terbayar, 0, ',', '.') . '</td>';
             $kas_saldo_all = $kas_saldo_all - $trse->terbayar;
         }
         echo '<td class="text-right">' . number_format($kas_saldo_all, 0, ',', '.') . '</td>';
@@ -295,8 +245,8 @@ if (!empty($tagal)) {
                         <tfoot>
                             <tr>
                                 <td colspan="<?=$post_bulan >= 13 && $post_bulan <= 16 || $post_bulan == 17 ? '5' : '4'; ?>" class="text-center font-weight-bold">Jumlah</td>
-                                <td class="text-right font-weight-bold"><?=number_format($kas_saldo_d, 0, ',', '.'); ?></td>
-                                <td class="text-right font-weight-bold"><?=number_format($kas_saldo_k, 0, ',', '.'); ?></td>
+                                <td class="text-right font-weight-bold" style="color: limegreen;vertical-align:middle;;"><?=number_format($kas_saldo_d, 0, ',', '.'); ?></td>
+                                <td class="text-right font-weight-bold" style="color: red;vertical-align:middle;;"><?=number_format($kas_saldo_k, 0, ',', '.'); ?></td>
                                 <td class="text-right font-weight-bold"><?=number_format($kas_saldo_all, 0, ',', '.'); ?></td>
                             </tr>
                         </tfoot>
@@ -321,8 +271,10 @@ if (!empty($tagal)) {
                 </div>
 
 
-                <div class="table-umum col-6" id="bang">
-                    <h4 class="pt-3 pb-2 text-center">BUKU BANK</h4>
+                <div class="col-12" id="bkbang">
+                    <h4 class="pt-3 pb-2 text-center">
+                        <tee>BUKU BANK</tee>
+                    </h4>
                     <table class="table table-sm mb-0 table-bordered" id="table-umum">
                         <thead>
                             <tr>
@@ -447,6 +399,8 @@ if (!empty($tagal)) {
         }
 
         echo '<td class="text-center">' . $trse->no_kas ?: "0" . '</td>';
+        $this->db->where('id', $trse->akun_kode);
+        $getakunkode = $this->db->get('akun_kode')->row();
         if ($trse->akun_kode == 101) {
             $this->db->where('id_transaksi', $trse->id);
             $ren = $this->db->get('operasional')->result();
@@ -462,16 +416,16 @@ if (!empty($tagal)) {
             foreach ($ren as $r) {
                 $tex .= '
             <div class="form-group row align-items-center mb-0">
-                                        <label for="inputEmail3" class="col-2 text-right control-label col-form-label">Inv. ' . $r->id . ' </label>
-                                        <div class="col-md-9 border-left">
+                                        <p class="col-2 text-right control-label col-form-label">Inv. ' . $r->id . ' </p>
+                                        <div class="col-md-10 border-left">
                                         <div class="row text-center justify-content-center">
-                                    <div class="col-6 col-md-4 mt-1">
+                                    <div class="col-4 col-md-4 mt-1">
                                         <h5 class="mb-0 font-weight-light">' . number_format($r->st, 0, ',', '.') . '</h5><small>Bruto</small>
                                     </div>
-                                    <div class="col-6 col-md-4 mt-1">
+                                    <div class="col-4 col-md-4 mt-1">
                                         <h5 class="mb-0 font-weight-light">' . number_format($r->pt, 0, ',', '.') . '</h5><small>PPh23</small>
                                     </div>
-                                    <div class="col-6 col-md-4 mt-1">
+                                    <div class="col-4 col-md-4 mt-1">
                                         <h5 class="mb-0 font-weight-light">' . number_format($r->tt, 0, ',', '.') . '</h5><small>Netto</small>
                                     </div>
                                 </div>
@@ -485,17 +439,17 @@ if (!empty($tagal)) {
             echo '<td class="text-left">' . $tex . '</td>';
 
         } else {
-            echo '<td class="text-left">' . $trse->keterangan . '</td>';
+            echo '<td class="text-left"><b style="font-weight: 600;">' . $getakunkode->keterangan . '</b> ' . $trse->keterangan . '</td>';
         }
         echo '<td class="text-center"  style="vertical-align:middle;">' . $trse->akun_kode . '</td>';
         if ($trse->dk == 1) {
             $bank_saldo_d = $trse->terbayar + $bank_saldo_d;
             echo '<td class="text-right" style="color: limegreen;vertical-align:middle;;">' . number_format($trse->terbayar, 0, ',', '.') . '</td>';
-            echo '<td class="text-right" style="color: red;vertical-align:middle;;">0</td>';
+            echo '<td class="text-right">0</td>';
             $bank_saldo_all = $trse->terbayar + $bank_saldo_all;
         } else {
             $bank_saldo_k = $trse->terbayar + $bank_saldo_k;
-            echo '<td class="text-right" style="color: limegreen;vertical-align:middle;">0</td>';
+            echo '<td class="text-right">0</td>';
             echo '<td class="text-right" style="color: red;vertical-align:middle;;">' . number_format($trse->terbayar, 0, ',', '.') . '</td>';
             $bank_saldo_all = $bank_saldo_all - $trse->terbayar;
         }
@@ -507,8 +461,8 @@ if (!empty($tagal)) {
                         <tfoot>
                             <tr>
                                 <td colspan="<?=$post_bulan >= 13 && $post_bulan <= 16 || $post_bulan == 17 ? '5' : '4'; ?>" class="text-center font-weight-bold">Jumlah</td>
-                                <td class="text-right font-weight-bold"><?=number_format($bank_saldo_d, 0, ',', '.'); ?></td>
-                                <td class="text-right font-weight-bold"><?=number_format($bank_saldo_k, 0, ',', '.'); ?></td>
+                                <td class="text-right font-weight-bold" style="color: limegreen;vertical-align:middle;;"><?=number_format($bank_saldo_d, 0, ',', '.'); ?></td>
+                                <td class="text-right font-weight-bold" style="color: red;vertical-align:middle;;"><?=number_format($bank_saldo_k, 0, ',', '.'); ?></td>
                                 <td class="text-right font-weight-bold"><?=number_format($bank_saldo_all, 0, ',', '.'); ?></td>
                             </tr>
                         </tfoot>
@@ -534,15 +488,8 @@ if (!empty($tagal)) {
 
 
 
-
-
-
-
-
-
-
-                <div class="table-umum col-6" id="pph21">
-                    <h4 class="pt-3 pb-2 text-center">PPH23</h4>
+                <div class="table-umum col-12" id="pph21">
+                    <h4 class="pt-3 pb-2 text-center"><b style="background-color: yellow;">PPH23</b></h4>
                     <table class="table table-sm mb-0 table-bordered" id="table-umum">
                         <thead>
                             <tr>
@@ -590,6 +537,7 @@ if ($post_bulan == 17) {
 $this->db->order_by('tanggal', 'asc');
 $this->db->where('buku', 2);
 $this->db->where('akun_kode', 101);
+
 $transaksi_semua = $this->db->get('transaksi')->result();
 foreach ($transaksi_semua as $trse) {
     // pre($trse);
@@ -600,7 +548,7 @@ if (!empty($tagal)) {
 // $tagal = array_unique($tagal);
     $tagal = array_count_values($tagal);
     $nagal = array_count_values($nagal);
-    // pre($nagal);
+    // pre($tagal);
     // var_dump($tagal);
     // foreach ($tagal as $tugal => $tugil) {
     // echo '<br>' . $tugal . '  - ' . $tugil;
@@ -649,8 +597,7 @@ if (!empty($tagal)) {
             echo '<tr>';
 
             if ($post_bulan >= 13 && $post_bulan <= 16 || $post_bulan == 17) {
-                $mulan = trim(indonesian_date($trse->tanggal, 'F'));
-                // pre($nagal);
+                $mulan    = trim(indonesian_date($trse->tanggal, 'F'));
                 $mulannew = $mulan;
                 if (!isset($mulanold)) {$mulanold = '';}
                 if ($mulannew != $mulanold) {
@@ -703,7 +650,7 @@ if (!empty($tagal)) {
             echo '<td class="text-center"  style="vertical-align:middle;"></td>';
             // echo '<td class="text-center"  style="vertical-align:middle;">' . $trse->akun_kode . '</td>';
             $bank_saldo_k = $r->pt + $bank_saldo_k;
-            echo '<td class="text-right" style="color: limegreen;vertical-align:middle;">0</td>';
+            echo '<td class="text-right" style="vertical-align:middle;">0</td>';
             echo '<td class="text-right" style="color: red;vertical-align:middle;;">' . number_format($r->pt, 0, ',', '.') . '</td>';
             $bank_saldo_all = $bank_saldo_all - $r->pt;
 
@@ -717,8 +664,8 @@ if (!empty($tagal)) {
                         <tfoot>
                             <tr>
                                 <td colspan="<?=$post_bulan >= 13 && $post_bulan <= 16 || $post_bulan == 17 ? '5' : '4'; ?>" class="text-center font-weight-bold">Jumlah</td>
-                                <td class="text-right font-weight-bold"><?=number_format($bank_saldo_d, 0, ',', '.'); ?></td>
-                                <td class="text-right font-weight-bold"><?=number_format($bank_saldo_k, 0, ',', '.'); ?></td>
+                                <td class="text-right font-weight-bold" style="color: limegreen;vertical-align:middle;;"><?=number_format($bank_saldo_d, 0, ',', '.'); ?></td>
+                                <td class="text-right font-weight-bold" style="color: red;vertical-align:middle;;"><?=number_format($bank_saldo_k, 0, ',', '.'); ?></td>
                                 <td class="text-right font-weight-bold"><?=number_format($bank_saldo_all, 0, ',', '.'); ?></td>
                             </tr>
                         </tfoot>
@@ -740,18 +687,13 @@ if (!empty($tagal)) {
                     </table>
                 </div>
 
-
-
-
-
-
                 <?php
 $this->db->where('hitung', 1);
 $result1 = $this->db->get('akun_kode')->result();
 if ($result1) {
     foreach ($result1 as $row1) {
-        echo '<div class="col-6">';
-        echo '<h4 class="pt-3 pb-2 text-center"><code>[' . $row1->id . ']</code> ' . $row1->nama . '</h4>';
+        echo '<div class="col-12">';
+        echo '<h4 class="pt-3 pb-2 text-center"><code>[' . $row1->id . ']</code> <b class="kuning">' . $row1->nama . '</b></h4>';
         // print_r($row1);
         echo '<table class="table table-sm mb-0 table-bordered">';
         echo '<thead>';
@@ -887,16 +829,19 @@ echo '
                     // echo '<td>' . indonesian_date($row2->tanggal, 'd') . '</td>';
                 }
 
-                echo '<td>' . $row2->keterangan . '</td>';
+                $this->db->where('id', $row2->akun_kode);
+                $getakunkode = $this->db->get('akun_kode')->row();
+
+                echo '<td><b style="font-weight: 600;">' . $getakunkode->keterangan . '</b> ' . $row2->keterangan . '</td>';
                 if ($row2->dk == 1) {
                     $bank_saldo_d = $row2->terbayar + $bank_saldo_d;
-                    echo '<td class="text-right">' . number_format($row2->terbayar, 0, ',', '.') . '</td>';
+                    echo '<td class="text-right"style="color: limegreen;vertical-align:middle;;">' . number_format($row2->terbayar, 0, ',', '.') . '</td>';
                     echo '<td class="text-right"></td>';
                     $bank_saldo_all = $row2->terbayar + $bank_saldo_all;
                 } else {
                     $bank_saldo_k = $row2->terbayar + $bank_saldo_k;
                     echo '<td class="text-right"></td>';
-                    echo '<td class="text-right">' . number_format($row2->terbayar, 0, ',', '.') . '</td>';
+                    echo '<td class="text-right"style="color: red;vertical-align:middle;;">' . number_format($row2->terbayar, 0, ',', '.') . '</td>';
                     $bank_saldo_all = $bank_saldo_all + $row2->terbayar;
                 }
                 echo '<td class="text-right">' . number_format($bank_saldo_all, 0, ',', '.') . '</td>';
@@ -1176,9 +1121,9 @@ $(document).ready(function($) {
 
 
 
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
-<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
-<link rel="stylesheet" type="text/css" href="<?=base_url(); ?>assets/libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
-<script src="<?=base_url(); ?>assets/libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
-<script src="<?=base_url(); ?>assets/libs/bootstrap-datepicker/dist/locales/bootstrap-datepicker.id.min.js"></script>
+<!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css"> -->
+<!-- <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script> -->
+<!-- <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script> -->
+<!-- <link rel="stylesheet" type="text/css" href="<?=base_url(); ?>assets/libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css"> -->
+<!-- <script src="<?=base_url(); ?>assets/libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+<script src="<?=base_url(); ?>assets/libs/bootstrap-datepicker/dist/locales/bootstrap-datepicker.id.min.js"></script> -->

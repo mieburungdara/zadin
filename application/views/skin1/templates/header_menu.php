@@ -1,4 +1,11 @@
-<header class="topbar">
+<style>
+@media print {
+    .noprint {
+        visibility: hidden;
+    }
+}
+</style>
+<header class="topbar noprint">
     <nav class="navbar top-navbar navbar-expand-lg navbar-dark">
         <div class="navbar-header">
             <!-- This is for the sidebar toggle which is visible on mobile only -->
