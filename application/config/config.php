@@ -24,8 +24,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
 |
  */
 // $config['base_url'] = 'http://192.168.1.17:8080/zadin';
-$config['base_url'] = 'http://localhost/zadin/';
+// $config['base_url'] = 'https://7de1-125-160-114-110.ap.ngrok.io/zadin/';
+// $config['base_url'] = 'http://localhost/zadin/';
 // $config['base_url'] = 'http://192.168.1.999:8080/zadin';
+$config['base_url'] = 'https://yuvenil.my.id/zadin';
 
 /*
 |--------------------------------------------------------------------------

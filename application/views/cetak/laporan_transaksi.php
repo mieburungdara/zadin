@@ -938,7 +938,8 @@ $saldo_akhir_bulan_lalu_bank = 0;
 if (!$adakah_bulan_lalu_bank) {
     $this->db->where('akun_kode', 2);
     $saldo_akhir_bulan_lalu_bank = $this->db->get('transaksi')->row()->nominal;
-    $data                        = array(
+    dd($saldo_akhir_bulan_lalu_bank1);
+    $data = array(
         'tanggal'    => $tanggal_bulan_lalu,
         'akun_kode'  => 25,
         'buku'       => 2,
