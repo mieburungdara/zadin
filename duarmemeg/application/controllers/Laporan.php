@@ -38,8 +38,15 @@ class Laporan extends Admin_controller
     }
     public function neraca()
     {
-        $data['post_bulan'] = (int)urldecode($this->input->post('post_bulan', true)) ?: date('m');
-        $data['post_tahun'] = (int)urldecode($this->input->post('post_tahun', true)) ?: date('Y');
+        // $data['post_bulan'] = (int)urldecode($this->input->post('post_bulan', true)) ?: date('m');
+        // $data['post_tahun'] = (int)urldecode($this->input->post('post_tahun', true)) ?: date('Y');
+$originalDate = explode(' – ', $this->input->post('tanggal_nya', true));
+ $tanggal_awal = $originalDate[0];
+ $tanggal_akhir = $originalDate[1] ?? '';
+$data['post_awal']  = date("Y-m-d", strtotime($tanggal_awal));
+$data['post_akhir'] = date("Y-m-d", strtotime($tanggal_akhir));
+$data['tuanggal'] = $this->input->post('tanggal_nya', true);
+
 
         if ($this->input->post('filter', true)) {
             $this->render_view('laporan/laporan_neraca', $data);

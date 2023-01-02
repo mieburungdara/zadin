@@ -693,6 +693,7 @@ if (!empty($tagal)) {
             // $tex = '';
             $tex = '<h6>Pembayaran ' . $per->inisial . ' </h6>';
             // var_dump($bren);
+            $pph23jumlah = 0;
             foreach ($ren as $r) {
                 $tex .= '
             <div class="form-group row align-items-center mb-0">
@@ -709,14 +710,15 @@ if (!empty($tagal)) {
                 if ($bren-- != 0) {
                     $tex .= '<hr class="m-0">';
                 }
+                $pph23jumlah = $pph23jumlah + $r->pt;
             }
             echo '<td class="text-left">' . $tex . '</td>';
             echo '<td class="text-center"  style="vertical-align:middle;"></td>';
             // echo '<td class="text-center"  style="vertical-align:middle;">' . $trse->akun_kode . '</td>';
-            $bank_saldo_k = $r->pt + $bank_saldo_k;
+            $bank_saldo_k = $pph23jumlah + $bank_saldo_k;
             echo '<td class="text-right" style="color: limegreen;vertical-align:middle;">0</td>';
-            echo '<td class="text-right" style="color: red;vertical-align:middle;;">' . number_format($r->pt, 0, ',', '.') . '</td>';
-            $bank_saldo_all = $bank_saldo_all - $r->pt;
+            echo '<td class="text-right" style="color: red;vertical-align:middle;;">' . number_format($pph23jumlah, 0, ',', '.') . '</td>';
+            $bank_saldo_all = $bank_saldo_all - $pph23jumlah;
 
             echo '<td class="text-right" style="vertical-align:middle;">' . number_format($bank_saldo_all, 0, ',', '.') . '</td>';
             // var_dump($trse);

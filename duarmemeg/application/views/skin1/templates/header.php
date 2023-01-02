@@ -18,6 +18,7 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome-animation@1.1.1/css/font-awesome-animation.min.css">
         <link rel="stylesheet" href="https://sensortower.github.io/daterangepicker/styles/daterangepicker.css">
         <script src="<?php echo base_url(); ?>assets/libs/jquery/dist/jquery.min.js"></script>
+        <script src="<?php echo base_url(); ?>assets/addel/addel.jquery.min.js"></script>
         <!-- <script src="<?php echo base_url(); ?>assets/bower_components/font-awesome/js/all.js"></script> -->
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->

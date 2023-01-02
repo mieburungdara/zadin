@@ -123,23 +123,23 @@ foreach ($fe as $de) {
                             </div>
                         </div>
                         <div class="table-umum">
-                    <table class="table mb-0 table-bordered" id="table-umum">
-                        <thead>
-                            <tr>
-                                <th scope="col" class="text-center" style="width: 0%;">No</th>
-                                <th scope="col" class="text-center" style="width: 8%;">Tanggal</th>
-                                <th scope="col" class="text-center" style="width: 0%;">Reff</th>
-                                <th scope="col" class="text-center" style="width: 10%;">Transaksi</th>
-                                <th scope="col" class="text-center"style="width: 0%;">Jenis</th>
-                                <th scope="col" class="text-center"style="width: 0%;">Dana</th>
-                                <th scope="col" class="text-right"style="width: 0%;">Nominal</th>
-                                <th scope="col" class="text-left" >Keterangan</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div>
+                            <table class="table mb-0 table-bordered" id="table-umum">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="text-center" style="width: 0%;">No</th>
+                                        <th scope="col" class="text-center" style="width: 8%;">Tanggal</th>
+                                        <th scope="col" class="text-center" style="width: 0%;">Reff</th>
+                                        <th scope="col" class="text-center" style="width: 10%;">Transaksi</th>
+                                        <th scope="col" class="text-center" style="width: 0%;">Jenis</th>
+                                        <th scope="col" class="text-center" style="width: 0%;">Dana</th>
+                                        <th scope="col" class="text-right" style="width: 0%;">Nominal</th>
+                                        <th scope="col" class="text-left">Keterangan</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
 
 
                     </div>
@@ -231,25 +231,25 @@ foreach ($fr as $row) {
                                 </div>
                             </div>
                         </div>
-                        
-                <div class="table-invoice">
-                    <table class="table mb-0 table-bordered" id="table-invoice">
-                        <thead>
-                            <tr>
-                                <th scope="col" class="text-center" style="width: 0%;">No</th>
-                                <th scope="col" class="text-center" style="width: 8%;">Tanggal</th>
-                                <th scope="col" class="text-center" style="width: 0%;">Reff</th>
-                                <th scope="col" class="text-center" style="width: 10%;">Transaksi</th>
-                                <th scope="col" class="text-center"style="width: 0%;">Jenis</th>
-                                <th scope="col" class="text-center"style="width: 0%;">Dana</th>
-                                <th scope="col" class="text-right"style="width: 0%;">Nominal</th>
-                                <th scope="col" class="text-left" >Keterangan</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div>
+
+                        <div class="table-invoice">
+                            <table class="table mb-0 table-bordered" id="table-invoice">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="text-center" style="width: 0%;">No</th>
+                                        <th scope="col" class="text-center" style="width: 8%;">Tanggal</th>
+                                        <th scope="col" class="text-center" style="width: 0%;">Reff</th>
+                                        <th scope="col" class="text-center" style="width: 10%;">Transaksi</th>
+                                        <th scope="col" class="text-center" style="width: 0%;">Jenis</th>
+                                        <th scope="col" class="text-center" style="width: 0%;">Dana</th>
+                                        <th scope="col" class="text-right" style="width: 0%;">Nominal</th>
+                                        <th scope="col" class="text-left">Keterangan</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
                     <div class="tab-pane" id="tab-operasional">
@@ -258,26 +258,26 @@ foreach ($fr as $row) {
 
 
                         <?php // XXX MODAL OPERASIONAL  ; ; ?>
-    <div class="modal fade" id="bs-operasional-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myLargeModalLabel">Transaksi Operasional</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                </div>
-                <div class="modal-body">
+                        <div class="modal fade" id="bs-operasional-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title" id="myLargeModalLabel">Transaksi Operasional</h4>
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                    </div>
+                                    <div class="modal-body">
 
-                    <code class="text-center"><p id="show_message" style="display: none">Transaksi ditambakan..</p></code>
-                    <code class="text-center"><p id="error" style="display: none"></p></code>
-                    <form action="javascript:void(0)" method="post" id="field_operasional">
-                        <div class="card-body">
+                                        <code class="text-center"><p id="show_message" style="display: none">Transaksi ditambakan..</p></code>
+                                        <code class="text-center"><p id="error" style="display: none"></p></code>
+                                        <form action="javascript:void(0)" method="post" id="field_operasional">
+                                            <div class="card-body">
 
 
-                            <div class="form-group row align-items-center mb-0" id='field_operasional'>
-                                <label for="input_op" class="col-md-3 text-right control-label col-form-label">Nomor Operasional</label>
-                                <div class="col-md-9 border-left pb-2 pt-2">
-                                    <select class="selectpicker" name="input_op[]" id="input_op" onchange="operasionalChange(this, event)" required multiple>
-                                        <?php
+                                                <div class="form-group row align-items-center mb-0" id='field_operasional'>
+                                                    <label for="input_op" class="col-md-3 text-right control-label col-form-label">Nomor Operasional</label>
+                                                    <div class="col-md-9 border-left pb-2 pt-2">
+                                                        <select class="selectpicker" name="input_op[]" id="input_op" onchange="operasionalChange(this, event)" required multiple>
+                                                            <?php
 $fr = $this->db->query('select * from biaya_operasional where id_transaksi is NULL group by no_operasional')->result();
 foreach ($fr as $row) {
     $this->db->where('id', $row->no_operasional);
@@ -296,17 +296,17 @@ foreach ($fr as $row) {
     echo '</optgroup>';
 }
 ?>
-                                    </select>
-                                </div>
-                            </div>
+                                                        </select>
+                                                    </div>
+                                                </div>
 
 
-                            <div class="form-group row align-items-center mb-0">
-                                <label for="input_tanggal" class="col-md-3 text-right control-label col-form-label">Tanggal</label>
-                                <div class="col-md-4 border-left pb-2 pt-2">
-                                    <input type="text" autocomplete="off" required class="form-control input_tanggal" name="input_tanggal" placeholder="hari-bulan-tahun">
-                                </div>
-                            </div>
+                                                <div class="form-group row align-items-center mb-0">
+                                                    <label for="input_tanggal" class="col-md-3 text-right control-label col-form-label">Tanggal</label>
+                                                    <div class="col-md-4 border-left pb-2 pt-2">
+                                                        <input type="text" autocomplete="off" required class="form-control input_tanggal" name="input_tanggal" placeholder="hari-bulan-tahun">
+                                                    </div>
+                                                </div>
                                                 <div class="form-group row align-items-center mb-0">
                                                     <label for="tagihan_operasional" class="col-md-3 text-right control-label col-form-label">Tagihan</label>
                                                     <div class="col-md-9 border-left pb-2 pt-2">
@@ -319,154 +319,154 @@ foreach ($fr as $row) {
                                                         <input type="text" class="form-control masinput" name="terbayar_operasional" required id="terbayar_operasional" placeholder="Operasional Terbayar" value="">
                                                     </div>
                                                 </div>
-                            <div class="form-group row align-items-center mb-0">
-                                <label for="inputEmail4" class="col-md-3 text-right control-label col-form-label">Jenis</label>
-                                <div class="col-md-9 border-left pb-2 pt-2">
-                                    <input name="jenis_transaksi" value="1" type="radio" id="customControlValidation14" class="radio-col-red material-inputs">
-                                    <label for="customControlValidation14" class="mb-0 mt-2">Pendapatan</label>
-                                    <input name="jenis_transaksi" value="2" type="radio" id="customControlValidation31" class="radio-col-red material-inputs">
-                                    <label for="customControlValidation31" class="mb-0 mt-2">Pengeluaran</label>
+                                                <div class="form-group row align-items-center mb-0">
+                                                    <label for="inputEmail4" class="col-md-3 text-right control-label col-form-label">Jenis</label>
+                                                    <div class="col-md-9 border-left pb-2 pt-2">
+                                                        <input name="jenis_transaksi" value="1" type="radio" id="customControlValidation14" class="radio-col-red material-inputs">
+                                                        <label for="customControlValidation14" class="mb-0 mt-2">Pendapatan</label>
+                                                        <input name="jenis_transaksi" value="2" type="radio" id="customControlValidation31" class="radio-col-red material-inputs">
+                                                        <label for="customControlValidation31" class="mb-0 mt-2">Pengeluaran</label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row align-items-center mb-0">
+                                                    <label for="inputEmail4" class="col-md-3 text-right control-label col-form-label">Dana</label>
+                                                    <div class="col-md-9 border-left pb-2 pt-2">
+                                                        <input name="dana" value="1" type="radio" id="customControlValidation61" class="radio-col-red material-inputs">
+                                                        <label for="customControlValidation61" class="mb-0 mt-2">Kas</label>
+                                                        <input name="dana" value="2" type="radio" id="customControlValidation53" class="radio-col-red material-inputs">
+                                                        <label for="customControlValidation53" class="mb-0 mt-2">Bank</label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row align-items-center mb-0">
+                                                    <label for="keterangan" class="col-md-3 text-right control-label col-form-label">Keterangan</label>
+                                                    <div class="col-md-9 border-left pb-2 pt-2">
+                                                        <textarea class="form-control" required id="keterangan" name="keterangan" required rows="3" placeholder="keterangan.."></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="card-body">
+                                                <div class="action-form">
+                                                    <div class="form-group mb-0 text-right">
+                                                        <button type="submit" class="btn btn-info waves-effect waves-light">Simpan</button>
+                                                        <button type="button" data-dismiss="modal" aria-hidden="true" class="btn btn-dark waves-effect waves-light">Batal</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="form-group row align-items-center mb-0">
-                                <label for="inputEmail4" class="col-md-3 text-right control-label col-form-label">Dana</label>
-                                <div class="col-md-9 border-left pb-2 pt-2">
-                                    <input name="dana" value="1" type="radio" id="customControlValidation61" class="radio-col-red material-inputs">
-                                    <label for="customControlValidation61" class="mb-0 mt-2">Kas</label>
-                                    <input name="dana" value="2" type="radio" id="customControlValidation53" class="radio-col-red material-inputs">
-                                    <label for="customControlValidation53" class="mb-0 mt-2">Bank</label>
-                                </div>
-                            </div>
-                            <div class="form-group row align-items-center mb-0">
-                                <label for="keterangan" class="col-md-3 text-right control-label col-form-label">Keterangan</label>
-                                <div class="col-md-9 border-left pb-2 pt-2">
-                                    <textarea class="form-control" required id="keterangan" name="keterangan" required rows="3" placeholder="keterangan.."></textarea>
-                                </div>
-                            </div>
+
                         </div>
 
-                        <div class="card-body">
-                            <div class="action-form">
-                                <div class="form-group mb-0 text-right">
-                                    <button type="submit" class="btn btn-info waves-effect waves-light">Simpan</button>
-                                    <button type="button" data-dismiss="modal" aria-hidden="true" class="btn btn-dark waves-effect waves-light">Batal</button>
-                                </div>
-                            </div>
+
+                        <div class="table-operasional">
+                            <table class="table mb-0 table-bordered" id="table-operasional">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="text-center" style="width: 0%;">No</th>
+                                        <th scope="col" class="text-center" style="width: 8%;">Tanggal</th>
+                                        <th scope="col" class="text-center" style="width: 0%;">Reff</th>
+                                        <th scope="col" class="text-center" style="width: 10%;">Transaksi</th>
+                                        <th scope="col" class="text-center" style="width: 0%;">Jenis</th>
+                                        <th scope="col" class="text-center" style="width: 0%;">Dana</th>
+                                        <th scope="col" class="text-right" style="width: 0%;">Nominal</th>
+                                        <th scope="col" class="text-left">Keterangan</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
                         </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        
-    </div>
-
-
-        <div class="table-operasional">
-                    <table class="table mb-0 table-bordered" id="table-operasional">
-                        <thead>
-                            <tr>
-                                <th scope="col" class="text-center" style="width: 0%;">No</th>
-                                <th scope="col" class="text-center" style="width: 8%;">Tanggal</th>
-                                <th scope="col" class="text-center" style="width: 0%;">Reff</th>
-                                <th scope="col" class="text-center" style="width: 10%;">Transaksi</th>
-                                <th scope="col" class="text-center"style="width: 0%;">Jenis</th>
-                                <th scope="col" class="text-center"style="width: 0%;">Dana</th>
-                                <th scope="col" class="text-right"style="width: 0%;">Nominal</th>
-                                <th scope="col" class="text-left" >Keterangan</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div>
                     </div>
 
                     <!-- <div class="tab-pane" id="tab-pspk"> -->
-                        <!-- <button type="button" class="btn btn-info waves-effect waves-light btn-sm mb-2 text-right" data-toggle="modal" data-target="#bs-ps-modal-lg" data-jenis="ps"><i class="fa-duotone fa-plus"></i> Pinjaman Sementara</button>
+                    <!-- <button type="button" class="btn btn-info waves-effect waves-light btn-sm mb-2 text-right" data-toggle="modal" data-target="#bs-ps-modal-lg" data-jenis="ps"><i class="fa-duotone fa-plus"></i> Pinjaman Sementara</button>
                         <button type="button" class="btn btn-info waves-effect waves-light btn-sm mb-2 text-right" data-toggle="modal" data-target="#bs-pk-modal-lg" data-jenis="pk"><i class="fa-duotone fa-plus"></i> Pembukuan Kembali</button> -->
 
 
 
 
-    <?php // XXX pinjaman_sementara ALL  ; ; ?>
-    <div class="modal fade" id="bs-ps-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myLargeModalLabel">Pinjaman Sementara</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                </div>
-                <div class="modal-body">
+                    <?php // XXX pinjaman_sementara ALL  ; ; ?>
+                    <div class="modal fade" id="bs-ps-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="myLargeModalLabel">Pinjaman Sementara</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                </div>
+                                <div class="modal-body">
 
-                    <code class="text-center"><p id="show_message" style="display: none">Transaksi ditambakan..</p></code>
-                    <code class="text-center"><p id="error" style="display: none"></p></code>
-                    <form action="javascript:void(0)" method="post" id="form_ps">
-                        <div class="card-body">
+                                    <code class="text-center"><p id="show_message" style="display: none">Transaksi ditambakan..</p></code>
+                                    <code class="text-center"><p id="error" style="display: none"></p></code>
+                                    <form action="javascript:void(0)" method="post" id="form_ps">
+                                        <div class="card-body">
 
-                            <div class="form-group row align-items-center mb-0">
-                                <label for="input_tanggal" class="col-md-3 text-right control-label col-form-label">Tanggal</label>
-                                <div class="col-md-4 border-left pb-2 pt-2">
-                                    <input type="text" autocomplete="off" required class="form-control input_tanggal" name="input_tanggal" placeholder="hari-bulan-tahun">
-                                </div>
-                            </div>
-                            <div class="form-group row align-items-center mb-0">
-                                <label for="nominal" class="col-md-3 text-right control-label col-form-label">Nominal</label>
-                                <div class="col-md-9 border-left pb-2 pt-2">
-                                    <input type="text" class="form-control masinput" name="nominal" required id="nominal" placeholder="Nominal" value="">
-                                </div>
-                            </div>
-                            <div class="form-group row align-items-center mb-0">
-                                <label for="inputEmail4" class="col-md-3 text-right control-label col-form-label">Dana</label>
-                                <div class="col-md-9 border-left pb-2 pt-2">
-                                    <input name="dana" value="1" type="radio" id="customControlValidation689aa" class="radio-col-red material-inputs">
-                                    <label for="customControlValidation689aa" class="mb-0 mt-2">Kas</label>
-                                    <input name="dana" value="2" type="radio" id="customControlValidation387vv" class="radio-col-red material-inputs">
-                                    <label for="customControlValidation387vv" class="mb-0 mt-2">Bank</label>
-                                </div>
-                            </div>
-                            <div class="form-group row align-items-center mb-0">
-                                <label for="keterangan" class="col-md-3 text-right control-label col-form-label">Keterangan</label>
-                                <div class="col-md-9 border-left pb-2 pt-2">
-                                    <textarea class="form-control" required id="keterangan" name="keterangan" required rows="3" placeholder="keterangan.."></textarea>
+                                            <div class="form-group row align-items-center mb-0">
+                                                <label for="input_tanggal" class="col-md-3 text-right control-label col-form-label">Tanggal</label>
+                                                <div class="col-md-4 border-left pb-2 pt-2">
+                                                    <input type="text" autocomplete="off" required class="form-control input_tanggal" name="input_tanggal" placeholder="hari-bulan-tahun">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row align-items-center mb-0">
+                                                <label for="nominal" class="col-md-3 text-right control-label col-form-label">Nominal</label>
+                                                <div class="col-md-9 border-left pb-2 pt-2">
+                                                    <input type="text" class="form-control masinput" name="nominal" required id="nominal" placeholder="Nominal" value="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row align-items-center mb-0">
+                                                <label for="inputEmail4" class="col-md-3 text-right control-label col-form-label">Dana</label>
+                                                <div class="col-md-9 border-left pb-2 pt-2">
+                                                    <input name="dana" value="1" type="radio" id="customControlValidation689aa" class="radio-col-red material-inputs">
+                                                    <label for="customControlValidation689aa" class="mb-0 mt-2">Kas</label>
+                                                    <input name="dana" value="2" type="radio" id="customControlValidation387vv" class="radio-col-red material-inputs">
+                                                    <label for="customControlValidation387vv" class="mb-0 mt-2">Bank</label>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row align-items-center mb-0">
+                                                <label for="keterangan" class="col-md-3 text-right control-label col-form-label">Keterangan</label>
+                                                <div class="col-md-9 border-left pb-2 pt-2">
+                                                    <textarea class="form-control" required id="keterangan" name="keterangan" required rows="3" placeholder="keterangan.."></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="card-body">
+                                            <div class="action-form">
+                                                <div class="form-group mb-0 text-right">
+                                                    <button type="submit" class="btn btn-info waves-effect waves-light">Simpan</button>
+                                                    <button type="button" data-dismiss="modal" aria-hidden="true" class="btn btn-dark waves-effect waves-light">Batal</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="card-body">
-                            <div class="action-form">
-                                <div class="form-group mb-0 text-right">
-                                    <button type="submit" class="btn btn-info waves-effect waves-light">Simpan</button>
-                                    <button type="button" data-dismiss="modal" aria-hidden="true" class="btn btn-dark waves-effect waves-light">Batal</button>
+
+                    <?php // XXX PEMBUKUAN KEMBALI  ; ; ?>
+                    <div class="modal fade" id="bs-pk-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="myLargeModalLabel">Pembukuan Kembai</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                                 </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+                                <div class="modal-body">
 
+                                    <code class="text-center"><p id="show_message" style="display: none">Transaksi ditambakan..</p></code>
+                                    <code class="text-center"><p id="error" style="display: none"></p></code>
+                                    <form action="javascript:void(0)" method="post" id="form_all">
+                                        <div class="card-body">
 
-    <?php // XXX PEMBUKUAN KEMBALI  ; ; ?>
-    <div class="modal fade" id="bs-pk-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myLargeModalLabel">Pembukuan Kembai</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                </div>
-                <div class="modal-body">
-
-                    <code class="text-center"><p id="show_message" style="display: none">Transaksi ditambakan..</p></code>
-                    <code class="text-center"><p id="error" style="display: none"></p></code>
-                    <form action="javascript:void(0)" method="post" id="form_all">
-                        <div class="card-body">
-
-                            <div class="form-group row align-items-center mb-0" id='field_all'>
-                                <label for="pembayaran" class="col-md-3 text-right control-label col-form-label">Pembayaran Kembali</label>
-                                <div class="col-md-9 border-left pb-2 pt-2">
-                                    <select class="selectpicker" name="pembayaran" id="pembayaran" data-show-subtext="true" required>
-                                        <?php
+                                            <div class="form-group row align-items-center mb-0" id='field_all'>
+                                                <label for="pembayaran" class="col-md-3 text-right control-label col-form-label">Pembayaran Kembali</label>
+                                                <div class="col-md-9 border-left pb-2 pt-2">
+                                                    <select class="selectpicker" name="pembayaran" id="pembayaran" data-show-subtext="true" required>
+                                                        <?php
 $this->db->where('akun_kode', 19);
 $this->db->where('tersisa !=', 0);
 $this->db->group_by('id');
@@ -484,60 +484,60 @@ foreach ($fr as $row) {
     echo '</optgroup>';
 }
 ?>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group row align-items-center mb-0">
-                                <label for="input_tanggal" class="col-md-3 text-right control-label col-form-label">Tanggal</label>
-                                <div class="col-md-4 border-left pb-2 pt-2">
-                                    <input type="text" autocomplete="off" required class="form-control input_tanggal" name="input_tanggal" placeholder="hari-bulan-tahun">
-                                </div>
-                            </div>
-                            <div class="form-group row align-items-center mb-0">
-                                <label for="nominal" class="col-md-3 text-right control-label col-form-label">Nominal</label>
-                                <div class="col-md-9 border-left pb-2 pt-2">
-                                    <input type="text" class="form-control masinput" name="nominal" required id="nominal" placeholder="Nominal" value="">
-                                </div>
-                            </div>
-                            <div class="form-group row align-items-center mb-0">
-                                <label for="inputEmail4" class="col-md-3 text-right control-label col-form-label">Jenis</label>
-                                <div class="col-md-9 border-left pb-2 pt-2">
-                                    <input name="jenis_transaksi" value="in" type="radio" id="asdasdsadsadsa" class="radio-col-red material-inputs">
-                                    <label for="asdasdsadsadsa" class="mb-0 mt-2">Pendapatan</label>
-                                    <input name="jenis_transaksi" value="out" type="radio" id="heherhehre" class="radio-col-red material-inputs">
-                                    <label for="heherhehre" class="mb-0 mt-2">Pengeluaran</label>
-                                </div>
-                            </div>
-                            <div class="form-group row align-items-center mb-0">
-                                <label for="inputEmail4" class="col-md-3 text-right control-label col-form-label">Dana</label>
-                                <div class="col-md-9 border-left pb-2 pt-2">
-                                    <input name="dana" value="kas" type="radio" id="yumuyyumuymyum" class="radio-col-red material-inputs">
-                                    <label for="yumuyyumuymyum" class="mb-0 mt-2">Kas</label>
-                                    <input name="dana" value="bank" type="radio" id="iyumtnb" class="radio-col-red material-inputs">
-                                    <label for="iyumtnb" class="mb-0 mt-2">Bank</label>
-                                </div>
-                            </div>
-                            <div class="form-group row align-items-center mb-0">
-                                <label for="keterangan" class="col-md-3 text-right control-label col-form-label">Keterangan</label>
-                                <div class="col-md-9 border-left pb-2 pt-2">
-                                    <textarea class="form-control" required id="keterangan" name="keterangan" required rows="3" placeholder="keterangan.."></textarea>
-                                </div>
-                            </div>
-                        </div>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row align-items-center mb-0">
+                                                <label for="input_tanggal" class="col-md-3 text-right control-label col-form-label">Tanggal</label>
+                                                <div class="col-md-4 border-left pb-2 pt-2">
+                                                    <input type="text" autocomplete="off" required class="form-control input_tanggal" name="input_tanggal" placeholder="hari-bulan-tahun">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row align-items-center mb-0">
+                                                <label for="nominal" class="col-md-3 text-right control-label col-form-label">Nominal</label>
+                                                <div class="col-md-9 border-left pb-2 pt-2">
+                                                    <input type="text" class="form-control masinput" name="nominal" required id="nominal" placeholder="Nominal" value="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row align-items-center mb-0">
+                                                <label for="inputEmail4" class="col-md-3 text-right control-label col-form-label">Jenis</label>
+                                                <div class="col-md-9 border-left pb-2 pt-2">
+                                                    <input name="jenis_transaksi" value="in" type="radio" id="asdasdsadsadsa" class="radio-col-red material-inputs">
+                                                    <label for="asdasdsadsadsa" class="mb-0 mt-2">Pendapatan</label>
+                                                    <input name="jenis_transaksi" value="out" type="radio" id="heherhehre" class="radio-col-red material-inputs">
+                                                    <label for="heherhehre" class="mb-0 mt-2">Pengeluaran</label>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row align-items-center mb-0">
+                                                <label for="inputEmail4" class="col-md-3 text-right control-label col-form-label">Dana</label>
+                                                <div class="col-md-9 border-left pb-2 pt-2">
+                                                    <input name="dana" value="kas" type="radio" id="yumuyyumuymyum" class="radio-col-red material-inputs">
+                                                    <label for="yumuyyumuymyum" class="mb-0 mt-2">Kas</label>
+                                                    <input name="dana" value="bank" type="radio" id="iyumtnb" class="radio-col-red material-inputs">
+                                                    <label for="iyumtnb" class="mb-0 mt-2">Bank</label>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row align-items-center mb-0">
+                                                <label for="keterangan" class="col-md-3 text-right control-label col-form-label">Keterangan</label>
+                                                <div class="col-md-9 border-left pb-2 pt-2">
+                                                    <textarea class="form-control" required id="keterangan" name="keterangan" required rows="3" placeholder="keterangan.."></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
 
-                        <div class="card-body">
-                            <div class="action-form">
-                                <div class="form-group mb-0 text-right">
-                                    <button type="submit" class="btn btn-info waves-effect waves-light">Simpan</button>
-                                    <button type="button" data-dismiss="modal" aria-hidden="true" class="btn btn-dark waves-effect waves-light">Batal</button>
+                                        <div class="card-body">
+                                            <div class="action-form">
+                                                <div class="form-group mb-0 text-right">
+                                                    <button type="submit" class="btn btn-info waves-effect waves-light">Simpan</button>
+                                                    <button type="button" data-dismiss="modal" aria-hidden="true" class="btn btn-dark waves-effect waves-light">Batal</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+                    </div>
 
 
 
@@ -561,10 +561,10 @@ foreach ($fr as $row) {
                                 <th scope="col" class="text-center" style="width: 8%;">Tanggal</th>
                                 <th scope="col" class="text-center" style="width: 0%;">Reff</th>
                                 <th scope="col" class="text-center" style="width: 10%;">Transaksi</th>
-                                <th scope="col" class="text-center"style="width: 0%;">Jenis</th>
-                                <th scope="col" class="text-center"style="width: 0%;">Dana</th>
-                                <th scope="col" class="text-right"style="width: 0%;">Nominal</th>
-                                <th scope="col" class="text-left" >Keterangan</th>
+                                <th scope="col" class="text-center" style="width: 0%;">Jenis</th>
+                                <th scope="col" class="text-center" style="width: 0%;">Dana</th>
+                                <th scope="col" class="text-right" style="width: 0%;">Nominal</th>
+                                <th scope="col" class="text-left">Keterangan</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -801,6 +801,7 @@ function invoiceChange(ele, event) {
         );
     });
 }
+
 function operasionalChange(ele, event) {
     var val = $(ele).selectpicker('val');
     console.log(val);
@@ -826,11 +827,11 @@ jQuery('#input_tp').datepicker({
     todayHighlight: true
 });
 $(document).ready(function() {
-jQuery('.input_tanggal').datepicker({
-    autoclose: true,
-    format: 'dd-mm-yyyy',
-    todayHighlight: true
-});
+    jQuery('.input_tanggal').datepicker({
+        autoclose: true,
+        format: 'dd-mm-yyyy',
+        todayHighlight: true
+    });
 });
 
 $('input.masinput').keyup(function(event) {
